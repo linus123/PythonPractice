@@ -1,22 +1,42 @@
+import sys
+
 def balance_money(amounts):
-    pennyAmounts = convert_dollars_to_pennies(amounts)
+    grand_total = get_sum(amounts)
 
-    grandTotal = get_sum(pennyAmounts)
+    average = grand_total // len(amounts)
 
-    average = grandTotal // len(pennyAmounts)
+    adjusted_amounts = create_list_of_amount(average, len(amounts))
 
-    adjustedAmounts = create_list_of_amount(average, len(pennyAmounts))
+    running_total = average * len(amounts)
 
-    runningTotal = average * len(pennyAmounts)
+    index = 0
 
-    index = 0;
-
-    while (runningTotal < grandTotal):
-        adjustedAmounts[index] += 1;
-        runningTotal += 1
+    while running_total < grand_total:
+        adjusted_amounts[index] += 1
+        running_total += 1
         index += 1
 
-    return convert_pennies_to_dollars(adjustedAmounts)
+    return adjusted_amounts
+
+
+def get_minimum_exchange(amounts):
+    amounts.sort(reverse=True)
+    adjusted_amounts = convert_dollars_to_pennies(amounts)
+    balanced_amounts = balance_money(adjusted_amounts)
+
+    index = 0
+
+    amount_to_move = 0
+
+    for balanced_amount in balanced_amounts:
+        diff = balanced_amount - adjusted_amounts[index]
+
+        if diff < 0:
+            amount_to_move += diff
+
+        index += 1
+
+    return (amount_to_move * -1) / 100
 
 
 def convert_dollars_to_pennies(amounts):
@@ -55,10 +75,31 @@ def create_list_of_amount(amount, length):
     return final
 
 
-#def main():
-#    threeNPlus1FromFile("110101.txt")
+def run_from_standard_in():
+    amount_count = int(sys.stdin.readline())
 
-#if __name__ == '__main__':
-#    main()
+    while amount_count != 0:
+
+        counter = 0
+
+        amounts = []
+
+        while counter < amount_count:
+            amount = float(sys.stdin.readline())
+            amounts.append(amount)
+            counter += 1
+
+        exchange_money = get_minimum_exchange(amounts)
+
+        print('${:,.2f}'.format(exchange_money))
+
+        amount_count = int(sys.stdin.readline())
+
+
+def main():
+   run_from_standard_in()
+
+if __name__ == '__main__':
+   main()
 
 

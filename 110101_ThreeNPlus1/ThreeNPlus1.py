@@ -1,5 +1,4 @@
 import sys
-import datetime
 
 def three_n_plus_one(x):
     currentVal = x
