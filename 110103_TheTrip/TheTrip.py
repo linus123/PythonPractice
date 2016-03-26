@@ -1,5 +1,6 @@
 import sys
 
+
 def balance_money(amounts):
     grand_total = get_sum(amounts)
 
@@ -91,7 +92,7 @@ def run_from_standard_in():
 
         exchange_money = get_minimum_exchange(amounts)
 
-        print('${:,.2f}'.format(exchange_money))
+        print('${:.2f}'.format(exchange_money))
 
         amount_count = int(sys.stdin.readline())
 
@@ -99,7 +100,7 @@ def run_from_standard_in():
 def main():
    run_from_standard_in()
 
+
 if __name__ == '__main__':
    main()
-
 
