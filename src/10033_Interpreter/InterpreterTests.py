@@ -157,3 +157,10 @@ class InterpreterTests(unittest.TestCase):
 
         self.assertEquals(16, instruction_count)
 
+    def test_sample_test_case2(self):
+        interpreter = Interpreter(['299','233','255','990','803','301','050','100'])
+
+        instruction_count = interpreter.execute()
+
+        self.assertEquals(26, instruction_count)
+

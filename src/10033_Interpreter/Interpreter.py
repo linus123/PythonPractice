@@ -1,4 +1,6 @@
-class Interpreter :
+import sys
+
+class Interpreter:
 
     def __init__(self, init_ram):
         self.DEFAULT_VALUE = '000'
@@ -30,6 +32,8 @@ class Interpreter :
 
             program_counter += 1
 
+            # self._print_state()
+
             if current_command[0] == '2':
                 self._set_register_to_value(value1, value2)
             elif current_command[0] == '3':
@@ -58,10 +62,12 @@ class Interpreter :
         self._registers[register_index] = value
 
     def _add_value_to_register(self, register_index, value):
-        self._registers[register_index] += value
+        raw_value = self._registers[register_index] + value
+        self._registers[register_index] = self._get_modulated_value(raw_value)
 
     def _multiply_value_by_register(self, register_index, value):
-        self._registers[register_index] *= value
+        raw_value = self._registers[register_index] * value
+        self._registers[register_index] = self._get_modulated_value(raw_value)
 
     def _copy_register_value(self, destination, source):
         self._registers[destination] = self._registers[source]
@@ -111,3 +117,46 @@ class Interpreter :
 
     def _convert_to_printable_string(self, val):
         return '{0:03d}'.format(val)
+
+    def _print_state(self):
+        print(self._registers)
+        print(self._ram)
+        print()
+
+#####################################
+
+def read_case_from_standard_in():
+    current_line = sys.stdin.readline().rstrip()
+
+    case = []
+
+    while current_line != "":
+        case.append(current_line)
+        current_line = sys.stdin.readline().rstrip()
+
+    return case
+
+
+def read_from_standard_in():
+    case_count_line = sys.stdin.readline().rstrip()
+
+    case_count = int(case_count_line)
+
+    #read blank line
+    sys.stdin.readline()
+
+    for count in range(case_count):
+        case = read_case_from_standard_in()
+        interp = Interpreter(case)
+        command_count = interp.execute()
+        print(command_count)
+
+        if (count < case_count - 1):
+            print()
+
+def main():
+    read_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
