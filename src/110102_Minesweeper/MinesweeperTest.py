@@ -23,8 +23,6 @@ class MinesweeperTests(unittest.TestCase):
         self.assertEquals(field_with_counts[1], "33200")
         self.assertEquals(field_with_counts[2], "1*100")
 
-
-
 def main():
     unittest.main()
 

@@ -1,3 +1,5 @@
+import sys
+
 def count_mines(height, width, field):
 
     def is_on_field(x, y):
@@ -94,9 +96,41 @@ def count_mines(height, width, field):
 
     return convert_to_array_of_strings(result_field)
 
-# def main():
-#     threeNPLus1FromStdIn()
-#
-# if __name__ == '__main__':
-#     main()
+def read_from_standard_in():
+    field_size_line = sys.stdin.readline().rstrip()
+
+    while field_size_line != "0 0":
+
+        split_result = field_size_line.split()
+
+        number_of_rows = int(split_result[0])
+        number_of_columns = int(split_result[1])
+
+        #print(number_of_rows)
+        #print(number_of_columns)
+
+        field = []
+
+        for line_counter in range(number_of_rows):
+            field_line = sys.stdin.readline().rstrip()
+            field.append(field_line)
+
+        result = count_mines(number_of_rows, number_of_columns, field)
+
+        for result_line in result :
+            print(result_line)
+
+        print()
+
+        #print(field)
+
+        field_size_line = sys.stdin.readline().rstrip()
+
+
+
+def main():
+    read_from_standard_in()
+
+if __name__ == '__main__':
+    main()
 

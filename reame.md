@@ -7,7 +7,17 @@ The videos can be found at https://www.youtube.com/watch?v=3dkbFf82_b8&list=PLjx
 
 Professor is: Steven Skiena
 
-## Submit a Exersise
+## Submit a Exercise
+
+The input from the judge is provided on standard in.
+
+## File to Standard In
+
+### Powershell
+
+```
+Get-Content .\110102.txt | & "C:\Users\Paul\AppData\Local\Programs\Python\Python35\python.exe" .\Minesweeper.py
+```
 
 ## Progress
 
