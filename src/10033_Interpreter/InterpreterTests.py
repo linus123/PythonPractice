@@ -141,3 +141,19 @@ class InterpreterTests(unittest.TestCase):
 
         self.assertEquals('001', interpreter.get_register_value(0))
         self.assertEquals(4, instruction_count)
+
+    def test_0ds_should_not_go_to_location_d_when_s_is_zero(self):
+        interpreter = Interpreter(['200', '214', '010', '201', '100'])
+
+        instruction_count = interpreter.execute()
+
+        self.assertEquals('001', interpreter.get_register_value(0))
+        self.assertEquals(5, instruction_count)
+
+    def test_sample_test_case(self):
+        interpreter = Interpreter(['299','492','495','399','492','495','399','283','279','689','078','100','000','000','000'])
+
+        instruction_count = interpreter.execute()
+
+        self.assertEquals(16, instruction_count)
+

@@ -47,7 +47,7 @@ class Interpreter :
             elif current_command[0] == '9':
                 self._copy_value_to_ram(value1, value2)
             elif current_command[0] == '0':
-                program_counter = self._get_new_program_counter(value1, value2)
+                program_counter = self._get_new_program_counter(value1, value2, program_counter)
 
             instruction_count += 1
             current_command = self._ram[program_counter]
@@ -67,10 +67,13 @@ class Interpreter :
         self._registers[destination] = self._registers[source]
 
     def _add_register_value(self, destination, source):
-        self._registers[destination] += self._registers[source]
+        raw_value = self._registers[destination] + self._registers[source]
+
+        self._registers[destination] = self._get_modulated_value(raw_value)
 
     def _multiply_register_value(self, destination, source):
-        self._registers[destination] *= self._registers[source]
+        raw_value = self._registers[destination] * self._registers[source]
+        self._registers[destination] = self._get_modulated_value(raw_value)
 
     def _copy_value_from_ram(self, destination, source):
         ram_index = self._registers[source]
@@ -80,8 +83,15 @@ class Interpreter :
         ram_index = self._registers[destination_ram]
         self._ram[ram_index] = self._convert_to_printable_string(self._registers[source_register_index])
 
-    def _get_new_program_counter(self, destination_loc_reg_index, eval_reg_index):
+    def _get_new_program_counter(self, destination_loc_reg_index, eval_reg_index, current_program_counter):
+
+        if self._registers[eval_reg_index] == 0:
+            return current_program_counter
+
         return self._registers[destination_loc_reg_index]
+
+    def _get_modulated_value(self, value):
+        return value % 1000
 
     def _convert_to_valid_value_or_default(self, val):
         if val is None:
