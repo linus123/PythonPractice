@@ -19,6 +19,7 @@ class Interpreter :
 
     def execute(self):
         program_counter = 0
+        instruction_count = 1
 
         current_command = self._ram[program_counter]
 
@@ -48,7 +49,10 @@ class Interpreter :
             elif current_command[0] == '0':
                 program_counter = self._get_new_program_counter(value1, value2)
 
+            instruction_count += 1
             current_command = self._ram[program_counter]
+
+        return instruction_count
 
     def _set_register_to_value(self, register_index, value):
         self._registers[register_index] = value
