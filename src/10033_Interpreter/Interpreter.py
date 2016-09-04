@@ -27,6 +27,8 @@ class Interpreter :
             value1 = int(current_command[1])
             value2 = int(current_command[2])
 
+            program_counter += 1
+
             if current_command[0] == '2':
                 self._set_register_to_value(value1, value2)
             elif current_command[0] == '3':
@@ -35,8 +37,16 @@ class Interpreter :
                 self._multiply_value_by_register(value1, value2)
             elif current_command[0] == '5':
                 self._copy_register_value(value1, value2)
-
-            program_counter += 1
+            elif current_command[0] == '6':
+                self._add_register_value(value1, value2)
+            elif current_command[0] == '7':
+                self._multiply_register_value(value1, value2)
+            elif current_command[0] == '8':
+                self._copy_value_from_ram(value1, value2)
+            elif current_command[0] == '9':
+                self._copy_value_to_ram(value1, value2)
+            elif current_command[0] == '0':
+                program_counter = self._get_new_program_counter(value1, value2)
 
             current_command = self._ram[program_counter]
 
@@ -51,6 +61,23 @@ class Interpreter :
 
     def _copy_register_value(self, destination, source):
         self._registers[destination] = self._registers[source]
+
+    def _add_register_value(self, destination, source):
+        self._registers[destination] += self._registers[source]
+
+    def _multiply_register_value(self, destination, source):
+        self._registers[destination] *= self._registers[source]
+
+    def _copy_value_from_ram(self, destination, source):
+        ram_index = self._registers[source]
+        self._registers[destination] = int(self._ram[ram_index])
+
+    def _copy_value_to_ram(self, source_register_index, destination_ram):
+        ram_index = self._registers[destination_ram]
+        self._ram[ram_index] = self._convert_to_printable_string(self._registers[source_register_index])
+
+    def _get_new_program_counter(self, destination_loc_reg_index, eval_reg_index):
+        return self._registers[destination_loc_reg_index]
 
     def _convert_to_valid_value_or_default(self, val):
         if val is None:

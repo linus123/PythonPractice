@@ -71,3 +71,31 @@ class InterpreterTests(unittest.TestCase):
         interpreter.execute()
         self.assertEquals('009', interpreter.get_register_value(0))
         self.assertEquals('009', interpreter.get_register_value(1))
+
+    def test_6ds_should_add_register_d_to_the_value_of_register_s(self):
+        interpreter = Interpreter(['209', '211', '610', '100'])
+        interpreter.execute()
+        self.assertEquals('009', interpreter.get_register_value(0))
+        self.assertEquals('010', interpreter.get_register_value(1))
+
+    def test_7ds_should_multiply_register_d_to_the_value_of_register_s(self):
+        interpreter = Interpreter(['209', '212', '710', '100'])
+        interpreter.execute()
+        self.assertEquals('009', interpreter.get_register_value(0))
+        self.assertEquals('018', interpreter.get_register_value(1))
+
+    def test_8da_should_set_register_d_to_the_value_in_ram_whose_address_is_in_register_a(self):
+        interpreter = Interpreter(['203', '810', '100', '999'])
+        interpreter.execute()
+        self.assertEquals('003', interpreter.get_register_value(0))
+        self.assertEquals('999', interpreter.get_register_value(1))
+
+    def test_9sa_set_the_value_in_ram(self):
+        interpreter = Interpreter(['209', '215', '901', '100'])
+        interpreter.execute()
+        self.assertEquals('009', interpreter.get_ram_value(5))
+
+    def test_0ds_should_go_to_location_d(self):
+        interpreter = Interpreter(['201', '214', '010', '201', '100'])
+        interpreter.execute()
+        self.assertEquals('001', interpreter.get_register_value(0))
