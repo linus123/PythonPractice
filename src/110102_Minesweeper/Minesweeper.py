@@ -99,7 +99,7 @@ def count_mines(height, width, field):
 def read_from_standard_in():
     field_size_line = sys.stdin.readline().rstrip()
 
-    while field_size_line != "0 0":
+    while has_more_grids(field_size_line):
 
         split_result = field_size_line.split()
 
@@ -120,12 +120,15 @@ def read_from_standard_in():
         for result_line in result :
             print(result_line)
 
-        print()
-
         #print(field)
 
         field_size_line = sys.stdin.readline().rstrip()
 
+        if has_more_grids(field_size_line):
+            print()
+
+def has_more_grids(line):
+    return line != "0 0"
 
 
 def main():
