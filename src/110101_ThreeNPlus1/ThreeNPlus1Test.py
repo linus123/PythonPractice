@@ -4,6 +4,7 @@ from ThreeNPlus1 import maxThreeNPlus1
 from ThreeNPlus1 import threeNPlus1CountOnly
 
 class ThreeNPLus1Tests(unittest.TestCase):
+
     def test_shouldReturnExpectedValues(self):
         result = three_n_plus_one(22)
         self.assertEqual(result[0], 22)

@@ -25,3 +25,4 @@ Get-Content .\110102.txt | & "C:\Users\Paul\AppData\Local\Programs\Python\Python
   - 3n + 1 Problem : Completed
   - The Trip : Completed
   - Minesweeper : Completed
+  - Interpreter : Completed
