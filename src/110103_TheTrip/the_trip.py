@@ -103,23 +103,3 @@ def main():
 
 if __name__ == '__main__':
    main()
-
-
-val1, val2 = myfunction()
-
-some_tuple = myfunction()
-
-val1 = some_tuple[0]
-val2 = some_tuple[1]
-
-should_try_again = true
-
-
-while should_try_again:
-    value = 1 #getvalue
-
-    #if value is invalid
-        should_try_again = true
-    else:
-        should_try_again = false
-        return #tuple
