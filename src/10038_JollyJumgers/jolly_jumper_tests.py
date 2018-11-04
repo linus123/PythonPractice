@@ -68,7 +68,7 @@ class JollyJumperTests(unittest.TestCase):
         result = is_jolly_jumper([1, 2])
         self.assertTrue(result)
 
-        result = is_jolly_jumper([2, -3])
+        result = is_jolly_jumper([-2, -3])
         self.assertTrue(result)
 
     def test_should_return_true_given_three_values(self):
@@ -77,7 +77,7 @@ class JollyJumperTests(unittest.TestCase):
         result = is_jolly_jumper([0, 1, 3])
         self.assertTrue(result)
 
-        result = is_jolly_jumper([0, -1, 3])
+        result = is_jolly_jumper([0, -1, 1])
         self.assertTrue(result)
 
         result = is_jolly_jumper([0, -1, -3])
@@ -86,13 +86,7 @@ class JollyJumperTests(unittest.TestCase):
         result = is_jolly_jumper([6, 7, 9])
         self.assertTrue(result)
 
-        result = is_jolly_jumper([-6, -7, 9])
-        self.assertTrue(result)
-
-        result = is_jolly_jumper([-6, 7, -9])
-        self.assertTrue(result)
-
-        result = is_jolly_jumper([-5, -7, 8])
+        result = is_jolly_jumper([-6, -7, -9])
         self.assertTrue(result)
 
     def test_random_true_test(self):
@@ -101,6 +95,8 @@ class JollyJumperTests(unittest.TestCase):
         result = is_jolly_jumper([1, 4, 2, 3])
         self.assertTrue(result)
 
+        result = is_jolly_jumper([4, 6, -1, 2, -4, 0, 1, 6, -2])
+        self.assertTrue(result)
 
 def main():
     unittest.main()

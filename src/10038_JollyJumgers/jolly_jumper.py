@@ -1,3 +1,6 @@
+import sys
+
+
 def is_jolly_jumper(values):
     values_len = len(values)
 
@@ -40,8 +43,25 @@ def is_difference_values_len_minus_one(diff_dic, values_len):
 
 
 def get_abs_diff(current_value, next_value):
+    return abs(current_value - next_value)
 
-    curr_abs = abs(current_value)
-    next_abs = abs(next_value)
 
-    return abs(curr_abs - next_abs)
+def run_from_standard_in():
+
+    for values_string in sys.stdin:
+        split_values = values_string.strip().split(' ')
+
+        values = [int(i) for i in split_values[1:]]
+
+        if is_jolly_jumper(values):
+            print("Jolly")
+        else:
+            print("Not jolly")
+
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
