@@ -1,5 +1,6 @@
 import unittest
 
+
 class BalanceMoneyTests(unittest.TestCase):
     def test_should_return_expected_number_of_items(self):
         from the_trip import balance_money
@@ -57,9 +58,10 @@ class BalanceMoneyTests(unittest.TestCase):
         result = get_minimum_exchange([0.01, 0.03, 0.03])
         self.assertEqual(result, 0.01)
 
+
 def main():
     unittest.main()
 
+
 if __name__ == '__main__':
     main()
-
