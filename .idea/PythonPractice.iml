@@ -7,8 +7,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src/110101_ThreeNPlus1" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/10033_Interpreter" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/000000_Template" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/10038_JollyJumgers" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.7 (PythonPractice)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">

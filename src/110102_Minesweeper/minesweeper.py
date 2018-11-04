@@ -1,5 +1,6 @@
 import sys
 
+
 def count_mines(height, width, field):
 
     def is_on_field(x, y):
@@ -97,6 +98,7 @@ def count_mines(height, width, field):
     return convert_to_array_of_strings(result_field)
 
 ####################################################
+
 
 def read_from_standard_in():
     field_size_line = get_next_non_blank_line_from_standard_in()

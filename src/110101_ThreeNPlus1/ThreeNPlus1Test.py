@@ -3,6 +3,7 @@ from ThreeNPlus1 import three_n_plus_one
 from ThreeNPlus1 import maxThreeNPlus1
 from ThreeNPlus1 import threeNPlus1CountOnly
 
+
 class ThreeNPLus1Tests(unittest.TestCase):
 
     def test_shouldReturnExpectedValues(self):

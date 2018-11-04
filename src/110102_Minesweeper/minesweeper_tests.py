@@ -1,5 +1,6 @@
 import unittest
 
+
 class MinesweeperTests(unittest.TestCase):
     def test_should_return_expected_count1(self):
         from minesweeper import count_mines
@@ -22,10 +23,10 @@ class MinesweeperTests(unittest.TestCase):
         self.assertEqual(field_with_counts[1], "33200")
         self.assertEqual(field_with_counts[2], "1*100")
 
+
 def main():
     unittest.main()
 
 
 if __name__ == '__main__':
     main()
-
