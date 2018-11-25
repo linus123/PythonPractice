@@ -83,10 +83,10 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("bb cc", dictionary)
         self.assertEqual("** **", result)
 
-    def test_should_return_no_solution_with_three_letters(self):
+    def test_should_return_solution_with_three_letters(self):
         dictionary = ["aab", "aac"]
         result = crypt_decrypt("xxy xxz", dictionary)
-        self.assertEqual("aab acc", result)
+        self.assertEqual("aab aac", result)
 
     def test_should_return_no_solution_when_two_letter_words_have_no_solution_and_change_in_letters(self):
         dictionary = ["ab"]
@@ -111,6 +111,11 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("bc bc", dictionary)
         self.assertEqual("ab ab", result)
 
+    def test_should_not_be_affected_by_duplicate_dictionary_words(self):
+        dictionary = ["ab", "ab"]
+        result = crypt_decrypt("xy", dictionary)
+        self.assertEqual("ab", result)
+
     def test_should_return_solution_one_of_multiple_solutions_with_two_letters(self):
         dictionary = ["ab", "cd"]
         result = crypt_decrypt("xy xy", dictionary)
@@ -119,6 +124,29 @@ class CryptKickerTests(unittest.TestCase):
         dictionary = ["cd", "ab"]
         result = crypt_decrypt("xy xy", dictionary)
         self.assertEqual("cd cd", result)
+
+    def test_should_not_allow_words_that_do_not_match_on_length(self):
+        dictionary = ["a"]
+        result = crypt_decrypt("xy", dictionary)
+        self.assertEqual("**", result)
+
+        dictionary = ["ab"]
+        result = crypt_decrypt("xyz", dictionary)
+        self.assertEqual("***", result)
+
+    def test_should_not_allow_words_that_are_not_letter_possible(self):
+        dictionary = ["ab"]
+        result = crypt_decrypt("xx", dictionary)
+        self.assertEqual("**", result)
+
+        dictionary = ["abc"]
+        result = crypt_decrypt("xxy", dictionary)
+        self.assertEqual("***", result)
+
+    def test_should_be_letter_possible_with_duplicates(self):
+        dictionary = ["aba"]
+        result = crypt_decrypt("xyx", dictionary)
+        self.assertEqual("aba", result)
 
     def test_should_return_solution_one_of_multiple_solutions_with_two_letters_when_first_item_should_be_rejected(self):
         dictionary = ["xx", "cd"]
