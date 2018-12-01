@@ -12,7 +12,7 @@ def crypt_decrypt(encrypted_line, solution_words):
     for encrypted_word in encrypted_words:
         word_map.process_encrypted_word(encrypted_word)
 
-    has_solution = word_map.has_solution()
+    has_solution = word_map.calculate_solution()
 
     if not has_solution:
         return get_no_solution(encrypted_words)
@@ -95,23 +95,38 @@ class WordMap:
 
         return True
 
-    def has_solution(self):
+    def calculate_solution(self):
         if len(self.decode_words) <= 0:
             return False
 
+        still_has_solution = self.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
+
+        if not still_has_solution:
+            return False
+
+        still_has_solution = self.choose_single_option_when_word_has_multiples()
+
+        if not still_has_solution:
+            return False
+
+        return True
+
+    def remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option(self):
         for key, decode_word_array in self.decode_words.items():
             if len(decode_word_array) == 1:
-                still_as_solution = self.remove_word_from_decode_words(decode_word_array[0], key)
-                if not still_as_solution:
+                still_has_solution = self.remove_word_from_decode_words(decode_word_array[0], key)
+                if not still_has_solution:
                     return False
 
-        # for multiples .. pick one
+        return True
+
+    def choose_single_option_when_word_has_multiples(self):
         for key, decode_word_array in self.decode_words.items():
             if len(decode_word_array) > 1:
                 # delete all items except first one
                 del decode_word_array[1:]
-                still_as_solution = self.remove_word_from_decode_words(decode_word_array[0], key)
-                if not still_as_solution:
+                still_has_solution = self.remove_word_from_decode_words(decode_word_array[0], key)
+                if not still_has_solution:
                     return False
 
         return True
