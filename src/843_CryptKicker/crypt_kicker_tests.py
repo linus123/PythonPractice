@@ -151,12 +151,23 @@ class CryptKickerTests(unittest.TestCase):
     def test_should_return_solution_one_of_multiple_solutions_with_two_letters_when_first_item_should_be_rejected(self):
         dictionary = ["xx", "cd"]
         result = crypt_decrypt("xy", dictionary)
-        self.assertEqual("cd cd", result)
+        self.assertEqual("cd", result)
 
     def test_would_work_with_singe_word_and_single_encrypt_word(self):
         dictionary = ["abc"]
-        result = crypt_decrypt("xyx", dictionary)
+        result = crypt_decrypt("xyz", dictionary)
         self.assertEqual("abc", result)
+
+    def test_should_choose_word_that_matches_letters_across_different_words(self):
+        dictionary = ["ef", "ab", "bc"]
+        result = crypt_decrypt("xy yz", dictionary)
+        self.assertEqual("ab bc", result)
+
+    def test_sample_imput_should_pass(self):
+        dictionary = ["and", "dick", "jane", "pull", "spot", "yertle"]
+        result = crypt_decrypt("bjvg xsb hxsn xsb qymm xsb rqat xsb pnetfn", dictionary)
+        self.assertEqual("dick and jane and puff and spot and yertle", result)
+
 
 
 def main():

@@ -78,47 +78,49 @@ class WordMap:
             return False
 
         letter_dic = {}
+        solution_letter_count_dic = {}
 
         for i in range(len(encrypted_word)):
             solution_letter = solution_word[i]
             encrypted_letter = encrypted_word[i]
 
             if encrypted_letter in letter_dic:
-                if solution_letter not in letter_dic[encrypted_letter]:
+                if solution_letter != letter_dic[encrypted_letter]:
                     return False
+            elif solution_letter in solution_letter_count_dic:
+                return False
             else:
-                letter_array = [solution_letter]
-                letter_dic[encrypted_letter] = letter_array
+                letter_dic[encrypted_letter] = solution_letter
+                solution_letter_count_dic[solution_letter] = 1
 
         return True
-
 
     def has_solution(self):
         if len(self.decode_words) <= 0:
             return False
 
-        for key, letter_array in self.decode_words.items():
-            if len(letter_array) == 1:
-                still_as_solution = self.remove_letter_from_options(letter_array[0], key)
+        for key, decode_word_array in self.decode_words.items():
+            if len(decode_word_array) == 1:
+                still_as_solution = self.remove_word_from_decode_words(decode_word_array[0], key)
                 if not still_as_solution:
                     return False
 
         # for multiples .. pick one
-        for key, letter_array in self.decode_words.items():
-            if len(letter_array) > 1:
+        for key, decode_word_array in self.decode_words.items():
+            if len(decode_word_array) > 1:
                 # delete all items except first one
-                del letter_array[1:]
-                still_as_solution = self.remove_letter_from_options(letter_array[0], key)
+                del decode_word_array[1:]
+                still_as_solution = self.remove_word_from_decode_words(decode_word_array[0], key)
                 if not still_as_solution:
                     return False
 
         return True
 
-    def remove_letter_from_options(self, letter_to_remove, key_to_skip):
-        for key, letter_array in self.decode_words.items():
+    def remove_word_from_decode_words(self, word_to_remove, key_to_skip):
+        for key, decode_word_array in self.decode_words.items():
             if key != key_to_skip:
-                letter_array.remove(letter_to_remove)
-                if len(letter_array) == 0:
+                decode_word_array.remove(word_to_remove)
+                if len(decode_word_array) == 0:
                     return False
         return True
 
