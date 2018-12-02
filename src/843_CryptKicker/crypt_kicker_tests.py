@@ -158,6 +158,11 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("xyz", dictionary)
         self.assertEqual("abc", result)
 
+    def test_foo(self):
+        dictionary = ["ab", "bc", "de", "fg"]
+        result = crypt_decrypt("hi hi", dictionary)
+        self.assertEqual("ab ab", result)
+
     def test_should_choose_word_that_matches_letters_across_different_words(self):
         dictionary = ["ef", "ab", "bc"]
         result = crypt_decrypt("xy yz", dictionary)
