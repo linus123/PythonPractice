@@ -62,38 +62,15 @@ class WordMap:
         self.decode_words = {}
 
     def process_encrypted_word(self, encrypted_word):
-        possible_encrypted_words = []
+        possible_solution_words = []
 
         for solution_word in self.solution_words:
-            if self.is_word_possible(encrypted_word, solution_word):
-                possible_encrypted_words.append(solution_word)
-                self.decode_words[encrypted_word] = possible_encrypted_words
 
-    @staticmethod
-    def has_same_length(encrypted_word, solution_word):
-        return len(encrypted_word) == len(solution_word)
+            word_pair = WordPair(encrypted_word, solution_word)
 
-    def is_word_possible(self, encrypted_word, solution_word):
-        if not self.has_same_length(encrypted_word, solution_word):
-            return False
-
-        letter_dic = {}
-        solution_letter_count_dic = {}
-
-        for i in range(len(encrypted_word)):
-            solution_letter = solution_word[i]
-            encrypted_letter = encrypted_word[i]
-
-            if encrypted_letter in letter_dic:
-                if solution_letter != letter_dic[encrypted_letter]:
-                    return False
-            elif solution_letter in solution_letter_count_dic:
-                return False
-            else:
-                letter_dic[encrypted_letter] = solution_letter
-                solution_letter_count_dic[solution_letter] = 1
-
-        return True
+            if word_pair.is_word_possible():
+                possible_solution_words.append(solution_word)
+                self.decode_words[encrypted_word] = possible_solution_words
 
     def calculate_solution(self):
         if len(self.decode_words) <= 0:
@@ -134,7 +111,7 @@ class WordMap:
     def remove_word_from_decode_words(self, word_to_remove, key_to_skip):
         for key, decode_word_array in self.decode_words.items():
             if key != key_to_skip:
-                decode_word_array.remove(word_to_remove)
+                self.safe_array_remove(decode_word_array, word_to_remove)
                 if len(decode_word_array) == 0:
                     return False
         return True
@@ -142,12 +119,50 @@ class WordMap:
     def get_word(self, encrypted_word):
         return self.decode_words[encrypted_word][0]
 
+    @staticmethod
+    def safe_array_remove(array, item_to_remove):
+        try:
+            array.remove(item_to_remove)
+        except ValueError:
+            return False
 
-class LetterMap:
-    def __init__(self, solution_words):
-        self.solution_words = solution_words
-        self.decode_letters = {}
+        return True
 
-    def process_encrypted_word(self, word):
-        pass
+
+class WordPair:
+    def __init__(self, encrypted_word, solution_word):
+        self.solution_word = solution_word
+        self.encrypted_word = encrypted_word
+
+    def is_word_possible(self):
+        if not self.has_same_length():
+            return False
+
+        return self.is_letter_possible()
+
+    def has_same_length(self):
+        return len(self.encrypted_word) == len(self.solution_word)
+
+    def is_letter_possible(self):
+        letter_dic = {}
+        solution_letter_count_dic = {}
+
+        for i in range(len(self.encrypted_word)):
+            solution_letter = self.solution_word[i]
+            encrypted_letter = self.encrypted_word[i]
+
+            if encrypted_letter in letter_dic:
+                if solution_letter != letter_dic[encrypted_letter]:
+                    return False
+            elif solution_letter in solution_letter_count_dic:
+                return False
+            else:
+                letter_dic[encrypted_letter] = solution_letter
+                solution_letter_count_dic[solution_letter] = 1
+        return True
+
+
+class EncryptedWordWithOptions:
+    def __init__(self, encrypted_word):
+        self.encrypted_word = encrypted_word
 

@@ -163,12 +163,14 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("xy yz", dictionary)
         self.assertEqual("ab bc", result)
 
-    def test_sample_imput_should_pass(self):
-        dictionary = ["and", "dick", "jane", "pull", "spot", "yertle"]
+    def test_sample_input_should_pass(self):
+        dictionary = ["and", "dick", "jane", "puff", "spot", "yertle"]
+
         result = crypt_decrypt("bjvg xsb hxsn xsb qymm xsb rqat xsb pnetfn", dictionary)
         self.assertEqual("dick and jane and puff and spot and yertle", result)
 
-
+        result = crypt_decrypt("xxxx yyy zzzz www yyyy aaa bbbb ccc dddddd", dictionary)
+        self.assertEqual("**** *** **** *** **** *** **** *** ******", result)
 
 def main():
     unittest.main()
