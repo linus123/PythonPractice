@@ -65,7 +65,7 @@ class EncryptedWordWithOptions:
         self.solution_words.append(word)
 
     def has_any_solution_words(self) -> bool:
-        return len(self.solution_words) > 1
+        return len(self.solution_words) > 0
 
     def get_solution_word_count(self) -> int:
         return len(self.solution_words)
@@ -109,8 +109,8 @@ class WordMap:
         if len(self.decode_words) <= 0:
             return False
 
-        for key, decode_word_array in self.decode_words.items():
-            if decode_word_array.get_solution_word_count() == 0:
+        for key, encrypted_word in self.decode_words.items():
+            if not encrypted_word.has_any_solution_words():
                 return False
 
         still_has_solution = self.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
