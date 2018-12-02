@@ -107,7 +107,7 @@ class WordMap:
     def remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option(self):
         for key, decode_word_array in self.decode_words.items():
             if decode_word_array.get_solution_word_count() == 1:
-                has_solution = self.remove_word_from_decode_words(decode_word_array.get_first_solution_word(), key)
+                has_solution = self.remove_word_from_other_decode_words(decode_word_array.get_first_solution_word(), key)
                 if not has_solution:
                     return False
 
@@ -121,14 +121,14 @@ class WordMap:
 
                 first_solution_word = encrypted_word.get_first_solution_word()
 
-                has_solution = self.remove_word_from_decode_words(first_solution_word, key)
+                has_solution = self.remove_word_from_other_decode_words(first_solution_word, key)
 
                 if not has_solution:
                     return False
 
         return True
 
-    def remove_word_from_decode_words(self, word_to_remove: str, key_to_skip: str):
+    def remove_word_from_other_decode_words(self, word_to_remove: str, key_to_skip: str):
         for key, encrypted_word in self.decode_words.items():
             if key != key_to_skip:
                 encrypted_word.safe_array_remove(word_to_remove)
