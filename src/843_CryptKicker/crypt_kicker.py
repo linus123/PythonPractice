@@ -56,35 +56,6 @@ def is_already_mapped(letter, decode_letters):
     return False
 
 
-class EncryptedWordWithOptions:
-    def __init__(self, encrypted_word: str):
-        self.encrypted_word = encrypted_word
-        self.solution_words = []
-
-    def add_solution_word(self, word):
-        self.solution_words.append(word)
-
-    def has_any_solution_words(self) -> bool:
-        return len(self.solution_words) > 0
-
-    def get_solution_word_count(self) -> int:
-        return len(self.solution_words)
-
-    def delete_all_solution_words_except_first(self):
-        del self.solution_words[1:]
-
-    def safe_array_remove(self, item_to_remove):
-        try:
-            self.solution_words.remove(item_to_remove)
-        except ValueError:
-            return False
-
-        return True
-
-    def get_first_solution_word(self) -> str:
-        return self.solution_words[0]
-
-
 class WordMap:
     def __init__(self, solution_words):
         self.solution_words = solution_words
@@ -168,6 +139,35 @@ class WordMap:
 
     def get_word(self, encrypted_word: str) -> str:
         return self.decode_words[encrypted_word].get_first_solution_word()
+
+
+class EncryptedWordWithOptions:
+    def __init__(self, encrypted_word: str):
+        self.encrypted_word = encrypted_word
+        self.solution_words = []
+
+    def add_solution_word(self, word):
+        self.solution_words.append(word)
+
+    def has_any_solution_words(self) -> bool:
+        return len(self.solution_words) > 0
+
+    def get_solution_word_count(self) -> int:
+        return len(self.solution_words)
+
+    def delete_all_solution_words_except_first(self):
+        del self.solution_words[1:]
+
+    def safe_array_remove(self, item_to_remove):
+        try:
+            self.solution_words.remove(item_to_remove)
+        except ValueError:
+            return False
+
+        return True
+
+    def get_first_solution_word(self) -> str:
+        return self.solution_words[0]
 
 
 class WordPair:
