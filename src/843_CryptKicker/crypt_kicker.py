@@ -49,13 +49,6 @@ def get_no_solution(encrypted_words):
     return s.strip()
 
 
-def is_already_mapped(letter, decode_letters):
-    for key, letter_array in decode_letters.items():
-        if letter in letter_array:
-            return True
-    return False
-
-
 class WordMap:
     def __init__(self, solution_words):
         self.solution_words = solution_words
