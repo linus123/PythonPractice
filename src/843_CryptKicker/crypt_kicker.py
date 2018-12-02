@@ -105,13 +105,14 @@ class WordMap:
 
         self.decode_words[encrypted_word] = encrypted_word_obj
 
-    def calculate_solution(self):
+    def calculate_solution(self) -> bool:
         if len(self.decode_words) <= 0:
             return False
 
-        for key, encrypted_word in self.decode_words.items():
-            if not encrypted_word.has_any_solution_words():
-                return False
+        still_has_solution = self.all_decode_words_have_at_least_one_item()
+
+        if not still_has_solution:
+            return False
 
         still_has_solution = self.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
 
@@ -122,6 +123,13 @@ class WordMap:
 
         if not still_has_solution:
             return False
+
+        return True
+
+    def all_decode_words_have_at_least_one_item(self):
+        for key, encrypted_word in self.decode_words.items():
+            if not encrypted_word.has_any_solution_words():
+                return False
 
         return True
 
