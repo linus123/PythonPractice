@@ -83,6 +83,8 @@ class WordMap:
         if not has_solution:
             return False
 
+        # This is where we need to do the letter count
+
         has_solution = self.choose_single_option_when_word_has_multiples()
 
         if not has_solution:
