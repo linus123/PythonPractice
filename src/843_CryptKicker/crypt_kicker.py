@@ -109,19 +109,19 @@ class WordMap:
         if len(self.decode_words) <= 0:
             return False
 
-        still_has_solution = self.all_decode_words_have_at_least_one_item()
+        has_solution = self.all_decode_words_have_at_least_one_item()
 
-        if not still_has_solution:
+        if not has_solution:
             return False
 
-        still_has_solution = self.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
+        has_solution = self.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
 
-        if not still_has_solution:
+        if not has_solution:
             return False
 
-        still_has_solution = self.choose_single_option_when_word_has_multiples()
+        has_solution = self.choose_single_option_when_word_has_multiples()
 
-        if not still_has_solution:
+        if not has_solution:
             return False
 
         return True
@@ -136,8 +136,8 @@ class WordMap:
     def remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option(self):
         for key, decode_word_array in self.decode_words.items():
             if decode_word_array.get_solution_word_count() == 1:
-                still_has_solution = self.remove_word_from_decode_words(decode_word_array.get_first_solution_word(), key)
-                if not still_has_solution:
+                has_solution = self.remove_word_from_decode_words(decode_word_array.get_first_solution_word(), key)
+                if not has_solution:
                     return False
 
         return True
@@ -148,9 +148,11 @@ class WordMap:
             if encrypted_word.get_solution_word_count() > 1:
                 encrypted_word.delete_all_solution_words_except_first()
 
-                still_has_solution = self.remove_word_from_decode_words(encrypted_word.get_first_solution_word(), key)
+                first_solution_word = encrypted_word.get_first_solution_word()
 
-                if not still_has_solution:
+                has_solution = self.remove_word_from_decode_words(first_solution_word, key)
+
+                if not has_solution:
                     return False
 
         return True
