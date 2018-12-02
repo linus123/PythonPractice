@@ -161,7 +161,8 @@ class WordMap:
         for key, encrypted_word in self.decode_words.items():
             if key != key_to_skip:
                 encrypted_word.safe_array_remove(word_to_remove)
-                if encrypted_word.get_solution_word_count() == 0:
+
+                if not encrypted_word.has_any_solution_words():
                     return False
         return True
 
