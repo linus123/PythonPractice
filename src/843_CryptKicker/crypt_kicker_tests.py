@@ -185,7 +185,13 @@ class CryptKickerTests(unittest.TestCase):
         self.assertEqual("ab ab", result)
 
     def test_022(self):
-        """Should return solution buy busing letters that match across different words"""
+        """Should use single option as a way of clearing all other options that match by letter"""
+        dictionary = ["bc", "ab", "bb"]
+        result = crypt_decrypt("yy xy yz", dictionary)
+        self.assertEqual("bb ab bc", result)
+
+    def test_0221(self):
+        """Should return solution by using letters that match across different words"""
         dictionary = ["ef", "ab", "bc"]
         result = crypt_decrypt("xy yz", dictionary)
         self.assertEqual("ab bc", result)

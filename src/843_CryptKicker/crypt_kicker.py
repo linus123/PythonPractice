@@ -85,6 +85,20 @@ class WordMap:
 
         # This is where we need to do the letter count
 
+        letter_maps = []
+
+        for key, encrypted_word in self.decode_words.items():
+            if encrypted_word.get_solution_word_count() == 1:
+                first_solution_word = encrypted_word.get_first_solution_word()
+                letter_map = self.create_encrypted_letter_map(encrypted_word.encrypted_word, first_solution_word)
+                letter_maps.append(letter_map)
+
+        for key, encrypted_word in self.decode_words.items():
+            if encrypted_word.get_solution_word_count() > 1:
+                for letter_map in letter_maps:
+                    for en_letter, sol_letter in letter_map.items():
+                        encrypted_word.remove_word_that_do_not_match_letter(en_letter, sol_letter)
+
         has_solution = self.choose_single_option_when_word_has_multiples()
 
         if not has_solution:
@@ -135,6 +149,16 @@ class WordMap:
     def get_word(self, encrypted_word: str) -> str:
         return self.decode_words[encrypted_word].get_first_solution_word()
 
+    def create_encrypted_letter_map(self, encrypted_word: str, solution_word: str) -> dict:
+        encrypted_letter_dictionary = {}
+
+        for encrypted_letter_index in range(len(encrypted_word)):
+
+            encrypted_letter = encrypted_word[encrypted_letter_index]
+            encrypted_letter_dictionary[encrypted_letter] = solution_word[encrypted_letter_index]
+
+        return encrypted_letter_dictionary
+
 
 class EncryptedWordWithOptions:
     def __init__(self, encrypted_word: str):
@@ -163,6 +187,20 @@ class EncryptedWordWithOptions:
 
     def get_first_solution_word(self) -> str:
         return self.solution_words[0]
+
+    def remove_word_that_do_not_match_letter(self, encrypted_letter, solution_letter):
+
+        for encrypted_letter_index in range(len(self.encrypted_word)):
+            current_encrypted_letter = self.encrypted_word[encrypted_letter_index]
+
+            new_solution_words = []
+
+            if current_encrypted_letter == encrypted_letter:
+                for solution_word in self.solution_words:
+                    if solution_word[encrypted_letter_index] == solution_letter:
+                        new_solution_words.append(solution_word)
+
+                self.solution_words = new_solution_words
 
 
 class WordPair:
