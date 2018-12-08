@@ -190,11 +190,29 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("yy xy yz", dictionary)
         self.assertEqual("bb ab bc", result)
 
-    def test_0221(self):
+    def test_023(self):
+        """Should find solution that ONLY is solved by letter maps"""
+        dictionary = ["bc", "ab"]
+        result = crypt_decrypt("xy yz", dictionary)
+        self.assertEqual("ab bc", result)
+
+    def test_024(self):
         """Should return solution by using letters that match across different words"""
         dictionary = ["ef", "ab", "bc"]
         result = crypt_decrypt("xy yz", dictionary)
         self.assertEqual("ab bc", result)
+
+    def test_024(self):
+        """Should leave spaces in solution intact"""
+        dictionary = ["cd"]
+        result = crypt_decrypt("ab  ab", dictionary)
+        self.assertEqual("cd  cd", result)
+
+    def test_024(self):
+        """Should leave spaces in no solution intact"""
+        dictionary = ["xx"]
+        result = crypt_decrypt("ab    ab", dictionary)
+        self.assertEqual("**    **", result)
 
     def test_sample_input_should_pass(self):
         """Should return expected solution from the directions samle"""
