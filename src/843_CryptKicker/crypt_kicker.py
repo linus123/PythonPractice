@@ -187,22 +187,10 @@ class WordMap:
     def remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option(self) -> bool:
         for key, decode_word_array in self.decode_words.items():
             if decode_word_array.get_solution_word_count() == 1:
-                has_solution = self.remove_word_from_other_decode_words(decode_word_array.get_first_solution_word(),
-                                                                        key)
-                if not has_solution:
-                    return False
 
-        return True
-
-    def choose_single_option_when_word_has_multiples(self) -> bool:
-        for key, encrypted_word in self.decode_words.items():
-
-            if encrypted_word.get_solution_word_count() > 1:
-                encrypted_word.delete_all_solution_words_except_first()
-
-                first_solution_word = encrypted_word.get_first_solution_word()
-
-                has_solution = self.remove_word_from_other_decode_words(first_solution_word, key)
+                has_solution = self.remove_word_from_other_decode_words(
+                    decode_word_array.get_first_solution_word(),
+                    key)
 
                 if not has_solution:
                     return False
@@ -217,9 +205,6 @@ class WordMap:
                 if not encrypted_word.has_any_solution_words():
                     return False
         return True
-
-    def get_word(self, encrypted_word: str) -> str:
-        return self.decode_words[encrypted_word].get_first_solution_word()
 
     def has_any_decode_words(self) -> bool:
         return len(self.decode_words) > 0
@@ -284,12 +269,6 @@ class EncryptedWordWithOptions:
 
         return result
 
-    def create_copy(self):
-        new_word = EncryptedWordWithOptions(self.encrypted_word)
-        new_word.solution_words = copy.deepcopy(self.solution_words)
-
-        return new_word
-
     def add_solution_word(self, word):
         self.solution_words.append(word)
 
@@ -301,9 +280,6 @@ class EncryptedWordWithOptions:
 
     def get_solution_words(self):
         return self.solution_words
-
-    def delete_all_solution_words_except_first(self):
-        del self.solution_words[1:]
 
     def remove_solution_word(self, item_to_remove) -> bool:
         try:
