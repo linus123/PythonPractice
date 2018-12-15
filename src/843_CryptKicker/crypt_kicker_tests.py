@@ -1,6 +1,6 @@
 import unittest
 
-from crypt_kicker import crypt_decrypt
+from crypt_kicker import crypt_decrypt, EncryptedWordWithOptions, WordMap
 
 
 class CryptKickerTests(unittest.TestCase):
@@ -224,6 +224,288 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("xxxx yyy zzzz www yyyy aaa bbbb ccc dddddd", dictionary)
         self.assertEqual("**** *** **** *** **** *** **** *** ******", result)
 
+    def test_udebug_1(self):
+        """Should return expected solution from the directions sample"""
+        dictionary = ["baseball", "football", "basketball", "tennis", "ball", "is", "a", "sport", "which", "uses",
+                      "not", "one", "two", "player", "players", "too", "i", "like", "also", "these", "are", "sports",
+                      "soccer", "no", "chess", "btw", "by", "the", "way"]
+
+        result = crypt_decrypt("a ybhd baic hdttcu oks", dictionary)
+        self.assertEqual("i also like soccer btw", result)
+
+        result = crypt_decrypt("lrsglrww as r sexvh", dictionary)
+        self.assertEqual("baseball is a sport", result)
+
+        result = crypt_decrypt("dffbqtoo sk t kjfcb bff", dictionary)
+        self.assertEqual("football is a sport too", result)
+
+        result = crypt_decrypt("knnwqndd hg j gmnbw wnn", dictionary)
+        self.assertEqual("******** ** * ***** ***", result)
+
+        result = crypt_decrypt("u wuqe bdaebdww", dictionary)
+        self.assertEqual("i like baseball", result)
+
+        result = crypt_decrypt("c pu iuo hcsw owiict", dictionary)
+        self.assertEqual("* ** *** **** ******", result)
+
+        result = crypt_decrypt("xhwkw fiw kldixk xwzzak yddxmfjj mfkqwxmfjj mfkwmfjj", dictionary)
+        self.assertEqual("these are sports tennis football basketball baseball", result)
+
+        result = crypt_decrypt("micvc tbc vwfbmv mff mchhev pffmdtoo dtvacmdtoo dtvcdtoo jicvv", dictionary)
+        self.assertEqual("these are sports too tennis football basketball baseball chess", result)
+
+        result = crypt_decrypt("mysrs bus rehumr mhh msggar ohhmjbxx jbrksmjbxx jbrsjbxx rkaagq", dictionary)
+        self.assertEqual("***** *** ****** *** ****** ******** ********** ******** ******", result)
+
+        result = crypt_decrypt("miana pfa ndcfmn mcc mallbn sccmqpjj qpnoamqpjj qpnaqpjj nceeaf", dictionary)
+        self.assertEqual("these are sports too tennis football basketball baseball soccer", result)
+
+        result = crypt_decrypt("w rvez vwum ezkkmg dj psm trj", dictionary)
+        self.assertEqual("i also like soccer by the way", result)
+
+        result = crypt_decrypt("b fkry kbew ryggwa qu liw tfurbvw", dictionary)
+        self.assertEqual("* **** **** ****** ** *** *******", result)
+
+    def test_udebug_2(self):
+        """Should return expected solution from the directions sample"""
+        dictionary = ["one",
+                      "two",
+                      "three",
+                      "four",
+                      "five",
+                      "six",
+                      "seven",
+                      "eight",
+                      "nine",
+                      "ten",
+                      "eleven",
+                      "twelve",
+                      "thirteen",
+                      "fourteen",
+                      "fifteen",
+                      "banana",
+                      "apple",
+                      "cucumber",
+                      "something",
+                      "else",
+                      "must",
+                      "do",
+                      "for",
+                      "this",
+                      "is",
+                      "boring"]
+
+        result = crypt_decrypt("aa", dictionary)
+        self.assertEqual("**", result)
+
+        result = crypt_decrypt("abcdefg", dictionary)
+        self.assertEqual("*******", result)
+
+        result = crypt_decrypt("qlc pcf xvotq qlxhix pvix nsnsdjxf", dictionary)
+        self.assertEqual("two for eight twelve five cucumber", result)
+
+        result = crypt_decrypt("lmen cu jfjfxaeb smeyne sdcbseez sdcu wlfb wcwseez uco wcne aizizi albczk sez", dictionary)
+        self.assertEqual("**** ** ******** ****** ******** **** **** ******* *** **** ****** ****** ***", result)
+
+        result = crypt_decrypt("its ibnz kwwqd fncd zsxdibnrj phphxlda fshaiddr itdqcd nz", dictionary)
+        self.assertEqual("two this apple five something cucumber fourteen twelve is", result)
+
+        result = crypt_decrypt("bfupxiim xcre fmi duex re ztmtmt zfprmv eisim irvcx", dictionary)
+        self.assertEqual("fourteen this one must is banana boring seven eight", result)
+
+        result = crypt_decrypt("nbi nsbmlb xirydqqn inq siylnh dalk nlnq xljq lk kqjqn", dictionary)
+        self.assertEqual("*** ****** ******** *** ****** **** **** **** ** *****", result)
+
+        result = crypt_decrypt("obf okzc brbmbf tngx czp tnx ojn tngxobbf", dictionary)
+        self.assertEqual("ten this eleven four six for two fourteen", result)
+
+        result = crypt_decrypt("hthyhv uirqohhv xi ohv bhyhv aiqgvj bifhosgvj ivh bgd frbo", dictionary)
+        self.assertEqual("eleven fourteen do ten seven boring something one six must", result)
+
+        result = crypt_decrypt("za yplplp asphn ajazak qtin moxskp", dictionary)
+        self.assertEqual("** ****** ***** ****** **** ******", result)
+
+        result = crypt_decrypt("ejn eiftbqjak xrxrfdtu je ajat ixbt dxxju zdbdbd", dictionary)
+        self.assertEqual("*** ********* ******** ** **** **** ***** ******", result)
+
+        result = crypt_decrypt("iona ettka flfluyaz ulcm yxzowp akca canaw mvx xwa cod mhozmaaw aophm maw ixlz", dictionary)
+        self.assertEqual("five apple cucumber must boring else seven two one six thirteen eight ten four", result)
+
+        result = crypt_decrypt("vewii fpi irsev myyni gf ru vlf prpi kfw", dictionary)
+        self.assertEqual("three one eight apple do is two nine for", result)
+
+        result = crypt_decrypt("koe vrxrg se ruvr egr", dictionary)
+        self.assertEqual("two seven do else one", result)
+
+        result = crypt_decrypt("gj jev qsj xjt qmnb bvyve bno izbq vfvyve raeaea xjztqvve qmtvv", dictionary)
+        self.assertEqual("do one two for this seven six must eleven banana fourteen three", result)
+
+        result = crypt_decrypt("aip tzbcc tdq ia lflfuscb cwcncr xqb xqfb sqbire tcr svrvrv xixtccr ciezt xinc", dictionary)
+        self.assertEqual("six three two is cucumber eleven for four boring ten banana fifteen eight five", result)
+
+        result = crypt_decrypt("sfsysl ozgss itithusg arp ovsfys jrys uegrlc htao jrjossl osl jeg", dictionary)
+        self.assertEqual("eleven three cucumber six twelve five boring must fifteen ten for", result)
+
+        result = crypt_decrypt("kuv mk qedo alzqub eqck dkcku eliz elz kykcku pskyck", dictionary)
+        self.assertEqual("*** ** **** ****** **** ***** **** *** ****** ******", result)
+
+        result = crypt_decrypt("laaug bixfjggw bixf gung ngmgw", dictionary)
+        self.assertEqual("apple fourteen four else seven", result)
+
+        result = crypt_decrypt("ushg cost ciym cicgmmd ko orugf fgrafooe mwzofgreu mrb", dictionary)
+        self.assertEqual("**** **** **** ******* ** ***** ******** ********* ***", result)
+
+        result = crypt_decrypt("zuml sbscsx vursatwxk zumlassx egxgxg atwv uxs vwj asx zwzassx atlss vscsx", dictionary)
+        self.assertEqual("four eleven something fourteen banana this one six ten fifteen three seven", result)
+
+        result = crypt_decrypt("iecdn yjl kpwn xj rgvgvg yjplniiv upupkril nqj niv jvi ndelniiv wez yeoi", dictionary)
+        self.assertEqual("eight for must do banana fourteen cucumber two ten one thirteen six five", result)
+
+        result = crypt_decrypt("evl ncococ ad hstawm yjyxyw", dictionary)
+        self.assertEqual("*** ****** ** ****** ******", result)
+
+        result = crypt_decrypt("giiej fnhp qrqj lrv whwhzxjp ujq usn xgqgqg", dictionary)
+        self.assertEqual("apple four nine six cucumber ten two banana", result)
+
+        result = crypt_decrypt("bubycck un ywuzycck djny cuqwy ywzcc vlwlk iuuzl otwl ojb ejbtkq vtc ojsb lzvl", dictionary)
+        self.assertEqual("******* ** ******** **** ***** ***** ***** ***** **** *** ****** *** **** ****", result)
+
+        result = crypt_decrypt("lqj kfrfrf nimecm gq myuxn nca njtxqhcmp xrnx wjlcmp qhlxx", dictionary)
+        self.assertEqual("*** ****** ****** ** ***** *** ********* **** ****** *****", result)
+
+        result = crypt_decrypt("vdvk zwckk zwdczkkv ujekzwdvy kxuk mjc", dictionary)
+        self.assertEqual("nine three thirteen something else for", result)
+
+        result = crypt_decrypt("fuo xfjaboou odhpb xdno ndti lx iabss srts vxbjcg iyx", dictionary)
+        self.assertEqual("*** ******** ***** **** **** ** ***** **** ****** ***", result)
+
+        result = crypt_decrypt("hwx vxar hwqbmq lx pggbq okoq", dictionary)
+        self.assertEqual("two four twelve do apple nine", result)
+
+        result = crypt_decrypt("evck lzhuexxs lclexxs efz lzu ck mhmhwixu evuxx scsx xdxnxs kzwxevcso lzhu izucso efxdnx", dictionary)
+        self.assertEqual("this fourteen fifteen two for is cucumber three nine eleven something four boring twelve", result)
+
+        result = crypt_decrypt("ngrgc nmt omrg fxxhg ueymcs lqghrg cmcg", dictionary)
+        self.assertEqual("seven six five apple boring twelve nine", result)
+
+        result = crypt_decrypt("xdkbxjjg xdkn xvw gkgj xdbjj qkzj jkfdx qwmbxjjg qkqxjjg lmt bx qnxd detcut", dictionary)
+        self.assertEqual("******** **** *** **** ***** **** ***** ******** ******* *** ** **** ******", result)
+
+        result = crypt_decrypt("iaqu wh teqt bhdlsz uph ucdtt lq slst jljutts mamaibtd uclq", dictionary)
+        self.assertEqual("must do else boring two three is nine fifteen cucumber this", result)
+
+        result = crypt_decrypt("ljdxv rql vglyhl kjhl srolvxjqd ir js", dictionary)
+        self.assertEqual("eight one twelve five something do is", result)
+
+        result = crypt_decrypt("df nxrn yfjpts yctctc rpl", dictionary)
+        self.assertEqual("do else boring banana six", result)
+
+        result = crypt_decrypt("hukl vspbnj kodon ltpoo oqodon bk abdo iccqo objtl ksholtbnj", dictionary)
+        self.assertEqual("must boring seven three eleven is five apple eight something", result)
+
+        result = crypt_decrypt("ybyqyl gmqy sumpsyyl gxep svybqy supyy svx", dictionary)
+        self.assertEqual("eleven five thirteen four twelve three two", result)
+
+        result = crypt_decrypt("tmjfuj odpztjje tmd odz nh onuj jnbxt onotjje", dictionary)
+        self.assertEqual("twelve fourteen two for is five eight fifteen", result)
+
+        result = crypt_decrypt("dmdldz ihxzinna bdgzinna bdgz kd uhyt gygc", dictionary)
+        self.assertEqual("****** ******** ******** **** ** **** ****", result)
+
+        result = crypt_decrypt("oupxk hed hesd kxdoo koy kroqco zeduyp huco", dictionary)
+        self.assertEqual("eight for four three ten twelve boring five", result)
+
+        result = crypt_decrypt("kakm zigc zic bykyky ikm tao dqat demwjm dqacdmmk jn mr", dictionary)
+        self.assertEqual("**** **** *** ****** *** *** **** ****** ******** ** **", result)
+
+        result = crypt_decrypt("hpbwdinax ctctbqwg optg onmw drp hny kp anaw hwmwa drwemw bthd paw", dictionary)
+        self.assertEqual("something cucumber four five two six do nine seven twelve must one", result)
+
+    # *************
+
+    def test_recurse_001(self):
+        decode_words_array = [EncryptedWordWithOptions("foobar")]
+        curr_dict = {}
+        array_of_dicts = []
+
+        WordMap.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+
+        self.assertEqual(0, len(array_of_dicts))
+
+    def test_recurse_002(self):
+        enc_word = EncryptedWordWithOptions("foobar")
+        enc_word.add_solution_word("bcculs")
+        decode_words_array = [enc_word]
+        curr_dict = {}
+        array_of_dicts = []
+
+        WordMap.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+
+        self.assertEqual(1, len(array_of_dicts))
+
+        target_enc_word = array_of_dicts[0]["foobar"]
+        self.assertEqual("foobar", target_enc_word.encrypted_word)
+        self.assertEqual(1, target_enc_word.get_solution_word_count())
+        self.assertEqual("bcculs", target_enc_word.get_solution_words()[0])
+
+    def test_recurse_002(self):
+        enc_word = EncryptedWordWithOptions("foobar")
+        enc_word.add_solution_word("bcculs")
+        enc_word.add_solution_word("qwwert")
+        decode_words_array = [enc_word]
+        curr_dict = {}
+        array_of_dicts = []
+
+        WordMap.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+
+        self.assertEqual(2, len(array_of_dicts))
+
+        target_enc_word = array_of_dicts[0]["foobar"]
+        self.assertEqual("foobar", target_enc_word.encrypted_word)
+        self.assertEqual(1, target_enc_word.get_solution_word_count())
+        self.assertEqual("bcculs", target_enc_word.get_solution_words()[0])
+
+        target_enc_word = array_of_dicts[1]["foobar"]
+        self.assertEqual("foobar", target_enc_word.encrypted_word)
+        self.assertEqual(1, target_enc_word.get_solution_word_count())
+        self.assertEqual("qwwert", target_enc_word.get_solution_words()[0])
+
+    def test_recurse_003(self):
+        enc_word01 = EncryptedWordWithOptions("a")
+        enc_word01.add_solution_word("i")
+
+        enc_word02 = EncryptedWordWithOptions("foobar")
+        enc_word02.add_solution_word("bcculs")
+        enc_word02.add_solution_word("qwwert")
+        decode_words_array = [enc_word01, enc_word02]
+
+        curr_dict = {}
+        array_of_dicts = []
+
+        WordMap.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+
+        self.assertEqual(2, len(array_of_dicts))
+
+        target_enc_word = array_of_dicts[0]["a"]
+        self.assertEqual("a", target_enc_word.encrypted_word)
+        self.assertEqual(1, target_enc_word.get_solution_word_count())
+        self.assertEqual("i", target_enc_word.get_solution_words()[0])
+
+        target_enc_word = array_of_dicts[0]["foobar"]
+        self.assertEqual("foobar", target_enc_word.encrypted_word)
+        self.assertEqual(1, target_enc_word.get_solution_word_count())
+        self.assertEqual("bcculs", target_enc_word.get_solution_words()[0])
+
+        target_enc_word = array_of_dicts[1]["a"]
+        self.assertEqual("a", target_enc_word.encrypted_word)
+        self.assertEqual(1, target_enc_word.get_solution_word_count())
+        self.assertEqual("i", target_enc_word.get_solution_words()[0])
+
+        target_enc_word = array_of_dicts[1]["foobar"]
+        self.assertEqual("foobar", target_enc_word.encrypted_word)
+        self.assertEqual(1, target_enc_word.get_solution_word_count())
+        self.assertEqual("qwwert", target_enc_word.get_solution_words()[0])
+
 
 def main():
     unittest.main()
@@ -231,4 +513,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
