@@ -1,6 +1,6 @@
 import unittest
 
-from crypt_kicker import crypt_decrypt, EncryptedWordWithOptions, WordMap
+from crypt_kicker import crypt_decrypt, EncryptedWordWithOptions, WordMap, SingleWord
 
 
 class CryptKickerTests(unittest.TestCase):
@@ -426,9 +426,8 @@ class CryptKickerTests(unittest.TestCase):
     def test_recurse_001(self):
         decode_words_array = [EncryptedWordWithOptions("foobar")]
         curr_dict = {}
-        array_of_dicts = []
 
-        WordMap.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
 
         self.assertEqual(0, len(array_of_dicts))
 
@@ -437,9 +436,8 @@ class CryptKickerTests(unittest.TestCase):
         enc_word.add_solution_word("bcculs")
         decode_words_array = [enc_word]
         curr_dict = {}
-        array_of_dicts = []
 
-        WordMap.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+        array_of_dicts = WordMap.create_all_single_word_combinations(decode_words_array, curr_dict)
 
         self.assertEqual(1, len(array_of_dicts))
 
@@ -454,9 +452,8 @@ class CryptKickerTests(unittest.TestCase):
         enc_word.add_solution_word("qwwert")
         decode_words_array = [enc_word]
         curr_dict = {}
-        array_of_dicts = []
 
-        WordMap.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
 
         self.assertEqual(2, len(array_of_dicts))
 
@@ -480,9 +477,8 @@ class CryptKickerTests(unittest.TestCase):
         decode_words_array = [enc_word01, enc_word02]
 
         curr_dict = {}
-        array_of_dicts = []
 
-        WordMap.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
 
         self.assertEqual(2, len(array_of_dicts))
 
@@ -506,6 +502,25 @@ class CryptKickerTests(unittest.TestCase):
         self.assertEqual(1, target_enc_word.get_solution_word_count())
         self.assertEqual("qwwert", target_enc_word.get_solution_words()[0])
 
+    def test_SingleWord_test001(self):
+        sw = SingleWord("a")
+        self.assertEqual("a", sw.word)
+        self.assertEqual("a", sw.unique_letter_word)
+
+    def test_SingleWord_test002(self):
+        sw = SingleWord("ab")
+        self.assertEqual("ab", sw.word)
+        self.assertEqual("ab", sw.unique_letter_word)
+
+    def test_SingleWord_test004(self):
+        sw = SingleWord("aa")
+        self.assertEqual("aa", sw.word)
+        self.assertEqual("a", sw.unique_letter_word)
+
+    def test_SingleWord_test005(self):
+        sw = SingleWord("aabb")
+        self.assertEqual("aabb", sw.word)
+        self.assertEqual("ab", sw.unique_letter_word)
 
 def main():
     unittest.main()

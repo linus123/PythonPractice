@@ -37,6 +37,7 @@ def crypt_decrypt(encrypted_line, solution_words):
             has_single_solution = guess_word_map.has_single_solution()
 
             if has_single_solution:
+                print("Found Single Solution")
                 word_map = guess_word_map
                 has_guess_solution = True
                 break
@@ -238,15 +239,13 @@ class WordMap:
         for current_key, current_encrypted_word in self.decode_words.items():
             decode_words_array.append(current_encrypted_word)
 
-        array_of_dicts = []
-
-        self.create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts)
+        array_of_dicts = self.create_all_single_word_combinations(decode_words_array, curr_dict)
 
         for blow in array_of_dicts:
             yield WordMap(self.solution_words, blow)
 
     @staticmethod
-    def create_all_single_word_combinations(decode_words_array, curr_dict, array_of_dicts, level=0):
+    def create_all_single_word_combinations(decode_words_array, curr_dict, level=0):
         if len(decode_words_array) == 0:
             return
         copy_with_sig_options = decode_words_array[0].copy_with_single_options()
@@ -256,10 +255,11 @@ class WordMap:
             # print("level %i - single_option %s" % (level, single_option))
             sub_decode_words_array = decode_words_array[1:]
             # print("level %i - sub_decode_words_array length %i" % (level, len(sub_decode_words_array)))
-            WordMap.create_all_single_word_combinations(sub_decode_words_array, curr_dict, array_of_dicts, level + 1)
+            for f in WordMap.create_all_single_word_combinations(sub_decode_words_array, curr_dict, level + 1):
+                yield f
             if len(decode_words_array) == 1:
                 # print("level %i - adding to array_of_dicts" % level)
-                array_of_dicts.append(copy.copy(curr_dict))
+                yield copy.copy(curr_dict)
 
 
 class EncryptedWordWithOptions:
@@ -357,6 +357,31 @@ class WordPair:
                 letter_dic[encrypted_letter] = solution_letter
                 solution_letter_count_dic[solution_letter] = 1
         return True
+
+
+class SingleWord:
+    def __init__(self, word: str):
+        self.word = word
+
+        self.unique_letter_word = self.create_unique_letter_word(word)
+        self.unique_letter_word_length = len(self.create_unique_letter_word(word))
+
+    @staticmethod
+    def create_unique_letter_word(word):
+
+        letter_dict = {}
+
+        for letter in word:
+            if letter not in letter_dict:
+                letter_dict[letter] = 1
+
+        return "".join(letter_dict.keys())
+
+    def __repr__(self) -> str:
+        return "word: '%s' unique_letter_word: '%s' unique_letter_word_length: '%i'" % (
+            self.word,
+            self.unique_letter_word,
+            self.unique_letter_word_length)
 
 
 def run_from_standard_in():
