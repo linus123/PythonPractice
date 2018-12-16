@@ -19,7 +19,7 @@ def crypt_decrypt(encrypted_line, solution_words):
     for encrypted_word in encrypted_words:
         word_map.process_encrypted_word(encrypted_word)
 
-    if has_no_solution(word_map, True):
+    if word_map.has_no_solution():
         return get_no_solution(encrypted_line)
     # else MIGHT have a solution
 
@@ -32,7 +32,7 @@ def crypt_decrypt(encrypted_line, solution_words):
 
             print("Process Guess")
 
-            if has_no_solution(guess_word_map, False):
+            if guess_word_map.has_no_solution():
                 continue
 
             has_single_solution = guess_word_map.has_single_solution()
@@ -47,37 +47,6 @@ def crypt_decrypt(encrypted_line, solution_words):
             return get_no_solution(encrypted_line)
 
     return word_map.get_decrypted_line(encrypted_line)
-
-
-def has_no_solution(word_map, perform_single_word_removal) -> bool:
-    if not word_map.has_any_decode_words():
-        return True
-
-    has_solution = word_map.all_decode_words_have_at_least_one_item()
-
-    if not has_solution:
-        return True
-
-    if perform_single_word_removal:
-        has_solution = word_map.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
-
-        if not has_solution:
-            return True
-
-    letter_maps = word_map.create_letter_map_array_for_all_single_solution_words()
-
-    if letter_maps is None:
-        return True
-
-    word_map.remove_possible_words_that_do_not_match_letter_maps(letter_maps)
-
-    has_solution = word_map.all_decode_words_have_at_least_one_item()
-
-    if not has_solution:
-        return True
-
-    return False
-
 
 class SingleWord:
     def __init__(self, word: str):
@@ -303,6 +272,33 @@ class WordMap:
                 # print("level %i - adding to array_of_dicts" % level)
                 yield copy.copy(curr_dict)
 
+    def has_no_solution(self) -> bool:
+        if not self.has_any_decode_words():
+            return True
+
+        has_solution = self.all_decode_words_have_at_least_one_item()
+
+        if not has_solution:
+            return True
+
+        has_solution = self.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
+
+        if not has_solution:
+            return True
+
+        letter_maps = self.create_letter_map_array_for_all_single_solution_words()
+
+        if letter_maps is None:
+            return True
+
+        self.remove_possible_words_that_do_not_match_letter_maps(letter_maps)
+
+        has_solution = self.all_decode_words_have_at_least_one_item()
+
+        if not has_solution:
+            return True
+
+        return False
 
 class EncryptedWordWithOptions:
     def __init__(self, encrypted_word: SingleWord):
