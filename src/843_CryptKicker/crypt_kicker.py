@@ -310,6 +310,12 @@ class WordMap:
             self.has_no_solution = True
             return
 
+        self.solution_words.sort(key=get_unique_letter_word_length)
+
+
+def get_unique_letter_word_length(word: SingleWord):
+    return word.unique_letter_word_length
+
 
 class EncryptedWordWithOptions:
     def __init__(self, encrypted_word: SingleWord):
