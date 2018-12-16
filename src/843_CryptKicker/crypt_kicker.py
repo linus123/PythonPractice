@@ -1,4 +1,5 @@
 import copy
+import sys
 
 
 def crypt_decrypt(encrypted_line, solution_words):
@@ -338,3 +339,33 @@ class WordPair:
                 letter_dic[encrypted_letter] = solution_letter
                 solution_letter_count_dic[solution_letter] = 1
         return True
+
+
+def run_from_standard_in():
+
+    line_counter = 0
+
+    dictionary_word_count = 0
+    dictionary_words = []
+
+    for line in sys.stdin:
+
+        clean_line = line.strip()
+
+        if line_counter == 0:
+            dictionary_word_count = int(clean_line)
+        elif line_counter <= dictionary_word_count:
+            dictionary_words.append(clean_line)
+        else:
+            result = crypt_decrypt(clean_line, dictionary_words)
+            print(result)
+
+        line_counter += 1
+
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
