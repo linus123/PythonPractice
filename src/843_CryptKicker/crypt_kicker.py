@@ -369,6 +369,7 @@ class EncryptedWordWithOptions:
 
                 self.solution_words = new_solution_words
 
+
 def run_from_standard_in():
 
     line_counter = 0
