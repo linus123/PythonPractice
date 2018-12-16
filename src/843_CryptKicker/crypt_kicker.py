@@ -110,6 +110,15 @@ class SingleWord:
             self.unique_letter_word,
             self.unique_letter_word_length)
 
+    def is_word_possible(self, word):
+        if self.word_length != word.word_length:
+            return False
+
+        if self.unique_letter_word_length != word.unique_letter_word_length:
+            return False
+
+        return True
+
 
 def clean_array(word_dictionary):
     return [SingleWord(word.strip()) for word in word_dictionary]
@@ -176,9 +185,7 @@ class WordMap:
 
         for solution_word in self.solution_words:
 
-            possible = is_word_possible(
-                encrypted_word_obj.encrypted_word,
-                solution_word)
+            possible = encrypted_word_obj.is_encrypted_word_possible_with(solution_word)
 
             if possible:
                 encrypted_word_obj.add_solution_word(solution_word)
@@ -305,6 +312,9 @@ class EncryptedWordWithOptions:
     def __repr__(self):
         return str(self.encrypted_word) + "[" + ",".join(self.solution_words) + "]"
 
+    def is_encrypted_word_possible_with(self, word: SingleWord):
+        return self.encrypted_word.is_word_possible(word)
+
     def copy_with_single_options(self):
         result = []
 
@@ -351,17 +361,6 @@ class EncryptedWordWithOptions:
                         new_solution_words.append(solution_word)
 
                 self.solution_words = new_solution_words
-
-
-def is_word_possible(word1: SingleWord, word2: SingleWord):
-    if word1.word_length != word2.word_length:
-        return False
-
-    if word1.unique_letter_word_length != word2.unique_letter_word_length:
-        return False
-
-    return True
-
 
 def run_from_standard_in():
 
