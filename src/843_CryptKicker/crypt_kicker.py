@@ -1,5 +1,6 @@
 import copy
 import sys
+from typing import List
 
 
 def crypt_decrypt(encrypted_line, solution_words):
@@ -78,11 +79,43 @@ def has_no_solution(word_map, perform_single_word_removal) -> bool:
     return False
 
 
+class SingleWord:
+    def __init__(self, word: str):
+        self.word = word
+        self.word_length = len(word)
+
+        self.unique_letter_word = self.create_unique_letter_word(word)
+        self.unique_letter_word_length = len(self.create_unique_letter_word(word))
+
+    @staticmethod
+    def create_unique_letter_word(word) -> str:
+
+        letter_dict = {}
+
+        for letter in word:
+            if letter not in letter_dict:
+                letter_dict[letter] = 1
+
+        return "".join(letter_dict.keys())
+
+    def __repr__(self) -> str:
+        return "word: '%s' unique_letter_word: '%s' unique_letter_word_length: '%i'" % (
+            self.word,
+            self.unique_letter_word,
+            self.unique_letter_word_length)
+
+    def __str__(self) -> str:
+        return "word: '%s' unique_letter_word: '%s' unique_letter_word_length: '%i'" % (
+            self.word,
+            self.unique_letter_word,
+            self.unique_letter_word_length)
+
+
 def clean_array(word_dictionary):
-    return [word.strip() for word in word_dictionary]
+    return [SingleWord(word.strip()) for word in word_dictionary]
 
 
-def convert_to_array(encrypted_line: str) -> list:
+def convert_to_array(encrypted_line: str) -> List[SingleWord]:
     encrypted_line = encrypted_line.strip()
 
     if encrypted_line == "":
@@ -96,7 +129,7 @@ def convert_to_array(encrypted_line: str) -> list:
         word = word.strip()
 
         if word != "":
-            encrypted_words.append(word)
+            encrypted_words.append(SingleWord(word))
 
     return encrypted_words
 
@@ -114,7 +147,7 @@ def get_no_solution(encrypted_line):
 
 
 class WordMap:
-    def __init__(self, solution_words, decode_words=None):
+    def __init__(self, solution_words: List[SingleWord], decode_words=None):
         self.solution_words = solution_words
 
         if decode_words is None:
@@ -135,8 +168,8 @@ class WordMap:
 
         return ''.join(char_array)
 
-    def process_encrypted_word(self, encrypted_word: str):
-        if encrypted_word in self.decode_words:
+    def process_encrypted_word(self, encrypted_word: SingleWord):
+        if encrypted_word.word in self.decode_words:
             return
 
         encrypted_word_obj = EncryptedWordWithOptions(encrypted_word)
@@ -144,13 +177,13 @@ class WordMap:
         for solution_word in self.solution_words:
 
             possible = is_word_possible(
-                SingleWord(encrypted_word_obj.encrypted_word),
-                SingleWord(solution_word))
+                encrypted_word_obj.encrypted_word,
+                solution_word)
 
             if possible:
                 encrypted_word_obj.add_solution_word(solution_word)
 
-        self.decode_words[encrypted_word] = encrypted_word_obj
+        self.decode_words[encrypted_word.word] = encrypted_word_obj
 
     def has_single_solution(self):
         for key, encrypted_word in self.decode_words.items():
@@ -223,12 +256,12 @@ class WordMap:
     def has_any_decode_words(self) -> bool:
         return len(self.decode_words) > 0
 
-    def create_encrypted_letter_map(self, encrypted_word: str, solution_word: str) -> dict:
+    def create_encrypted_letter_map(self, encrypted_word: SingleWord, solution_word: SingleWord) -> dict:
         encrypted_letter_dictionary = {}
 
-        for encrypted_letter_index in range(len(encrypted_word)):
-            encrypted_letter = encrypted_word[encrypted_letter_index]
-            encrypted_letter_dictionary[encrypted_letter] = solution_word[encrypted_letter_index]
+        for encrypted_letter_index in range(len(encrypted_word.unique_letter_word)):
+            encrypted_letter = encrypted_word.unique_letter_word[encrypted_letter_index]
+            encrypted_letter_dictionary[encrypted_letter] = solution_word.unique_letter_word[encrypted_letter_index]
 
         return encrypted_letter_dictionary
 
@@ -265,12 +298,12 @@ class WordMap:
 
 
 class EncryptedWordWithOptions:
-    def __init__(self, encrypted_word: str):
+    def __init__(self, encrypted_word: SingleWord):
         self.encrypted_word = encrypted_word
         self.solution_words = []
 
     def __repr__(self):
-        return self.encrypted_word + "[" + ",".join(self.solution_words) + "]"
+        return str(self.encrypted_word) + "[" + ",".join(self.solution_words) + "]"
 
     def copy_with_single_options(self):
         result = []
@@ -282,7 +315,7 @@ class EncryptedWordWithOptions:
 
         return result
 
-    def add_solution_word(self, word):
+    def add_solution_word(self, word: SingleWord):
         self.solution_words.append(word)
 
     def has_any_solution_words(self) -> bool:
@@ -294,7 +327,7 @@ class EncryptedWordWithOptions:
     def get_solution_words(self):
         return self.solution_words
 
-    def remove_solution_word(self, item_to_remove) -> bool:
+    def remove_solution_word(self, item_to_remove: SingleWord) -> bool:
         for index in range(len(self.solution_words)):
             if self.solution_words[index] == item_to_remove:
                 del self.solution_words[index]
@@ -302,48 +335,22 @@ class EncryptedWordWithOptions:
 
         return False
 
-    def get_first_solution_word(self) -> str:
+    def get_first_solution_word(self) -> SingleWord:
         return self.solution_words[0]
 
     def remove_word_that_do_not_match_letter(self, encrypted_letter, solution_letter):
 
-        for encrypted_letter_index in range(len(self.encrypted_word)):
-            current_encrypted_letter = self.encrypted_word[encrypted_letter_index]
+        for encrypted_letter_index in range(len(self.encrypted_word.unique_letter_word)):
+            current_encrypted_letter = self.encrypted_word.unique_letter_word[encrypted_letter_index]
 
             new_solution_words = []
 
             if current_encrypted_letter == encrypted_letter:
                 for solution_word in self.solution_words:
-                    if solution_word[encrypted_letter_index] == solution_letter:
+                    if solution_word.unique_letter_word[encrypted_letter_index] == solution_letter:
                         new_solution_words.append(solution_word)
 
                 self.solution_words = new_solution_words
-
-
-class SingleWord:
-    def __init__(self, word: str):
-        self.word = word
-        self.word_length = len(word)
-
-        self.unique_letter_word = self.create_unique_letter_word(word)
-        self.unique_letter_word_length = len(self.create_unique_letter_word(word))
-
-    @staticmethod
-    def create_unique_letter_word(word) -> str:
-
-        letter_dict = {}
-
-        for letter in word:
-            if letter not in letter_dict:
-                letter_dict[letter] = 1
-
-        return "".join(letter_dict.keys())
-
-    def __repr__(self) -> str:
-        return "word: '%s' unique_letter_word: '%s' unique_letter_word_length: '%i'" % (
-            self.word,
-            self.unique_letter_word,
-            self.unique_letter_word_length)
 
 
 def is_word_possible(word1: SingleWord, word2: SingleWord):
