@@ -353,23 +353,6 @@ def is_word_possible(word1: SingleWord, word2: SingleWord):
     if word1.unique_letter_word_length != word2.unique_letter_word_length:
         return False
 
-    letter_dic1 = {}
-    letter_dic2 = {}
-
-    for i in range(len(word1.unique_letter_word)):
-
-        word1_letter = word1.unique_letter_word[i]
-        word2_letter = word2.unique_letter_word[i]
-
-        if word1_letter in letter_dic1:
-            if word2_letter != letter_dic1[word1_letter]:
-                return False
-        elif word2_letter in letter_dic2:
-            return False
-        else:
-            letter_dic1[word1_letter] = word2_letter
-            letter_dic2[word2_letter] = 1
-
     return True
 
 
