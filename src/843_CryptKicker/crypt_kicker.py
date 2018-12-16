@@ -143,9 +143,11 @@ class WordMap:
 
         for solution_word in self.solution_words:
 
-            word_pair = WordPair(encrypted_word_obj.encrypted_word, solution_word)
+            possible = is_word_possible(
+                SingleWord(encrypted_word_obj.encrypted_word),
+                SingleWord(solution_word))
 
-            if word_pair.is_word_possible():
+            if possible:
                 encrypted_word_obj.add_solution_word(solution_word)
 
         self.decode_words[encrypted_word] = encrypted_word_obj
@@ -292,14 +294,6 @@ class EncryptedWordWithOptions:
     def get_solution_words(self):
         return self.solution_words
 
-    # def remove_solution_word(self, item_to_remove) -> bool:
-    #     try:
-    #         self.solution_words.remove(item_to_remove)
-    #     except ValueError:
-    #         return False
-    #
-    #     return True
-
     def remove_solution_word(self, item_to_remove) -> bool:
         for index in range(len(self.solution_words)):
             if self.solution_words[index] == item_to_remove:
@@ -326,48 +320,16 @@ class EncryptedWordWithOptions:
                 self.solution_words = new_solution_words
 
 
-class WordPair:
-    def __init__(self, encrypted_word: str, solution_word: str):
-        self.solution_word = solution_word
-        self.encrypted_word = encrypted_word
-
-    def is_word_possible(self) -> bool:
-        if not self.has_same_length():
-            return False
-
-        return self.is_letter_possible()
-
-    def has_same_length(self) -> bool:
-        return len(self.encrypted_word) == len(self.solution_word)
-
-    def is_letter_possible(self) -> bool:
-        letter_dic = {}
-        solution_letter_count_dic = {}
-
-        for i in range(len(self.encrypted_word)):
-            solution_letter = self.solution_word[i]
-            encrypted_letter = self.encrypted_word[i]
-
-            if encrypted_letter in letter_dic:
-                if solution_letter != letter_dic[encrypted_letter]:
-                    return False
-            elif solution_letter in solution_letter_count_dic:
-                return False
-            else:
-                letter_dic[encrypted_letter] = solution_letter
-                solution_letter_count_dic[solution_letter] = 1
-        return True
-
-
 class SingleWord:
     def __init__(self, word: str):
         self.word = word
+        self.word_length = len(word)
 
         self.unique_letter_word = self.create_unique_letter_word(word)
         self.unique_letter_word_length = len(self.create_unique_letter_word(word))
 
     @staticmethod
-    def create_unique_letter_word(word):
+    def create_unique_letter_word(word) -> str:
 
         letter_dict = {}
 
@@ -382,6 +344,33 @@ class SingleWord:
             self.word,
             self.unique_letter_word,
             self.unique_letter_word_length)
+
+
+def is_word_possible(word1: SingleWord, word2: SingleWord):
+    if word1.word_length != word2.word_length:
+        return False
+
+    if word1.unique_letter_word_length != word2.unique_letter_word_length:
+        return False
+
+    letter_dic1 = {}
+    letter_dic2 = {}
+
+    for i in range(len(word1.unique_letter_word)):
+
+        word1_letter = word1.unique_letter_word[i]
+        word2_letter = word2.unique_letter_word[i]
+
+        if word1_letter in letter_dic1:
+            if word2_letter != letter_dic1[word1_letter]:
+                return False
+        elif word2_letter in letter_dic2:
+            return False
+        else:
+            letter_dic1[word1_letter] = word2_letter
+            letter_dic2[word2_letter] = 1
+
+    return True
 
 
 def run_from_standard_in():

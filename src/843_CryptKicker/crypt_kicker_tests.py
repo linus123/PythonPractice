@@ -215,7 +215,7 @@ class CryptKickerTests(unittest.TestCase):
         self.assertEqual("**    **", result)
 
     def test_sample_input_should_pass(self):
-        """Should return expected solution from the directions samle"""
+        """Should return expected solution from the directions sample"""
         dictionary = ["and", "dick", "jane", "puff", "spot", "yertle"]
 
         result = crypt_decrypt("bjvg xsb hxsn xsb qymm xsb rqat xsb pnetfn", dictionary)
