@@ -504,7 +504,7 @@ class CryptKickerTests(unittest.TestCase):
         target_enc_word = array_of_dicts[1][a_sw]
         self.assertEqual("a", target_enc_word.get_encrypted_word())
         self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("i", target_enc_word.get_solution_words()[0].word)
+        self.assertEqual("i", target_enc_word.get_solution_word_at_index(0))
 
         target_enc_word = array_of_dicts[1][foobar_sw]
         self.assertEqual("foobar", target_enc_word.get_encrypted_word())
