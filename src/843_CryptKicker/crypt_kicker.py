@@ -353,6 +353,9 @@ class EncryptedWordWithOptions:
     def get_solution_words(self):
         return self.solution_words
 
+    def get_solution_word_at_index(self, index: int):
+        return self.solution_words[index].word
+
     def remove_solution_word(self, item_to_remove: SingleWord) -> bool:
         for index in range(len(self.solution_words)):
             if self.solution_words[index] == item_to_remove:

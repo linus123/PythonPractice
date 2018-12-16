@@ -448,7 +448,7 @@ class CryptKickerTests(unittest.TestCase):
         target_enc_word = array_of_dicts[0][foobar_sw]
         self.assertEqual("foobar", target_enc_word.get_encrypted_word())
         self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("bcculs", target_enc_word.get_solution_words()[0].word)
+        self.assertEqual("bcculs", target_enc_word.get_solution_word_at_index(0))
 
     def test_recurse_002(self):
         foobar_sw = SingleWord("foobar")
@@ -466,12 +466,12 @@ class CryptKickerTests(unittest.TestCase):
         target_enc_word = array_of_dicts[0][foobar_sw]
         self.assertEqual("foobar", target_enc_word.get_encrypted_word())
         self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("bcculs", target_enc_word.get_solution_words()[0].word)
+        self.assertEqual("bcculs", target_enc_word.get_solution_word_at_index(0))
 
         target_enc_word = array_of_dicts[1][foobar_sw]
         self.assertEqual("foobar", target_enc_word.get_encrypted_word())
         self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("qwwert", target_enc_word.get_solution_words()[0].word)
+        self.assertEqual("qwwert", target_enc_word.get_solution_word_at_index(0))
 
     def test_recurse_003(self):
         a_sw = SingleWord("a")
@@ -494,12 +494,12 @@ class CryptKickerTests(unittest.TestCase):
         target_enc_word = array_of_dicts[0][a_sw]
         self.assertEqual("a", target_enc_word.get_encrypted_word())
         self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("i", target_enc_word.get_solution_words()[0].word)
+        self.assertEqual("i", target_enc_word.get_solution_word_at_index(0))
 
         target_enc_word = array_of_dicts[0][foobar_sw]
         self.assertEqual("foobar", target_enc_word.get_encrypted_word())
         self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("bcculs", target_enc_word.get_solution_words()[0].word)
+        self.assertEqual("bcculs", target_enc_word.get_solution_word_at_index(0))
 
         target_enc_word = array_of_dicts[1][a_sw]
         self.assertEqual("a", target_enc_word.get_encrypted_word())
@@ -509,7 +509,7 @@ class CryptKickerTests(unittest.TestCase):
         target_enc_word = array_of_dicts[1][foobar_sw]
         self.assertEqual("foobar", target_enc_word.get_encrypted_word())
         self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("qwwert", target_enc_word.get_solution_words()[0].word)
+        self.assertEqual("qwwert", target_enc_word.get_solution_word_at_index(0))
 
     def test_SingleWord_test001(self):
         sw = SingleWord("a")
