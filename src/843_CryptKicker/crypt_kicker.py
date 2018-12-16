@@ -322,6 +322,9 @@ class EncryptedWordWithOptions:
         self.encrypted_word = encrypted_word
         self.solution_words = []
 
+    def get_encrypted_word(self):
+        return self.encrypted_word.word
+
     def __repr__(self):
         return str(self.encrypted_word) + "[" + ",".join(self.solution_words) + "]"
 
