@@ -3,6 +3,9 @@ import sys
 
 
 def crypt_decrypt(encrypted_line, solution_words):
+
+    print("Start")
+
     encrypted_words = convert_to_array(encrypted_line)
 
     if len(encrypted_words) == 0:
@@ -15,7 +18,7 @@ def crypt_decrypt(encrypted_line, solution_words):
     for encrypted_word in encrypted_words:
         word_map.process_encrypted_word(encrypted_word)
 
-    if has_no_solution(word_map):
+    if has_no_solution(word_map, True):
         return get_no_solution(encrypted_line)
     # else MIGHT have a solution
 
@@ -25,7 +28,10 @@ def crypt_decrypt(encrypted_line, solution_words):
         has_guess_solution = False
 
         for guess_word_map in word_map.get_guesses():
-            if has_no_solution(guess_word_map):
+
+            print("Process Guess")
+
+            if has_no_solution(guess_word_map, False):
                 continue
 
             has_single_solution = guess_word_map.has_single_solution()
@@ -41,7 +47,7 @@ def crypt_decrypt(encrypted_line, solution_words):
     return word_map.get_decrypted_line(encrypted_line)
 
 
-def has_no_solution(word_map) -> bool:
+def has_no_solution(word_map, perform_single_word_removal) -> bool:
     if not word_map.has_any_decode_words():
         return True
 
@@ -50,10 +56,11 @@ def has_no_solution(word_map) -> bool:
     if not has_solution:
         return True
 
-    has_solution = word_map.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
+    if perform_single_word_removal:
+        has_solution = word_map.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
 
-    if not has_solution:
-        return True
+        if not has_solution:
+            return True
 
     letter_maps = word_map.create_letter_map_array_for_all_single_solution_words()
 
@@ -157,6 +164,9 @@ class WordMap:
     def create_letter_map_array_for_all_single_solution_words(self):
         letter_maps_dic_enc = {}
         letter_maps_dic_sol = {}
+
+        # print("calling create_letter_map_array_for_all_single_solution_words")
+
         for key, current_encrypted_word in self.decode_words.items():
             if current_encrypted_word.get_solution_word_count() == 1:
                 first_solution_word = current_encrypted_word.get_first_solution_word()
@@ -282,13 +292,21 @@ class EncryptedWordWithOptions:
     def get_solution_words(self):
         return self.solution_words
 
-    def remove_solution_word(self, item_to_remove) -> bool:
-        try:
-            self.solution_words.remove(item_to_remove)
-        except ValueError:
-            return False
+    # def remove_solution_word(self, item_to_remove) -> bool:
+    #     try:
+    #         self.solution_words.remove(item_to_remove)
+    #     except ValueError:
+    #         return False
+    #
+    #     return True
 
-        return True
+    def remove_solution_word(self, item_to_remove) -> bool:
+        for index in range(len(self.solution_words)):
+            if self.solution_words[index] == item_to_remove:
+                del self.solution_words[index]
+                return True
+
+        return False
 
     def get_first_solution_word(self) -> str:
         return self.solution_words[0]
