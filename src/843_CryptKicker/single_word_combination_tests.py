@@ -26,10 +26,12 @@ class SingleWordComboTests(unittest.TestCase):
 
         self.assertEqual(1, len(array_of_dicts))
 
-        target_enc_word = array_of_dicts[0][foobar_sw]
-        self.assertEqual("foobar", target_enc_word.get_encrypted_word())
-        self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("bcculs", target_enc_word.get_solution_word_at_index(0))
+        self.assert_word_with_options_matches(
+            array_of_dicts[0][foobar_sw],
+            foobar_sw,
+            ["bcculs"]
+        )
+
 
     def test_recurse_003(self):
         foobar_sw = SingleWord("foobar")
@@ -44,15 +46,17 @@ class SingleWordComboTests(unittest.TestCase):
 
         self.assertEqual(2, len(array_of_dicts))
 
-        target_enc_word = array_of_dicts[0][foobar_sw]
-        self.assertEqual("foobar", target_enc_word.get_encrypted_word())
-        self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("bcculs", target_enc_word.get_solution_word_at_index(0))
+        self.assert_word_with_options_matches(
+            array_of_dicts[0][foobar_sw],
+            foobar_sw,
+            ["bcculs"]
+        )
 
-        target_enc_word = array_of_dicts[1][foobar_sw]
-        self.assertEqual("foobar", target_enc_word.get_encrypted_word())
-        self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("qwwert", target_enc_word.get_solution_word_at_index(0))
+        self.assert_word_with_options_matches(
+            array_of_dicts[1][foobar_sw],
+            foobar_sw,
+            ["qwwert"]
+        )
 
     def test_recurse_004(self):
         a_sw = SingleWord("a")
@@ -72,22 +76,34 @@ class SingleWordComboTests(unittest.TestCase):
 
         self.assertEqual(2, len(array_of_dicts))
 
-        target_enc_word = array_of_dicts[0][a_sw]
-        self.assertEqual("a", target_enc_word.get_encrypted_word())
-        self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("i", target_enc_word.get_solution_word_at_index(0))
+        self.assert_word_with_options_matches(
+            array_of_dicts[0][a_sw],
+            a_sw,
+            ["i"]
+        )
 
-        target_enc_word = array_of_dicts[0][foobar_sw]
-        self.assertEqual("foobar", target_enc_word.get_encrypted_word())
-        self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("bcculs", target_enc_word.get_solution_word_at_index(0))
+        self.assert_word_with_options_matches(
+            array_of_dicts[0][foobar_sw],
+            foobar_sw,
+            ["bcculs"]
+        )
 
-        target_enc_word = array_of_dicts[1][a_sw]
-        self.assertEqual("a", target_enc_word.get_encrypted_word())
-        self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("i", target_enc_word.get_solution_word_at_index(0))
+        self.assert_word_with_options_matches(
+            array_of_dicts[1][a_sw],
+            a_sw,
+            ["i"]
+        )
 
-        target_enc_word = array_of_dicts[1][foobar_sw]
-        self.assertEqual("foobar", target_enc_word.get_encrypted_word())
-        self.assertEqual(1, target_enc_word.get_solution_word_count())
-        self.assertEqual("qwwert", target_enc_word.get_solution_word_at_index(0))
+        self.assert_word_with_options_matches(
+            array_of_dicts[1][foobar_sw],
+            foobar_sw,
+            ["qwwert"]
+        )
+
+    def assert_word_with_options_matches(self, target: EncryptedWordWithOptions, single_word: SingleWord, solution_words: list):
+        self.assertEqual(single_word.word, target.get_encrypted_word())
+
+        self.assertEqual(len(solution_words), target.get_solution_word_count())
+
+        for index in range(len(solution_words)):
+            self.assertEqual(solution_words[index], target.get_solution_word_at_index(index))
