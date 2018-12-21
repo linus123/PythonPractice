@@ -224,6 +224,15 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("xxxx yyy zzzz www yyyy aaa bbbb ccc dddddd", dictionary)
         self.assertEqual("**** *** **** *** **** *** **** *** ******", result)
 
+    def test_udebug_5(self):
+        """Should return expected solution from the directions sample"""
+        dictionary = ["ball", "is", "a", "uses",
+                      "not", "one", "two", "too", "i", "like", "also", "are",
+                      "no", "btw", "by", "the", "way"]
+
+        result = crypt_decrypt("a ybhd baic oks", dictionary)
+        self.assertEqual("i also like btw", result)
+
     def test_udebug_1(self):
         """Should return expected solution from the directions sample"""
         dictionary = ["baseball", "football", "basketball", "tennis", "ball", "is", "a", "sport", "which", "uses",
@@ -235,6 +244,9 @@ class CryptKickerTests(unittest.TestCase):
 
         result = crypt_decrypt("a ybhd baic hdttcu oks", dictionary)
         self.assertEqual("i also like soccer btw", result)
+
+        result = crypt_decrypt("a ybhd baic hdttcu", dictionary)
+        self.assertEqual("i also like soccer", result)
 
         result = crypt_decrypt("lrsglrww as r sexvh", dictionary)
         self.assertEqual("baseball is a sport", result)

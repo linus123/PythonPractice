@@ -31,7 +31,6 @@ class SingleWordComboTests(unittest.TestCase):
         enc_word.add_solution_word(SingleWord("bcculs"))
         enc_word.add_solution_word(SingleWord("qwwert"))
         decode_words_array = [enc_word]
-        curr_dict = {}
 
         array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array))
 

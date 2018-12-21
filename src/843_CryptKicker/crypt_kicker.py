@@ -54,6 +54,8 @@ def recurse_guesses(current_guess):
             print("Found Single Solution")
             return guess_word_map
 
+        return recurse_guesses(guess_word_map)
+
     return None
 
 
@@ -143,6 +145,13 @@ class WordMap:
 
         self.has_no_solution = False
 
+    def print_state(self):
+        print("***")
+        for key, item in self.decode_words.items():
+            print("encrypted word '%s'" % key)
+            for sol_word in item.get_solution_words():
+                print("\t%s" % sol_word.word)
+
     def get_decrypted_line(self, encrypted_line: str):
 
         letter_map = self.create_letter_map_array_for_all_single_solution_words()
@@ -179,10 +188,15 @@ class WordMap:
         return True
 
     def remove_possible_words_that_do_not_match_letter_maps(self, letter_maps: dict):
+        items_were_removed = False
+
         for key, encrypted_word in self.decode_words.items():
-            if encrypted_word.get_solution_word_count() > 1:
-                for en_letter, sol_letter in letter_maps.items():
-                    encrypted_word.remove_word_that_do_not_match_letter(en_letter, sol_letter)
+            for en_letter, sol_letter in letter_maps.items():
+                removed = encrypted_word.remove_word_that_do_not_match_letter(en_letter, sol_letter)
+                if removed:
+                    items_were_removed = True
+
+        return items_were_removed
 
     def create_letter_map_array_for_all_single_solution_words(self):
         letter_maps_dic_enc = {}
@@ -218,27 +232,34 @@ class WordMap:
 
         return True
 
-    def remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option(self) -> bool:
+    def remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option(self) -> (bool, bool):
+        word_was_removed = False
+
         for key, decode_word_array in self.decode_words.items():
             if decode_word_array.get_solution_word_count() == 1:
 
-                has_solution = self.remove_word_from_other_decode_words(
+                has_solution, removed = self.remove_word_from_other_decode_words(
                     decode_word_array.get_first_solution_word(),
                     key)
 
-                if not has_solution:
-                    return False
+                if removed:
+                    word_was_removed = True
 
-        return True
+                if not has_solution:
+                    return False, False
+
+        return True, word_was_removed
 
     def remove_word_from_other_decode_words(self, word_to_remove: str, key_to_skip: str):
+        word_was_removed = False
+
         for key, encrypted_word in self.decode_words.items():
             if key != key_to_skip:
-                encrypted_word.remove_solution_word(word_to_remove)
+                word_was_removed = encrypted_word.remove_solution_word(word_to_remove)
 
                 if not encrypted_word.has_any_solution_words():
-                    return False
-        return True
+                    return False, False
+        return True, word_was_removed
 
     def has_any_decode_words(self) -> bool:
         return len(self.decode_words) > 0
@@ -287,35 +308,47 @@ class WordMap:
                 yield foo_dict
 
     def prune_options(self):
-        if not self.has_any_decode_words():
-            self.has_no_solution = True
-            return
+        words_were_removed_by_single = True
+        words_were_removed_by_map = True
 
-        has_solution = self.all_decode_words_have_at_least_one_item()
+        while words_were_removed_by_single or words_were_removed_by_map:
 
-        if not has_solution:
-            self.has_no_solution = True
-            return
+            if not self.has_any_decode_words():
+                self.has_no_solution = True
+                return
 
-        has_solution = self.remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
+            has_solution = self.all_decode_words_have_at_least_one_item()
 
-        if not has_solution:
-            self.has_no_solution = True
-            return
+            if not has_solution:
+                self.has_no_solution = True
+                return
 
-        letter_maps = self.create_letter_map_array_for_all_single_solution_words()
+            has_solution, words_were_removed_by_single = self\
+                .remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
 
-        if letter_maps is None:
-            self.has_no_solution = True
-            return
+            print("remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option 1")
+            self.print_state()
 
-        self.remove_possible_words_that_do_not_match_letter_maps(letter_maps)
+            if not has_solution:
+                self.has_no_solution = True
+                return
 
-        has_solution = self.all_decode_words_have_at_least_one_item()
+            letter_maps = self.create_letter_map_array_for_all_single_solution_words()
 
-        if not has_solution:
-            self.has_no_solution = True
-            return
+            if letter_maps is None:
+                self.has_no_solution = True
+                return
+
+            words_were_removed_by_map = self.remove_possible_words_that_do_not_match_letter_maps(letter_maps)
+
+            has_solution = self.all_decode_words_have_at_least_one_item()
+
+            if not has_solution:
+                self.has_no_solution = True
+                return
+
+            print("remove_possible_words_that_do_not_match_letter_maps")
+            self.print_state()
 
         self.solution_words.sort(key=get_unique_letter_word_length)
 
@@ -384,17 +417,23 @@ class EncryptedWordWithOptions:
 
     def remove_word_that_do_not_match_letter(self, encrypted_letter, solution_letter):
 
+        items_were_removed = False
+
         for encrypted_letter_index in range(len(self.encrypted_word.unique_letter_word)):
             current_encrypted_letter = self.encrypted_word.unique_letter_word[encrypted_letter_index]
 
-            new_solution_words = []
-
             if current_encrypted_letter == encrypted_letter:
+
+                new_solution_words = []
+
                 for solution_word in self.solution_words:
                     if solution_word.unique_letter_word[encrypted_letter_index] == solution_letter:
                         new_solution_words.append(solution_word)
 
+                items_were_removed = len(new_solution_words) != len(self.solution_words)
                 self.solution_words = new_solution_words
+
+        return items_were_removed
 
 
 def run_from_standard_in():
