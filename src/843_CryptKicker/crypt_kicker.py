@@ -267,9 +267,21 @@ class WordMap:
         if len(decode_words_array) == 0:
             return
 
-        copy_with_sig_options = decode_words_array[0].copy_with_single_options()
+        for outer_index in range(len(decode_words_array)):
+            single_options = decode_words_array[outer_index].copy_with_single_options()
 
-        hold = None
+            for single_option in single_options:
+                foo_dict = copy.copy(curr_dict)
+                for inner_index in range(len(decode_words_array)):
+                    current_enc_word = decode_words_array[inner_index]
+                    if inner_index == outer_index:
+                        foo_dict[current_enc_word.encrypted_word] = single_option
+                    else:
+                        current_enc_word = decode_words_array[inner_index]
+                        foo_dict[current_enc_word.encrypted_word] = current_enc_word.create_copy()
+                yield foo_dict
+
+        copy_with_sig_options = decode_words_array[0].copy_with_single_options()
 
         for sig_option in copy_with_sig_options:
             curr_dict[sig_option.encrypted_word] = sig_option
@@ -283,25 +295,8 @@ class WordMap:
 
                 sub_decode_words_array = decode_words_array[1:]
 
-                # for f in WordMap.create_all_single_word_combinations(sub_decode_words_array, curr_dict, level + 1):
-                #     yield f
-
-                hold = WordMap.create_all_single_word_combinations(sub_decode_words_array, curr_dict, level + 1)
-
-            yield copy.copy(curr_dict)
-
-            if hold is not None:
-                for f in hold:
+                for f in WordMap.create_all_single_word_combinations(sub_decode_words_array, curr_dict, level + 1):
                     yield f
-
-        # for single_option in copy_with_sig_options:
-        #     curr_dict[single_option.encrypted_word] = single_option
-        #     # print("level %i - single_option %s" % (level, single_option))
-        #     sub_decode_words_array = decode_words_array[1:]
-        #     # print("level %i - sub_decode_words_array length %i" % (level, len(sub_decode_words_array)))
-        #     for f in WordMap.create_all_single_word_combinations(sub_decode_words_array, curr_dict, level + 1):
-        #         yield f
-        #     yield copy.copy(curr_dict)
 
     def prune_options(self):
         if not self.has_any_decode_words():

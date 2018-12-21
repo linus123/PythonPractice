@@ -94,29 +94,37 @@ class SingleWordComboTests(unittest.TestCase):
 
         array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
 
-        self.assertEqual(6, len(array_of_dicts))
+        self.assertEqual(8, len(array_of_dicts))
 
         GuessDictionaryAssertBuilder(array_of_dicts[0], self)\
             .assert_word_with_options_matches(word1_sw, ["i"])\
             .assert_word_with_options_matches(word2_sw, ["bcculs", "qwwert"])
 
         GuessDictionaryAssertBuilder(array_of_dicts[1], self)\
-            .assert_word_with_options_matches(word1_sw, ["i"])\
-            .assert_word_with_options_matches(word2_sw, ["bcculs"])
-
-        GuessDictionaryAssertBuilder(array_of_dicts[2], self)\
-            .assert_word_with_options_matches(word1_sw, ["i"])\
-            .assert_word_with_options_matches(word2_sw, ["qwwert"])
-
-        GuessDictionaryAssertBuilder(array_of_dicts[3], self)\
             .assert_word_with_options_matches(word1_sw, ["j"])\
             .assert_word_with_options_matches(word2_sw, ["bcculs", "qwwert"])
 
+        GuessDictionaryAssertBuilder(array_of_dicts[2], self)\
+            .assert_word_with_options_matches(word1_sw, ["i", "j"])\
+            .assert_word_with_options_matches(word2_sw, ["bcculs"])
+
+        GuessDictionaryAssertBuilder(array_of_dicts[3], self)\
+            .assert_word_with_options_matches(word1_sw, ["i", "j"])\
+            .assert_word_with_options_matches(word2_sw, ["qwwert"])
+
         GuessDictionaryAssertBuilder(array_of_dicts[4], self)\
-            .assert_word_with_options_matches(word1_sw, ["j"])\
+            .assert_word_with_options_matches(word1_sw, ["i"])\
             .assert_word_with_options_matches(word2_sw, ["bcculs"])
 
         GuessDictionaryAssertBuilder(array_of_dicts[5], self)\
+            .assert_word_with_options_matches(word1_sw, ["i"])\
+            .assert_word_with_options_matches(word2_sw, ["qwwert"])
+
+        GuessDictionaryAssertBuilder(array_of_dicts[6], self)\
+            .assert_word_with_options_matches(word1_sw, ["j"])\
+            .assert_word_with_options_matches(word2_sw, ["bcculs"])
+
+        GuessDictionaryAssertBuilder(array_of_dicts[7], self)\
             .assert_word_with_options_matches(word1_sw, ["j"])\
             .assert_word_with_options_matches(word2_sw, ["qwwert"])
 

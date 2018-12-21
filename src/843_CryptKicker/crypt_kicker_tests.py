@@ -230,6 +230,9 @@ class CryptKickerTests(unittest.TestCase):
                       "not", "one", "two", "player", "players", "too", "i", "like", "also", "these", "are", "sports",
                       "soccer", "no", "chess", "btw", "by", "the", "way"]
 
+        result = crypt_decrypt("c pu iuo hcsw owiict", dictionary)
+        self.assertEqual("* ** *** **** ******", result)
+
         result = crypt_decrypt("a ybhd baic hdttcu oks", dictionary)
         self.assertEqual("i also like soccer btw", result)
 
