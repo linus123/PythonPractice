@@ -5,9 +5,6 @@ from typing import List
 
 def crypt_decrypt(encrypted_line, solution_words):
 
-    if len(encrypted_line) > 80:
-        return None
-
     if encrypted_line.strip() == "":
         return None
 
@@ -43,24 +40,25 @@ def crypt_decrypt(encrypted_line, solution_words):
 
 
 def recurse_guesses(current_guess):
-    print("Starting Recursing Guesses")
+    # print("Starting Recursing Guesses")
     for guess_word_map in current_guess.get_guesses():
 
-        print("Process Guess has_no_solution" + str(guess_word_map.has_no_solution))
+        # print("Process Guess has_no_solution" + str(guess_word_map.has_no_solution))
 
         guess_word_map.prune_options()
 
         if guess_word_map.has_no_solution:
-            print("Not a solution")
+            # print("Not a solution")
             continue
 
         has_single_solution = guess_word_map.has_single_solution()
 
         if has_single_solution:
-            print("Found Single Solution")
+            # print("Found Single Solution")
             return guess_word_map
         else:
-            print("did NOT Found Single Solution")
+            # print("did NOT Found Single Solution")
+            pass
 
         return recurse_guesses(guess_word_map)
 
@@ -82,12 +80,14 @@ class SingleWord:
     def create_unique_letter_word(word) -> str:
 
         letter_dict = {}
+        letter_array = []
 
         for letter in word:
             if letter not in letter_dict:
                 letter_dict[letter] = 1
+                letter_array.append(letter)
 
-        return "".join(sorted(letter_dict.keys()))
+        return "".join(letter_array)
 
     def __repr__(self) -> str:
         return "word: '%s' unique_letter_word: '%s' unique_letter_word_length: '%i'" % (
@@ -174,14 +174,14 @@ class WordMap:
         self.has_no_solution = False
 
     def print_state(self):
-        # pass
-        print("***")
-        for key, item in self.decode_words.items():
-           print("encrypted word '%s'" % key)
-           for sol_word in item.get_solution_words():
-               print("\t%s" % sol_word.word)
-
-        print("has_no_solution " + str(self.has_no_solution))
+         pass
+        # print("***")
+        # for key, item in sorted(self.decode_words.items()):
+        #    print("encrypted word '%s'" % key)
+        #    for sol_word in item.get_solution_words():
+        #        print("\t%s" % sol_word.word)
+        #
+        # print("has_no_solution " + str(self.has_no_solution))
 
     def get_decrypted_line(self, encrypted_words):
 
@@ -208,7 +208,7 @@ class WordMap:
         self.decode_words[encrypted_word.word] = encrypted_word_obj
 
     def has_single_solution(self):
-        for key, encrypted_word in self.decode_words.items():
+        for key, encrypted_word in sorted(self.decode_words.items()):
             if encrypted_word.get_solution_word_count() > 1:
                 return False
         return True
@@ -216,7 +216,7 @@ class WordMap:
     def remove_possible_words_that_do_not_match_letter_maps(self, letter_maps: dict):
         items_were_removed = False
 
-        for key, encrypted_word in self.decode_words.items():
+        for key, encrypted_word in sorted(self.decode_words.items()):
             for en_letter, sol_letter in letter_maps.items():
                 removed = encrypted_word.remove_word_that_do_not_match_letter(en_letter, sol_letter)
                 if removed:
@@ -228,9 +228,9 @@ class WordMap:
         letter_maps_dic_enc = {}
         letter_maps_dic_sol = {}
 
-        print("calling create_letter_map_array_for_all_single_solution_words")
+        # print("calling create_letter_map_array_for_all_single_solution_words")
 
-        for key, current_encrypted_word in self.decode_words.items():
+        for key, current_encrypted_word in sorted(self.decode_words.items()):
             if current_encrypted_word.get_solution_word_count() == 1:
                 first_solution_word = current_encrypted_word.get_first_solution_word()
 
@@ -238,30 +238,30 @@ class WordMap:
                     current_encrypted_word.encrypted_word,
                     first_solution_word)
 
-                print("letter_map_for_current_enc_word: %s" % letter_map_for_current_enc_word)
+                # print("letter_map_for_current_enc_word: %s" % letter_map_for_current_enc_word)
 
                 for current_key, current_sol_letter in letter_map_for_current_enc_word.items():
-                    print("eval current_key: %s current_sol_letter: %s" % (current_key, current_sol_letter))
+                    # print("eval current_key: %s current_sol_letter: %s" % (current_key, current_sol_letter))
 
                     if current_key in letter_maps_dic_enc:
                         if letter_maps_dic_enc[current_key] != current_sol_letter:
-                            print("1 - %s is not %s" % (letter_maps_dic_enc[current_key], current_sol_letter))
+                            # print("1 - %s is not %s" % (letter_maps_dic_enc[current_key], current_sol_letter))
                             return None
                     if current_sol_letter in letter_maps_dic_sol:
                         if letter_maps_dic_sol[current_sol_letter] != current_key:
-                            print("2 - %s is not %s" % (letter_maps_dic_sol[current_sol_letter], current_key))
+                            # print("2 - %s is not %s" % (letter_maps_dic_sol[current_sol_letter], current_key))
                             return None
                     else:
                         letter_maps_dic_enc[current_key] = current_sol_letter
                         letter_maps_dic_sol[current_sol_letter] = current_key
 
-                        print("letter_maps_dic_enc: %s" % letter_maps_dic_enc)
-                        print("letter_maps_dic_sol: %s" % letter_maps_dic_sol)
+                        # print("letter_maps_dic_enc: %s" % letter_maps_dic_enc)
+                        # print("letter_maps_dic_sol: %s" % letter_maps_dic_sol)
 
         return letter_maps_dic_enc
 
     def all_decode_words_have_at_least_one_item(self) -> bool:
-        for key, encrypted_word in self.decode_words.items():
+        for key, encrypted_word in sorted(self.decode_words.items()):
             if not encrypted_word.has_any_solution_words():
                 return False
 
@@ -270,7 +270,7 @@ class WordMap:
     def remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option(self) -> (bool, bool):
         word_was_removed = False
 
-        for key, decode_word_array in self.decode_words.items():
+        for key, decode_word_array in sorted(self.decode_words.items()):
             if decode_word_array.get_solution_word_count() == 1:
 
                 has_solution, removed = self.remove_word_from_other_decode_words(
@@ -288,7 +288,7 @@ class WordMap:
     def remove_word_from_other_decode_words(self, word_to_remove: str, key_to_skip: str):
         word_was_removed = False
 
-        for key, encrypted_word in self.decode_words.items():
+        for key, encrypted_word in sorted(self.decode_words.items()):
             if key != key_to_skip:
                 word_was_removed = encrypted_word.remove_solution_word(word_to_remove)
 
@@ -312,7 +312,7 @@ class WordMap:
 
         decode_words_array = []
 
-        for current_key, current_encrypted_word in self.decode_words.items():
+        for current_key, current_encrypted_word in sorted(self.decode_words.items()):
             decode_words_array.append(current_encrypted_word)
 
         array_of_dicts = self.create_all_single_word_combinations(decode_words_array)
@@ -346,52 +346,53 @@ class WordMap:
         words_were_removed_by_single = True
         words_were_removed_by_map = True
 
-        print("Begin Prune")
+        # print("Begin Prune")
         self.print_state()
 
         while words_were_removed_by_single or words_were_removed_by_map:
 
             if not self.has_any_decode_words():
-                print("Cut 1")
+                # print("Cut 1")
                 self.has_no_solution = True
                 return
 
             has_solution = self.all_decode_words_have_at_least_one_item()
 
             if not has_solution:
-                print("Cut 2")
+                # print("Cut 2")
                 self.has_no_solution = True
                 return
 
             has_solution, words_were_removed_by_single = self\
                 .remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
 
-            print("remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option | has_solution: %r words_were_removed_by_single: %r" % (has_solution, words_were_removed_by_single))
+            # print("remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option | has_solution: %r words_were_removed_by_single: %r" % (has_solution, words_were_removed_by_single))
             self.print_state()
 
             if not has_solution:
-                print("Cut 3")
+                # print("Cut 3")
                 self.has_no_solution = True
                 return
 
             letter_maps = self.create_letter_map_array_for_all_single_solution_words()
 
             if letter_maps is None:
-                print("Cut 4")
+                # print("Cut 4")
                 self.has_no_solution = True
                 return
             else:
-                print("letter_map: " + str(letter_maps))
+                # print("letter_map: " + str(letter_maps))
+                pass
 
             words_were_removed_by_map = self.remove_possible_words_that_do_not_match_letter_maps(letter_maps)
 
-            print("remove_possible_words_that_do_not_match_letter_maps | words_were_removed_by_map: %r" % words_were_removed_by_map)
+            # print("remove_possible_words_that_do_not_match_letter_maps | words_were_removed_by_map: %r" % words_were_removed_by_map)
             self.print_state()
 
             has_solution = self.all_decode_words_have_at_least_one_item()
 
             if not has_solution:
-                print("Cut 5")
+                # print("Cut 5")
                 self.has_no_solution = True
                 return
 
@@ -491,6 +492,9 @@ def run_from_standard_in():
     for line in sys.stdin:
 
         clean_line = line.strip()
+
+        if clean_line == "":
+            continue
 
         if line_counter == 0:
             dictionary_word_count = int(clean_line)
