@@ -118,7 +118,7 @@ class GuessDictionaryAssertBuilder:
         self.test_case = test_case
 
     def assert_word_with_options_matches(self, single_word: SingleWord, solution_words: list):
-        target = self.dictionary[single_word]
+        target = self.dictionary[single_word.word]
 
         self.test_case.assertEqual(single_word.word, target.get_encrypted_word())
 
