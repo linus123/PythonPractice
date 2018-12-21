@@ -17,7 +17,7 @@ class CryptKickerTests(unittest.TestCase):
         self.assertEqual("***", result)
 
         result = crypt_decrypt("  aff  ", dictionary)
-        self.assertEqual("  foo  ", result)
+        self.assertEqual("foo", result)
 
     def test_102(self):
         dictionary = ["dog", "cat", "web"]
@@ -36,6 +36,18 @@ class CryptKickerTests(unittest.TestCase):
 
         result = crypt_decrypt("  aas    ", dictionary)
         self.assertEqual("***", result)
+
+    def test_105(self):
+        dictionary = ["foo"]
+
+        result = crypt_decrypt("  ass    ", dictionary)
+        self.assertEqual("foo", result)
+
+    def test_106(self):
+        dictionary = ["foo", "bas"]
+
+        result = crypt_decrypt("  ass  qck    ass ", dictionary)
+        self.assertEqual("foo bas foo", result)
 
     def test_001(self):
         """Should return the empty string given an empty string"""

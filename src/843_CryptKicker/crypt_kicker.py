@@ -38,7 +38,7 @@ def crypt_decrypt(encrypted_line, solution_words):
 
         word_map = solution
 
-    return word_map.get_decrypted_line(encrypted_line)
+    return word_map.get_decrypted_line(encrypted_words)
 
 
 def recurse_guesses(current_guess):
@@ -70,7 +70,7 @@ class SingleWord:
         self.unique_letter_word = self.create_unique_letter_word(word)
         self.unique_letter_word_length = len(self.create_unique_letter_word(word))
 
-    def get_solution_string(self):
+    def get_no_solution_string(self):
         return "*" * len(self.word)
 
     @staticmethod
@@ -153,7 +153,7 @@ def get_no_solution(encrypted_words: list):
     word_array = []
 
     for word in encrypted_words:
-        word_array.append(word.get_solution_string())
+        word_array.append(word.get_no_solution_string())
 
     return ' '.join(word_array)
 
@@ -176,19 +176,14 @@ class WordMap:
         #    for sol_word in item.get_solution_words():
         #        print("\t%s" % sol_word.word)
 
-    def get_decrypted_line(self, encrypted_line: str):
+    def get_decrypted_line(self, encrypted_words):
 
-        letter_map = self.create_letter_map_array_for_all_single_solution_words()
+        word_array = []
 
-        char_array = []
+        for word in encrypted_words:
+            word_array.append(self.decode_words[word.word].get_first_solution_word().word)
 
-        for letter in encrypted_line:
-            if letter == " ":
-                char_array.append(letter)
-            else:
-                char_array.append(letter_map[letter])
-
-        return ''.join(char_array)
+        return ' '.join(word_array)
 
     def process_encrypted_word(self, encrypted_word: SingleWord):
         if encrypted_word.word in self.decode_words:
@@ -325,10 +320,10 @@ class WordMap:
                 for inner_index in range(len(decode_words_array)):
                     current_enc_word = decode_words_array[inner_index]
                     if inner_index == outer_index:
-                        foo_dict[current_enc_word.encrypted_word] = single_option
+                        foo_dict[current_enc_word.encrypted_word.word] = single_option
                     else:
                         current_enc_word = decode_words_array[inner_index]
-                        foo_dict[current_enc_word.encrypted_word] = current_enc_word.create_copy()
+                        foo_dict[current_enc_word.encrypted_word.word] = current_enc_word.create_copy()
                 yield foo_dict
 
     def prune_options(self):
