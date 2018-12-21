@@ -8,9 +8,8 @@ class SingleWordComboTests(unittest.TestCase):
         word_sw = SingleWord("foobar")
 
         decode_words_array = [EncryptedWordWithOptions(word_sw)]
-        curr_dict = {}
 
-        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
+        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array))
 
         self.assertEqual(0, len(array_of_dicts))
 
@@ -20,14 +19,10 @@ class SingleWordComboTests(unittest.TestCase):
 
         enc_word.add_solution_word(SingleWord("bcculs"))
         decode_words_array = [enc_word]
-        curr_dict = {}
 
-        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
+        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array))
 
-        self.assertEqual(1, len(array_of_dicts))
-
-        GuessDictionaryAssertBuilder(array_of_dicts[0], self)\
-            .assert_word_with_options_matches(word_sw, ["bcculs"])
+        self.assertEqual(0, len(array_of_dicts))
 
     def test_recurse_003(self):
         word_sw = SingleWord("foobar")
@@ -38,7 +33,7 @@ class SingleWordComboTests(unittest.TestCase):
         decode_words_array = [enc_word]
         curr_dict = {}
 
-        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
+        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array))
 
         self.assertEqual(2, len(array_of_dicts))
 
@@ -61,9 +56,7 @@ class SingleWordComboTests(unittest.TestCase):
         enc_word02.add_solution_word(SingleWord("qwwert"))
         decode_words_array = [enc_word01, enc_word02]
 
-        curr_dict = {}
-
-        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
+        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array))
 
         self.assertEqual(2, len(array_of_dicts))
 
@@ -90,11 +83,9 @@ class SingleWordComboTests(unittest.TestCase):
 
         decode_words_array = [enc_word01, enc_word02]
 
-        curr_dict = {}
+        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array))
 
-        array_of_dicts = list(WordMap.create_all_single_word_combinations(decode_words_array, curr_dict))
-
-        self.assertEqual(8, len(array_of_dicts))
+        self.assertEqual(4, len(array_of_dicts))
 
         GuessDictionaryAssertBuilder(array_of_dicts[0], self)\
             .assert_word_with_options_matches(word1_sw, ["i"])\
@@ -110,22 +101,6 @@ class SingleWordComboTests(unittest.TestCase):
 
         GuessDictionaryAssertBuilder(array_of_dicts[3], self)\
             .assert_word_with_options_matches(word1_sw, ["i", "j"])\
-            .assert_word_with_options_matches(word2_sw, ["qwwert"])
-
-        GuessDictionaryAssertBuilder(array_of_dicts[4], self)\
-            .assert_word_with_options_matches(word1_sw, ["i"])\
-            .assert_word_with_options_matches(word2_sw, ["bcculs"])
-
-        GuessDictionaryAssertBuilder(array_of_dicts[5], self)\
-            .assert_word_with_options_matches(word1_sw, ["i"])\
-            .assert_word_with_options_matches(word2_sw, ["qwwert"])
-
-        GuessDictionaryAssertBuilder(array_of_dicts[6], self)\
-            .assert_word_with_options_matches(word1_sw, ["j"])\
-            .assert_word_with_options_matches(word2_sw, ["bcculs"])
-
-        GuessDictionaryAssertBuilder(array_of_dicts[7], self)\
-            .assert_word_with_options_matches(word1_sw, ["j"])\
             .assert_word_with_options_matches(word2_sw, ["qwwert"])
 
     def assert_word_with_options_matches(self, target: EncryptedWordWithOptions, single_word: SingleWord, solution_words: list):

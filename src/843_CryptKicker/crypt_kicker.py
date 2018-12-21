@@ -263,15 +263,18 @@ class WordMap:
             yield WordMap(self.solution_words, blow)
 
     @staticmethod
-    def create_all_single_word_combinations(decode_words_array, curr_dict, level=0):
+    def create_all_single_word_combinations(decode_words_array):
         if len(decode_words_array) == 0:
             return
 
         for outer_index in range(len(decode_words_array)):
+            if decode_words_array[outer_index].get_number_of_solution_words() <= 1:
+                continue
+
             single_options = decode_words_array[outer_index].copy_with_single_options()
 
             for single_option in single_options:
-                foo_dict = copy.copy(curr_dict)
+                foo_dict = {}
                 for inner_index in range(len(decode_words_array)):
                     current_enc_word = decode_words_array[inner_index]
                     if inner_index == outer_index:
@@ -280,23 +283,6 @@ class WordMap:
                         current_enc_word = decode_words_array[inner_index]
                         foo_dict[current_enc_word.encrypted_word] = current_enc_word.create_copy()
                 yield foo_dict
-
-        copy_with_sig_options = decode_words_array[0].copy_with_single_options()
-
-        for sig_option in copy_with_sig_options:
-            curr_dict[sig_option.encrypted_word] = sig_option
-
-            for index in range(len(decode_words_array)):
-                if index == 0:
-                    continue
-
-                ew_copy = decode_words_array[index].create_copy()
-                curr_dict[ew_copy.encrypted_word] = ew_copy
-
-                sub_decode_words_array = decode_words_array[1:]
-
-                for f in WordMap.create_all_single_word_combinations(sub_decode_words_array, curr_dict, level + 1):
-                    yield f
 
     def prune_options(self):
         if not self.has_any_decode_words():
@@ -354,6 +340,9 @@ class EncryptedWordWithOptions:
 
     def is_encrypted_word_possible_with(self, word: SingleWord):
         return self.encrypted_word.is_word_possible(word)
+
+    def get_number_of_solution_words(self):
+        return len(self.solution_words)
 
     def copy_with_single_options(self):
         result = []
