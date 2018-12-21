@@ -28,29 +28,33 @@ def crypt_decrypt(encrypted_line, solution_words):
     has_single_solution = word_map.has_single_solution()
 
     if not has_single_solution:
-        has_guess_solution = False
+        solution = recurse_guesses(word_map)
 
-        for guess_word_map in word_map.get_guesses():
-
-            print("Process Guess")
-
-            guess_word_map.prune_options()
-
-            if guess_word_map.has_no_solution:
-                continue
-
-            has_single_solution = guess_word_map.has_single_solution()
-
-            if has_single_solution:
-                print("Found Single Solution")
-                word_map = guess_word_map
-                has_guess_solution = True
-                break
-
-        if not has_guess_solution:
+        if solution is None:
             return get_no_solution(encrypted_line)
 
+        word_map = solution
+
     return word_map.get_decrypted_line(encrypted_line)
+
+
+def recurse_guesses(current_guess):
+    for guess_word_map in current_guess.get_guesses():
+
+        print("Process Guess")
+
+        guess_word_map.prune_options()
+
+        if guess_word_map.has_no_solution:
+            continue
+
+        has_single_solution = guess_word_map.has_single_solution()
+
+        if has_single_solution:
+            print("Found Single Solution")
+            return guess_word_map
+
+    return None
 
 
 class SingleWord:
@@ -252,12 +256,10 @@ class WordMap:
 
         decode_words_array = []
 
-        curr_dict = {}
-
         for current_key, current_encrypted_word in self.decode_words.items():
             decode_words_array.append(current_encrypted_word)
 
-        array_of_dicts = self.create_all_single_word_combinations(decode_words_array, curr_dict)
+        array_of_dicts = self.create_all_single_word_combinations(decode_words_array)
 
         for blow in array_of_dicts:
             yield WordMap(self.solution_words, blow)
