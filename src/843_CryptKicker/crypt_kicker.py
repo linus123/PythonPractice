@@ -5,7 +5,8 @@ from typing import List
 
 def crypt_decrypt(encrypted_line, solution_words):
 
-    # print("Start")
+    if len(encrypted_line) > 80:
+        return None
 
     if encrypted_line.strip() == "":
         return None
