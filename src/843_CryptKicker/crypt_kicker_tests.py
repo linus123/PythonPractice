@@ -4,25 +4,58 @@ from crypt_kicker import crypt_decrypt, SingleWord
 
 
 class CryptKickerTests(unittest.TestCase):
+    def test_100(self):
+        dictionary = ["foo"]
+
+        result = crypt_decrypt("      ", dictionary)
+        self.assertEqual(None, result)
+
+    def test_101(self):
+        dictionary = ["foo"]
+
+        result = crypt_decrypt("  afs  ", dictionary)
+        self.assertEqual("***", result)
+
+        result = crypt_decrypt("  aff  ", dictionary)
+        self.assertEqual("  foo  ", result)
+
+    def test_102(self):
+        dictionary = ["dog", "cat", "web"]
+
+        result = crypt_decrypt("xyz abc pqr", dictionary)
+        self.assertEqual("dog cat web", result)
+
+    def test_103(self):
+        dictionary = ["aa"]
+
+        result = crypt_decrypt("  bc      bf", dictionary)
+        self.assertEqual("** **", result)
+
+    def test_104(self):
+        dictionary = ["foo"]
+
+        result = crypt_decrypt("  aas    ", dictionary)
+        self.assertEqual("***", result)
+
     def test_001(self):
         """Should return the empty string given an empty string"""
         dictionary = []
 
         result = crypt_decrypt("", dictionary)
-        self.assertEqual("", result)
+        self.assertEqual(None, result)
 
         result = crypt_decrypt(" ", dictionary)
-        self.assertEqual("", result)
+        self.assertEqual(None, result)
 
     def test_002(self):
         """Should return the empty string given an empty string and anything in the decrypted words"""
         dictionary = ["some stuff"]
 
         result = crypt_decrypt("", dictionary)
-        self.assertEqual("", result)
+        self.assertEqual(None, result)
 
         result = crypt_decrypt("  ", dictionary)
-        self.assertEqual("", result)
+        self.assertEqual(None, result)
 
     def test_003(self):
         """Should return the expected result given a single letter for encrypted and decrypted words"""
@@ -212,7 +245,7 @@ class CryptKickerTests(unittest.TestCase):
         """Should leave spaces in no solution intact"""
         dictionary = ["xx"]
         result = crypt_decrypt("ab    ab", dictionary)
-        self.assertEqual("**    **", result)
+        self.assertEqual("** **", result)
 
     def test_sample_input_should_pass(self):
         """Should return expected solution from the directions sample"""

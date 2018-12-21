@@ -7,10 +7,13 @@ def crypt_decrypt(encrypted_line, solution_words):
 
     # print("Start")
 
+    if encrypted_line.strip() == "":
+        return None
+
     encrypted_words = convert_to_array(encrypted_line)
 
     if len(encrypted_words) == 0:
-        return ""
+        return get_no_solution(encrypted_words)
 
     solution_words = clean_array(solution_words)
 
@@ -22,7 +25,7 @@ def crypt_decrypt(encrypted_line, solution_words):
     word_map.prune_options()
 
     if word_map.has_no_solution:
-        return get_no_solution(encrypted_line)
+        return get_no_solution(encrypted_words)
     # else MIGHT have a solution
 
     has_single_solution = word_map.has_single_solution()
@@ -31,7 +34,7 @@ def crypt_decrypt(encrypted_line, solution_words):
         solution = recurse_guesses(word_map)
 
         if solution is None:
-            return get_no_solution(encrypted_line)
+            return get_no_solution(encrypted_words)
 
         word_map = solution
 
@@ -67,6 +70,9 @@ class SingleWord:
         self.unique_letter_word = self.create_unique_letter_word(word)
         self.unique_letter_word_length = len(self.create_unique_letter_word(word))
 
+    def get_solution_string(self):
+        return "*" * len(self.word)
+
     @staticmethod
     def create_unique_letter_word(word) -> str:
 
@@ -97,6 +103,26 @@ class SingleWord:
         if self.unique_letter_word_length != word.unique_letter_word_length:
             return False
 
+        dic1 = {}
+        dic2 = {}
+
+        for letter_index in range(len(self.word)):
+
+            letter1 = self.word[letter_index]
+            letter2 = word.word[letter_index]
+
+            if letter1 in dic1:
+                if dic1[letter1] != letter2:
+                    return False
+            else:
+                dic1[letter1] = letter2
+
+            if letter2 in dic2:
+                if dic2[letter2] != letter1:
+                    return False
+            else:
+                dic2[letter2] = letter1
+
         return True
 
 
@@ -123,16 +149,13 @@ def convert_to_array(encrypted_line: str) -> List[SingleWord]:
     return encrypted_words
 
 
-def get_no_solution(encrypted_line):
-    char_array = []
+def get_no_solution(encrypted_words: list):
+    word_array = []
 
-    for letter in encrypted_line:
-        if letter == " ":
-            char_array.append(letter)
-        else:
-            char_array.append("*")
+    for word in encrypted_words:
+        word_array.append(word.get_solution_string())
 
-    return ''.join(char_array)
+    return ' '.join(word_array)
 
 
 class WordMap:
@@ -454,7 +477,8 @@ def run_from_standard_in():
             dictionary_words.append(clean_line)
         else:
             result = crypt_decrypt(clean_line, dictionary_words)
-            print(result)
+            if result is not None:
+                print(result)
 
         line_counter += 1
 
