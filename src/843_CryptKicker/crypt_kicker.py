@@ -5,7 +5,7 @@ from typing import List
 
 def crypt_decrypt(encrypted_line, solution_words):
 
-    print("Start")
+    # print("Start")
 
     encrypted_words = convert_to_array(encrypted_line)
 
@@ -41,7 +41,7 @@ def crypt_decrypt(encrypted_line, solution_words):
 def recurse_guesses(current_guess):
     for guess_word_map in current_guess.get_guesses():
 
-        print("Process Guess")
+        # print("Process Guess")
 
         guess_word_map.prune_options()
 
@@ -51,7 +51,7 @@ def recurse_guesses(current_guess):
         has_single_solution = guess_word_map.has_single_solution()
 
         if has_single_solution:
-            print("Found Single Solution")
+            # print("Found Single Solution")
             return guess_word_map
 
         return recurse_guesses(guess_word_map)
@@ -146,11 +146,12 @@ class WordMap:
         self.has_no_solution = False
 
     def print_state(self):
-        print("***")
-        for key, item in self.decode_words.items():
-            print("encrypted word '%s'" % key)
-            for sol_word in item.get_solution_words():
-                print("\t%s" % sol_word.word)
+        pass
+        #print("***")
+        #for key, item in self.decode_words.items():
+        #    print("encrypted word '%s'" % key)
+        #    for sol_word in item.get_solution_words():
+        #        print("\t%s" % sol_word.word)
 
     def get_decrypted_line(self, encrypted_line: str):
 
@@ -326,7 +327,7 @@ class WordMap:
             has_solution, words_were_removed_by_single = self\
                 .remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option()
 
-            print("remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option 1")
+            # print("remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option 1")
             self.print_state()
 
             if not has_solution:
@@ -347,7 +348,7 @@ class WordMap:
                 self.has_no_solution = True
                 return
 
-            print("remove_possible_words_that_do_not_match_letter_maps")
+            # print("remove_possible_words_that_do_not_match_letter_maps")
             self.print_state()
 
         self.solution_words.sort(key=get_unique_letter_word_length)
