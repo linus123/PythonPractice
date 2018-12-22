@@ -45,6 +45,9 @@ def recurse_guesses(current_guess):
 
         # print("Process Guess has_no_solution" + str(guess_word_map.has_no_solution))
 
+        if guess_word_map.decode_words["httb"].get_first_solution_word() == "seem":
+            print("Foo")
+
         guess_word_map.prune_options()
 
         if guess_word_map.has_no_solution:
@@ -60,7 +63,10 @@ def recurse_guesses(current_guess):
             # print("did NOT Found Single Solution")
             pass
 
-        return recurse_guesses(guess_word_map)
+        rg = recurse_guesses(guess_word_map)
+
+        if rg is not None:
+            return rg
 
     return None
 
@@ -169,17 +175,22 @@ class WordMap:
 
         if decode_words is None:
             decode_words = {}
+        else:
+            for key, encrypted_word in sorted(decode_words.items()):
+                if encrypted_word.get_solution_word_count() <= 0:
+                    raise ValueError('Empty solution words')
+
         self.decode_words = decode_words
 
         self.has_no_solution = False
 
     def print_state(self):
-         pass
+        pass
         # print("***")
         # for key, item in sorted(self.decode_words.items()):
-        #    print("encrypted word '%s'" % key)
-        #    for sol_word in item.get_solution_words():
-        #        print("\t%s" % sol_word.word)
+        #     print("encrypted word '%s'" % key)
+        #     for sol_word in item.get_solution_words():
+        #         print("\t%s" % sol_word.word)
         #
         # print("has_no_solution " + str(self.has_no_solution))
 
@@ -407,6 +418,10 @@ class EncryptedWordWithOptions:
     def __init__(self, encrypted_word: SingleWord):
         self.encrypted_word = encrypted_word
         self.solution_words = []
+
+    # Needed by print
+    def get_solution_words(self):
+        return self.solution_words
 
     def get_encrypted_word(self):
         return self.encrypted_word.word
