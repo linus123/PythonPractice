@@ -464,20 +464,11 @@ class EncryptedWordWithOptions:
         return word in self.solution_words
 
     def remove_solution_word(self, item_to_remove: SingleWord) -> bool:
-        # TODO: This is the part that is slow
-
         if self.has_solution_word(item_to_remove.word):
             del self.solution_words[item_to_remove.word]
             return True
 
         return False
-
-        # for index in range(len(self.solution_words)):
-        #     if self.solution_words[index] == item_to_remove:
-        #         del self.solution_words[index]
-        #         return True
-        #
-        # return False
 
     def get_first_solution_word(self) -> SingleWord:
         # return self.solution_words[0]
@@ -494,7 +485,6 @@ class EncryptedWordWithOptions:
 
                 new_solution_words = {}
 
-                # for solution_word_index in range(len(self.solution_words)):
                 for key, solution_word in self.solution_words.items():
                     if solution_word.unique_letter_word[encrypted_letter_index] == solution_letter:
                         new_solution_words[solution_word.word] = solution_word
