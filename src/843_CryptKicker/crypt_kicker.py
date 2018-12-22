@@ -222,15 +222,13 @@ class WordMap:
         return True
 
     def remove_possible_words_that_do_not_match_letter_maps(self, letter_maps: dict):
-        items_were_removed = False
-
         for key, encrypted_word in sorted(self.decode_words.items()):
             for en_letter, sol_letter in letter_maps.items():
                 removed = encrypted_word.remove_word_that_do_not_match_letter(en_letter, sol_letter)
                 if removed:
-                    items_were_removed = True
+                    return True
 
-        return items_were_removed
+        return False
 
     def create_letter_map_array_for_all_single_solution_words(self):
         letter_maps_dic_enc = {}
@@ -465,6 +463,7 @@ class EncryptedWordWithOptions:
         return self.solution_words[index].word
 
     def remove_solution_word(self, item_to_remove: SingleWord) -> bool:
+        # TODO: This is the part that is slow
         for index in range(len(self.solution_words)):
             if self.solution_words[index] == item_to_remove:
                 del self.solution_words[index]
