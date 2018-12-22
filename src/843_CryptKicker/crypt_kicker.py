@@ -317,8 +317,8 @@ class WordMap:
 
         array_of_dicts = self.create_all_single_word_combinations(decode_words_array)
 
-        for blow in array_of_dicts:
-            yield WordMap(self.solution_words, blow)
+        for d in array_of_dicts:
+            yield WordMap(self.solution_words, d)
 
     @staticmethod
     def create_all_single_word_combinations(decode_words_array):
@@ -332,15 +332,15 @@ class WordMap:
             single_options = decode_words_array[outer_index].copy_with_single_options()
 
             for single_option in single_options:
-                foo_dict = {}
+                d = {}
                 for inner_index in range(len(decode_words_array)):
                     current_enc_word = decode_words_array[inner_index]
                     if inner_index == outer_index:
-                        foo_dict[current_enc_word.encrypted_word.word] = single_option
+                        d[current_enc_word.encrypted_word.word] = single_option
                     else:
                         current_enc_word = decode_words_array[inner_index]
-                        foo_dict[current_enc_word.encrypted_word.word] = current_enc_word.create_copy()
-                yield foo_dict
+                        d[current_enc_word.encrypted_word.word] = current_enc_word.create_copy()
+                yield d
 
     def prune_options(self):
         words_were_removed_by_single = True
@@ -444,9 +444,6 @@ class EncryptedWordWithOptions:
     def get_solution_word_count(self) -> int:
         return len(self.solution_words)
 
-    def get_solution_words(self):
-        return self.solution_words
-
     def get_solution_word_at_index(self, index: int):
         return self.solution_words[index].word
 
@@ -491,7 +488,7 @@ def run_from_standard_in():
 
     for line in sys.stdin:
 
-        clean_line = line.strip()
+        clean_line = line.strip().lower()
 
         if clean_line == "":
             continue

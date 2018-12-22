@@ -23,7 +23,7 @@ class CryptKickerTests(unittest.TestCase):
         dictionary = ["dog", "cat", "web"]
 
         result = crypt_decrypt("xyz abc pqr", dictionary)
-        self.assertEqual("dog cat web", result)
+        self.assertEqual("web dog cat", result)
 
     def test_103(self):
         dictionary = ["aa"]
@@ -141,7 +141,7 @@ class CryptKickerTests(unittest.TestCase):
         """Should return solution with three letters"""
         dictionary = ["aab", "aac"]
         result = crypt_decrypt("xxy xxz", dictionary)
-        self.assertEqual("aac aab", result)
+        self.assertEqual("aab aac", result)
 
     def test_011(self):
         """Should not return solution when two letter words have no solution can a change in letters"""
