@@ -2,4 +2,4 @@ __pycache__/
 .idea/workspace.xml
 *.swp
 *.swo
-venv/
+venv*/
