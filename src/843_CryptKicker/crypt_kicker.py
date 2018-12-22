@@ -45,9 +45,6 @@ def recurse_guesses(current_guess):
 
         # print("Process Guess has_no_solution" + str(guess_word_map.has_no_solution))
 
-        if guess_word_map.decode_words["httb"].get_first_solution_word() == "seem":
-            print("Foo")
-
         guess_word_map.prune_options()
 
         if guess_word_map.has_no_solution:
