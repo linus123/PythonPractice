@@ -320,8 +320,10 @@ class WordMap:
 
         decode_words_array = []
 
-        for current_key, current_encrypted_word in sorted(self.decode_words.items()):
+        for current_key, current_encrypted_word in self.decode_words.items():
             decode_words_array.append(current_encrypted_word)
+
+        decode_words_array.sort(key=lambda x: x.get_encrypted_word_length(), reverse=True)
 
         array_of_dicts = self.create_all_single_word_combinations(decode_words_array)
 
@@ -422,6 +424,9 @@ class EncryptedWordWithOptions:
 
     def get_encrypted_word(self):
         return self.encrypted_word.word
+
+    def get_encrypted_word_length(self):
+        return len(self.encrypted_word.word)
 
     def create_copy(self):
         ew = EncryptedWordWithOptions(self.encrypted_word)
