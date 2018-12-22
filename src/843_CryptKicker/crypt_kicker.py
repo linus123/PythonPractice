@@ -486,7 +486,8 @@ class EncryptedWordWithOptions:
 
                 new_solution_words = []
 
-                for solution_word in self.solution_words:
+                for solution_word_index in range(len(self.solution_words)):
+                    solution_word = self.solution_words[solution_word_index]
                     if solution_word.unique_letter_word[encrypted_letter_index] == solution_letter:
                         new_solution_words.append(solution_word)
 
