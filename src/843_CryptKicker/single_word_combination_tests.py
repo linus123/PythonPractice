@@ -208,7 +208,7 @@ class SingleWordComboTests(unittest.TestCase):
         self.assertEqual(len(solution_words), target.get_solution_word_count())
 
         for index in range(len(solution_words)):
-            self.assertEqual(solution_words[index], target.get_solution_word_at_index(index))
+            self.assertTrue(target.has_solution_word(solution_words[index]))
 
 
 class GuessDictionaryAssertBuilder:

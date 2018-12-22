@@ -414,11 +414,12 @@ def get_unique_letter_word_length(word: SingleWord):
 class EncryptedWordWithOptions:
     def __init__(self, encrypted_word: SingleWord):
         self.encrypted_word = encrypted_word
-        self.solution_words = []
+        self.solution_words = {}
 
     # Needed by print
     def get_solution_words(self):
-        return self.solution_words
+        for key, decode_word_array in self.solution_words.items():
+            yield key
 
     def get_encrypted_word(self):
         return self.encrypted_word.word
@@ -443,7 +444,7 @@ class EncryptedWordWithOptions:
     def copy_with_single_options(self):
         result = []
 
-        for solution_word in self.solution_words:
+        for key, solution_word in self.solution_words.items():
             opt = EncryptedWordWithOptions(self.encrypted_word)
             opt.add_solution_word(solution_word)
             result.append(opt)
@@ -451,7 +452,7 @@ class EncryptedWordWithOptions:
         return result
 
     def add_solution_word(self, word: SingleWord):
-        self.solution_words.append(word)
+        self.solution_words[word.word] = word
 
     def has_any_solution_words(self) -> bool:
         return len(self.solution_words) > 0
@@ -459,20 +460,28 @@ class EncryptedWordWithOptions:
     def get_solution_word_count(self) -> int:
         return len(self.solution_words)
 
-    def get_solution_word_at_index(self, index: int):
-        return self.solution_words[index].word
+    def has_solution_word(self, word: str):
+        return word in self.solution_words
 
     def remove_solution_word(self, item_to_remove: SingleWord) -> bool:
         # TODO: This is the part that is slow
-        for index in range(len(self.solution_words)):
-            if self.solution_words[index] == item_to_remove:
-                del self.solution_words[index]
-                return True
+
+        if self.has_solution_word(item_to_remove.word):
+            del self.solution_words[item_to_remove.word]
+            return True
 
         return False
 
+        # for index in range(len(self.solution_words)):
+        #     if self.solution_words[index] == item_to_remove:
+        #         del self.solution_words[index]
+        #         return True
+        #
+        # return False
+
     def get_first_solution_word(self) -> SingleWord:
-        return self.solution_words[0]
+        # return self.solution_words[0]
+        return next(iter(self.solution_words.values()))
 
     def remove_word_that_do_not_match_letter(self, encrypted_letter, solution_letter):
 
@@ -483,12 +492,12 @@ class EncryptedWordWithOptions:
 
             if current_encrypted_letter == encrypted_letter:
 
-                new_solution_words = []
+                new_solution_words = {}
 
-                for solution_word_index in range(len(self.solution_words)):
-                    solution_word = self.solution_words[solution_word_index]
+                # for solution_word_index in range(len(self.solution_words)):
+                for key, solution_word in self.solution_words.items():
                     if solution_word.unique_letter_word[encrypted_letter_index] == solution_letter:
-                        new_solution_words.append(solution_word)
+                        new_solution_words[solution_word.word] = solution_word
 
                 items_were_removed = len(new_solution_words) != len(self.solution_words)
                 self.solution_words = new_solution_words
