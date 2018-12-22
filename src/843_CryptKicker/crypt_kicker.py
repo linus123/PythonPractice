@@ -416,6 +416,14 @@ class EncryptedWordWithOptions:
         self.encrypted_word = encrypted_word
         self.solution_words = {}
 
+        self.opt_dic = {}
+
+        for letter in encrypted_word.unique_letter_word:
+            self.opt_dic[letter] = 1
+
+    def has_letter_in_encrypted_word(self, letter):
+        return letter in self.opt_dic
+
     # Needed by print
     def get_solution_words(self):
         for key, decode_word_array in self.solution_words.items():
@@ -477,6 +485,9 @@ class EncryptedWordWithOptions:
     def remove_word_that_do_not_match_letter(self, encrypted_letter, solution_letter):
 
         items_were_removed = False
+
+        if not self.has_letter_in_encrypted_word(encrypted_letter):
+            return False
 
         for encrypted_letter_index in range(len(self.encrypted_word.unique_letter_word)):
             current_encrypted_letter = self.encrypted_word.unique_letter_word[encrypted_letter_index]
