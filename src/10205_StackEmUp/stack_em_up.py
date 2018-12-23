@@ -46,11 +46,16 @@ class Card:
         return self.value + 1 + self.suite * 13
 
 
-def create_deck():
-    deck = []
+class Game:
+    def __init__(self) -> None:
+        pass
 
-    for value_count in range(13):
+    @staticmethod
+    def create_deck():
+        deck = []
+
         for suite_count in range(4):
-            deck.append(Card(value_count, suite_count))
+            for value_count in range(13):
+                deck.append(Card(value_count, suite_count))
 
-    return deck
+        return deck
