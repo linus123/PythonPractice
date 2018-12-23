@@ -23,7 +23,7 @@ class Card:
             suite_for_name = "Diamonds"
         if self.suite == 2:
             suite_for_name = "Hearts"
-        if self.suite == 4:
+        if self.suite == 3:
             suite_for_name = "Spades"
 
         return suite_for_name
@@ -48,10 +48,11 @@ class Card:
 
 class Game:
     def __init__(self) -> None:
-        pass
+        self.deck = Game.create_deck()
+        self.shuffle = []
 
     @staticmethod
-    def create_deck():
+    def create_deck() -> list:
         deck = []
 
         for suite_count in range(4):
@@ -59,3 +60,21 @@ class Game:
                 deck.append(Card(value_count, suite_count))
 
         return deck
+
+    def add_shuffle(self, shuffle: list):
+        self.shuffle.append(shuffle)
+
+    def apply_shuffle(self, shuffle_num):
+        target_shuffle = self.shuffle[shuffle_num - 1]
+
+        new_deck = [0] * 52
+
+        for deck_index in range(52):
+            target_deck_index = target_shuffle[deck_index] - 1
+            new_deck[deck_index] = self.deck[target_deck_index]
+
+        self.deck = new_deck
+
+    def get_current_deck(self):
+        for card in self.deck:
+            yield card.get_card_name()
