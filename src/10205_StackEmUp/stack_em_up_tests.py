@@ -56,3 +56,11 @@ class CardTypeTests(unittest.TestCase):
 
         self.assertEqual("Ace of Clubs", card.get_card_name())
         self.assertEqual(13, card.get_id())
+
+    def test_008(self):
+        """get_card_name should error when given a value larger than 12"""
+
+        def f():
+            Card(13, 0)
+
+        self.assertRaises(ValueError, f)

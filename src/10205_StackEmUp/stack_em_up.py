@@ -1,8 +1,8 @@
-import enum
-
-
 class Card:
     def __init__(self, value: int, suite: int) -> None:
+        if value > 12:
+            raise ValueError("Value cannot be greater than 13")
+
         self.value = value
         self.suite = suite
 
