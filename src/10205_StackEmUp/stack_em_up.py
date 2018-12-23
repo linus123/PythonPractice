@@ -11,4 +11,7 @@ class Card:
 
         return "%i of Clubs" % value_for_name
 
+    def get_id(self):
+        return self.value + 1
+
 

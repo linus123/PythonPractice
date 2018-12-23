@@ -12,6 +12,5 @@ class CardTypeTests(unittest.TestCase):
         """get_card_name should return the expected name 001"""
         card = Card(0, 0)
 
-        name = card.get_card_name()
-
-        self.assertEqual("2 of Clubs", name)
+        self.assertEqual("2 of Clubs", card.get_card_name())
+        self.assertEqual(1, card.get_id())
