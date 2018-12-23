@@ -96,11 +96,15 @@ def run_from_standard_in():
         current_game = Game()
 
         for shuffle_type_index in range(shuffle_type_count):
-            numbers_line = sys.stdin.readline().strip()
-            numbers_list = numbers_line.split(" ")
             shuffle_number_array = []
-            for number_string in numbers_list:
-                shuffle_number_array.append(int(number_string))
+
+            while len(shuffle_number_array) < 52:
+
+                numbers_line = sys.stdin.readline().strip()
+                numbers_list = numbers_line.split(" ")
+                for number_string in numbers_list:
+                    shuffle_number_array.append(int(number_string))
+
             current_game.add_shuffle(shuffle_number_array)
 
         for line in sys.stdin:
