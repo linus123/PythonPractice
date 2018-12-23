@@ -35,3 +35,24 @@ class CardTypeTests(unittest.TestCase):
 
         self.assertEqual("Jack of Clubs", card.get_card_name())
         self.assertEqual(10, card.get_id())
+
+    def test_005(self):
+        """get_card_name should return the expected name 005"""
+        card = Card(10, 0)
+
+        self.assertEqual("Queen of Clubs", card.get_card_name())
+        self.assertEqual(11, card.get_id())
+
+    def test_006(self):
+        """get_card_name should return the expected name 005"""
+        card = Card(11, 0)
+
+        self.assertEqual("King of Clubs", card.get_card_name())
+        self.assertEqual(12, card.get_id())
+
+    def test_007(self):
+        """get_card_name should return the expected name 007"""
+        card = Card(12, 0)
+
+        self.assertEqual("Ace of Clubs", card.get_card_name())
+        self.assertEqual(13, card.get_id())

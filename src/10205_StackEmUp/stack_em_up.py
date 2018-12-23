@@ -12,6 +12,15 @@ class Card:
         if self.value == 9:
             value_for_name = "Jack"
 
+        if self.value == 10:
+            value_for_name = "Queen"
+
+        if self.value == 11:
+            value_for_name = "King"
+
+        if self.value == 12:
+            value_for_name = "Ace"
+
         return "%s of Clubs" % value_for_name
 
     def get_id(self):
