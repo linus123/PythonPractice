@@ -1,3 +1,6 @@
+import sys
+
+
 class Card:
     def __init__(self, value: int, suite: int) -> None:
         if value > 12:
@@ -78,3 +81,48 @@ class Game:
     def get_current_deck(self):
         for card in self.deck:
             yield card.get_card_name()
+
+
+def run_from_standard_in():
+
+    first_line = sys.stdin.readline()
+    number_of_test_cases = int(first_line.strip())
+    blank_line = sys.stdin.readline()
+
+    for test_case_counter in range(number_of_test_cases):
+        shuffle_type_count_line = sys.stdin.readline()
+        shuffle_type_count = int(shuffle_type_count_line.strip())
+
+        current_game = Game()
+
+        for shuffle_type_index in range(shuffle_type_count):
+            numbers_line = sys.stdin.readline().strip()
+            numbers_list = numbers_line.split(" ")
+            shuffle_number_array = []
+            for number_string in numbers_list:
+                shuffle_number_array.append(int(number_string))
+            current_game.add_shuffle(shuffle_number_array)
+
+        for line in sys.stdin:
+            clean_line = line.strip()
+            if clean_line == "":
+                break
+            current_game.apply_shuffle(int(clean_line))
+
+        cards = current_game.get_current_deck()
+
+        if test_case_counter == 0:
+            is_first = False
+        else:
+            print("")
+
+        for card in cards:
+            print(card)
+
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
