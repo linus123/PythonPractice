@@ -64,3 +64,52 @@ class CardTypeTests(unittest.TestCase):
             Card(13, 0)
 
         self.assertRaises(ValueError, f)
+
+    def test_009(self):
+        """get_card_name should return the expected name 009"""
+
+        card = Card(0, 1)
+
+        self.assertEqual("2 of Diamonds", card.get_card_name())
+        self.assertEqual(14, card.get_id())
+
+    def test_010(self):
+        """get_card_name should return the expected name 009"""
+
+        card = Card(1, 1)
+
+        self.assertEqual("3 of Diamonds", card.get_card_name())
+        self.assertEqual(15, card.get_id())
+
+    def test_011(self):
+        """get_card_name should return the expected name 010"""
+
+        card = Card(8, 1)
+
+        self.assertEqual("10 of Diamonds", card.get_card_name())
+        self.assertEqual(22, card.get_id())
+
+    def test_012(self):
+        """get_card_name should return the expected name 010"""
+
+        card = Card(9, 1)
+
+        self.assertEqual("Jack of Diamonds", card.get_card_name())
+        self.assertEqual(23, card.get_id())
+
+    def test_013(self):
+        """get_card_name should return the expected name 010"""
+
+        card = Card(0, 2)
+
+        self.assertEqual("2 of Hearts", card.get_card_name())
+        self.assertEqual(27, card.get_id())
+
+    def test_014(self):
+        """get_card_name should error when given a suite greater than 3"""
+
+        def f():
+            Card(0, 4)
+
+        self.assertRaises(ValueError, f)
+
