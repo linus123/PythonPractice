@@ -7,18 +7,6 @@ The videos can be found at https://www.youtube.com/watch?v=3dkbFf82_b8&list=PLjx
 
 Professor is: Steven Skiena
 
-## Submit a Exercise
-
-The input from the judge is provided on standard in.
-
-## File to Standard In
-
-### Powershell
-
-```
-Get-Content .\110102.txt | & "C:\Users\Paul\AppData\Local\Programs\Python\Python35\python.exe" .\Minesweeper.py
-```
-
 ## Progress
 
 - Lecture 1
@@ -26,3 +14,6 @@ Get-Content .\110102.txt | & "C:\Users\Paul\AppData\Local\Programs\Python\Python
   - The Trip : Completed
   - Minesweeper : Completed
   - Interpreter : Completed
+  - JollyJumpers : Completed
+  - CryptKicker : Time Limit
+  - Stack 'em Up : Completed
