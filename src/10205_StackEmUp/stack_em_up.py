@@ -46,3 +46,11 @@ class Card:
         return self.value + 1 + self.suite * 13
 
 
+def create_deck():
+    deck = []
+
+    for value_count in range(13):
+        for suite_count in range(4):
+            deck.append(Card(value_count, suite_count))
+
+    return deck

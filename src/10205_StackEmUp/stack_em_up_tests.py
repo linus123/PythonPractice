@@ -1,6 +1,6 @@
 import unittest
 
-from stack_em_up import Card
+from stack_em_up import Card, create_deck
 
 
 class StackEmUpTests(unittest.TestCase):
@@ -113,3 +113,12 @@ class CardTypeTests(unittest.TestCase):
 
         self.assertRaises(ValueError, f)
 
+    def test_015(self):
+        """create_deck should return all 52 cards with expected ids"""
+
+        deck = create_deck()
+
+        self.assertEqual(52, len(deck))
+
+        for i in range(len(deck)):
+            self.assertEqual(i + 1, deck[i].get_id())
