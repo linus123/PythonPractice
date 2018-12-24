@@ -110,3 +110,15 @@ class ThrowRollTest(unittest.TestCase):
 
         roll = ThrowRoll([3, 3, 5, 3, 3])
         self.assertTrue(roll.has_four_of_a_kind())
+
+    def test_011(self):
+        """get_change_value should return sum of all dice"""
+
+        roll = ThrowRoll([1, 1, 1, 1, 1])
+        self.assertEqual(5, roll.get_change_value())
+
+        roll = ThrowRoll([1, 1, 1, 6, 1])
+        self.assertEqual(10, roll.get_change_value())
+
+        roll = ThrowRoll([1, 2, 3, 4, 5])
+        self.assertEqual(15, roll.get_change_value())

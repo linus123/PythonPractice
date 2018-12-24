@@ -71,3 +71,13 @@ class ThrowRoll:
 
     def has_four_of_a_kind(self) -> bool:
         return self.has_x_of_a_kind(4)
+
+    def has_three_of_a_kind(self) -> bool:
+        return self.has_x_of_a_kind(3)
+
+    def get_change_value(self) -> int:
+        sum = 0
+        for dice_value in self.dice_values:
+            sum += dice_value
+
+        return sum
