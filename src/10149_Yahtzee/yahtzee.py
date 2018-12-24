@@ -27,29 +27,40 @@ class ThrowRoll:
 
         self.dice_values = dice_values
 
-        self.score_dic = self.create_score_dic(dice_values)
+        self.count_dic = self.create_count_dic()
+        self.score_dic = self.create_score_dic()
 
-    def create_score_dic(self, dice_values):
+    def create_count_dic(self):
         value_dic = {}
-        for dic_value in dice_values:
+        for dic_value in self.dice_values:
             if dic_value in value_dic:
                 value_dic[dic_value] += 1
             else:
                 value_dic[dic_value] = 1
         return value_dic
 
-    def is_full_house(self) -> bool:
-        has_two_count = False
-        has_three_count = False
+    def create_score_dic(self):
+        has_two_of_any_kind = False
+        has_three_of_any_kind = False
 
-        for key, value in self.score_dic.items():
+        score_dic = {}
+
+        for key, value in self.count_dic.items():
             if value == 2:
-                has_two_count = True
+                has_two_of_any_kind = True
 
             if value == 3:
-                has_three_count = True
+                has_three_of_any_kind = True
 
-        return has_two_count and has_three_count
+        if has_two_of_any_kind and has_three_of_any_kind:
+            score_dic[Category.FULL_HOUSE] = 40
+        else:
+            score_dic[Category.FULL_HOUSE] = 0
+
+        return score_dic
+
+    def is_full_house(self) -> bool:
+        return self.score_dic[Category.FULL_HOUSE] > 0
 
     def is_long_straight(self) -> bool:
         index = 1
@@ -64,29 +75,29 @@ class ThrowRoll:
         return True
 
     def is_short_straight(self) -> bool:
-        if 1 in self.score_dic \
-                and 2 in self.score_dic \
-                and 3 in self.score_dic \
-                and 4 in self.score_dic:
+        if 1 in self.count_dic \
+                and 2 in self.count_dic \
+                and 3 in self.count_dic \
+                and 4 in self.count_dic:
             return True
 
-        if 2 in self.score_dic \
-                and 3 in self.score_dic \
-                and 4 in self.score_dic \
-                and 5 in self.score_dic:
+        if 2 in self.count_dic \
+                and 3 in self.count_dic \
+                and 4 in self.count_dic \
+                and 5 in self.count_dic:
             return True
 
         return False
 
     def has_x_of_the_same_value(self, x: int) -> bool:
-        for key, value in self.score_dic.items():
+        for key, value in self.count_dic.items():
             if value == x:
                 return True
 
         return False
 
     def get_x_of_a_kind_sum(self, x: int) -> int:
-        for key, value in self.score_dic.items():
+        for key, value in self.count_dic.items():
             if value == x:
                 return value * key
 
@@ -109,7 +120,7 @@ class ThrowRoll:
         return s
 
     def get_sum_of_all(self, v) -> int:
-        if v in self.score_dic:
-            return self.score_dic[v] * v
+        if v in self.count_dic:
+            return self.count_dic[v] * v
 
         return 0
