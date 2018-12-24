@@ -62,6 +62,11 @@ class ThrowRoll:
         else:
             score_dic[Category.SHORT_STRAIGHT] = 0
 
+        if self.__has_x_of_the_same_value(5):
+            score_dic[Category.FIVE_OF_A_KIND] = 50
+        else:
+            score_dic[Category.FIVE_OF_A_KIND] = 0
+
         return score_dic
 
     def __is_full_house(self, has_three_of_any_kind, has_two_of_any_kind):
@@ -101,17 +106,17 @@ class ThrowRoll:
 
         return False
 
-    # **
-
-    def get_score(self, cat: Category) -> int:
-        return self.score_dic[cat]
-
-    def has_x_of_the_same_value(self, x: int) -> bool:
+    def __has_x_of_the_same_value(self, x: int) -> bool:
         for key, value in self.count_dic.items():
             if value == x:
                 return True
 
         return False
+
+    # **
+
+    def get_score(self, cat: Category) -> int:
+        return self.score_dic[cat]
 
     def get_x_of_a_kind_sum(self, x: int) -> int:
         for key, value in self.count_dic.items():

@@ -79,22 +79,22 @@ class ThrowRollTest(unittest.TestCase):
         """get_five_of_a_kind_sum should return 0"""
 
         roll = ThrowRoll([1, 2, 3, 4, 1])
-        self.assertEqual(0, roll.get_five_of_a_kind_sum())
+        self.assertEqual(0, roll.get_score(Category.FIVE_OF_A_KIND))
 
         roll = ThrowRoll([1, 1, 1, 1, 4])
-        self.assertEqual(0, roll.get_five_of_a_kind_sum())
+        self.assertEqual(0, roll.get_score(Category.FIVE_OF_A_KIND))
 
     def test_008(self):
         """has_five_of_a_kind should return sum when there is 5 of any dice"""
 
         roll = ThrowRoll([1, 1, 1, 1, 1])
-        self.assertEqual(5, roll.get_five_of_a_kind_sum())
+        self.assertEqual(50, roll.get_score(Category.FIVE_OF_A_KIND))
 
         roll = ThrowRoll([2, 2, 2, 2, 2])
-        self.assertEqual(10, roll.get_five_of_a_kind_sum())
+        self.assertEqual(50, roll.get_score(Category.FIVE_OF_A_KIND))
 
         roll = ThrowRoll([5, 5, 5, 5, 5])
-        self.assertEqual(25, roll.get_five_of_a_kind_sum())
+        self.assertEqual(50, roll.get_score(Category.FIVE_OF_A_KIND))
 
     def test_009(self):
         """get_four_of_a_kind_sum should be 0 when there is NOT 4 of any dice"""
