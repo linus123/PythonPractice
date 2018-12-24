@@ -222,12 +222,18 @@ class ScoreSequenceFactory:
         ss = ScoreSequence()
         target_rolls = copy.copy(self.rolls)
 
-        smallest_five_of_a_kind_roll_index, smallest_five_of_a_kind_roll = self.__get_smallest_five_of_a_kind_roll(
-            target_rolls)
+        # **
+
+        smallest_five_of_a_kind_roll_index, smallest_five_of_a_kind_roll = self.__get_smallest_roll(
+            target_rolls,
+            Category.FIVE_OF_A_KIND
+        )
 
         if smallest_five_of_a_kind_roll is not None:
             ss.set_category(Category.FIVE_OF_A_KIND, smallest_five_of_a_kind_roll)
             del target_rolls[smallest_five_of_a_kind_roll_index]
+
+        # **
 
         sequences = self.__recurse(cat_array, target_rolls, ss)
 
@@ -256,17 +262,17 @@ class ScoreSequenceFactory:
                 if ss is not None:
                     yield ss
 
-    def __get_smallest_five_of_a_kind_roll(self, rolls):
+    def __get_smallest_roll(self, rolls, category):
         smallest_roll = None
         smallest_index = -1
         for roll_index in range(len(rolls)):
-            current_five_score = self.rolls[roll_index].get_score(Category.FIVE_OF_A_KIND)
+            current_five_score = rolls[roll_index].get_score(category)
             if current_five_score > 0:
                 if smallest_roll is None:
                     smallest_roll = rolls[roll_index]
                     smallest_index = roll_index
                 else:
-                    if current_five_score < smallest_roll.get_score(Category.FIVE_OF_A_KIND):
+                    if current_five_score < smallest_roll.get_score(category):
                         smallest_roll = rolls[roll_index]
                         smallest_index = roll_index
 
