@@ -106,9 +106,6 @@ class ThrowRoll:
     def get_score(self, cat: Category) -> int:
         return self.score_dic[cat]
 
-    def is_short_straight(self) -> bool:
-        return self.score_dic[Category.SHORT_STRAIGHT] > 0
-
     def has_x_of_the_same_value(self, x: int) -> bool:
         for key, value in self.count_dic.items():
             if value == x:

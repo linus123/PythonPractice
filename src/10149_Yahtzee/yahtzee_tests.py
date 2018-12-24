@@ -58,22 +58,22 @@ class ThrowRollTest(unittest.TestCase):
         """is_short_straight should return false when there is no 4 sequence"""
 
         roll = ThrowRoll([1, 2, 3, 2, 2])
-        self.assertFalse(roll.is_short_straight())
+        self.assertEqual(0, roll.get_score(Category.SHORT_STRAIGHT))
 
         roll = ThrowRoll([2, 1, 1, 2, 3])
-        self.assertFalse(roll.is_short_straight())
+        self.assertEqual(0, roll.get_score(Category.SHORT_STRAIGHT))
 
     def test_006(self):
         """is_short_straight should return true when roll has sequence of 4"""
 
         roll = ThrowRoll([1, 2, 3, 4, 1])
-        self.assertTrue(roll.is_short_straight())
+        self.assertEqual(25, roll.get_score(Category.SHORT_STRAIGHT))
 
         roll = ThrowRoll([6, 1, 2, 3, 4])
-        self.assertTrue(roll.is_short_straight())
+        self.assertEqual(25, roll.get_score(Category.SHORT_STRAIGHT))
 
         roll = ThrowRoll([1, 3, 4, 2, 1])
-        self.assertTrue(roll.is_short_straight())
+        self.assertEqual(25, roll.get_score(Category.SHORT_STRAIGHT))
 
     def test_007(self):
         """get_five_of_a_kind_sum should return 0"""
