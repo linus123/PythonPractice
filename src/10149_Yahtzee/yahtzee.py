@@ -216,8 +216,7 @@ class ScoreSequenceFactory:
                      Category.THREE_OF_A_KIND,
                      Category.FOUR_OF_A_KIND,
                      Category.SHORT_STRAIGHT,
-                     Category.LONG_STRAIGHT,
-                     Category.FULL_HOUSE]
+                     Category.LONG_STRAIGHT]
 
         ss = ScoreSequence()
         target_rolls = copy.copy(self.rolls)
@@ -232,6 +231,17 @@ class ScoreSequenceFactory:
         if smallest_five_of_a_kind_roll is not None:
             ss.set_category(Category.FIVE_OF_A_KIND, smallest_five_of_a_kind_roll)
             del target_rolls[smallest_five_of_a_kind_roll_index]
+
+        # **
+
+        smallest_full_house_roll_index, smallest_full_house_roll = self.__get_smallest_roll(
+            target_rolls,
+            Category.FULL_HOUSE
+        )
+
+        if smallest_five_of_a_kind_roll is not None:
+            ss.set_category(Category.FULL_HOUSE, smallest_full_house_roll)
+            del target_rolls[smallest_full_house_roll_index]
 
         # **
 
