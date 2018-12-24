@@ -75,7 +75,7 @@ class ThrowRoll:
         for v in self.dice_values:
             chance_sum += v
 
-            for i in range(6):
+            for i in range(7):
                 if v == i:
                     sums[i - 1] += i
 
@@ -160,7 +160,25 @@ class ScoreSequence:
         for key, roll in self.sequence_dic.items():
             grand_total += roll.get_score(key)
 
+        if self.__should_add_bonus():
+            grand_total += 35
+
         return grand_total
+
+    def __should_add_bonus(self):
+        single_number_categories = [Category.ONES,
+                                    Category.TWOS,
+                                    Category.THREES,
+                                    Category.FOURS,
+                                    Category.FIVES,
+                                    Category.SIXES]
+
+        total = 0
+
+        for c in single_number_categories:
+            total += self.sequence_dic[c].get_score(c)
+
+        return total >= 63
 
 
 class YahtzeeScorer:

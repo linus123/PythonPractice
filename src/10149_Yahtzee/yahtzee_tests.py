@@ -174,6 +174,9 @@ class ThrowRollTest(unittest.TestCase):
         roll = ThrowRoll([1, 2, 3, 4, 1])
         self.assertEqual(0, roll.get_score(Category.FIVES))
 
+        roll = ThrowRoll([6, 6, 6, 6, 6])
+        self.assertEqual(30, roll.get_score(Category.SIXES))
+
 
 class ScoreSequenceTests(unittest.TestCase):
     def test_000(self):
@@ -200,6 +203,54 @@ class ScoreSequenceTests(unittest.TestCase):
 
         self.assertEqual(90, score)
 
+    def test_001(self):
+        """get_score should return total score with bonus exactly"""
+        ss = ScoreSequence()
+
+        same_roll = ThrowRoll([1, 2, 3, 2, 1])
+
+        ss.set_category(Category.ONES, ThrowRoll([2, 2, 2, 2, 2]))
+        ss.set_category(Category.TWOS, ThrowRoll([1, 1, 1, 1, 1]))
+        ss.set_category(Category.THREES, ThrowRoll([1, 1, 1, 1, 1]))
+        ss.set_category(Category.FOURS, ThrowRoll([4, 4, 1, 1, 1]))
+        ss.set_category(Category.FIVES, ThrowRoll([5, 5, 5, 5, 5]))
+        ss.set_category(Category.SIXES, ThrowRoll([6, 6, 6, 6, 6]))
+        ss.set_category(Category.CHANCE, ThrowRoll([1, 1, 1, 1, 1]))
+        ss.set_category(Category.THREE_OF_A_KIND, same_roll)
+        ss.set_category(Category.FOUR_OF_A_KIND, same_roll)
+        ss.set_category(Category.FIVE_OF_A_KIND, same_roll)
+        ss.set_category(Category.SHORT_STRAIGHT, same_roll)
+        ss.set_category(Category.LONG_STRAIGHT, same_roll)
+        ss.set_category(Category.FULL_HOUSE, same_roll)
+
+        score = ss.get_score()
+
+        self.assertEqual(68 + 35, score)
+
+
+    def test_003(self):
+        """get_score should return total score with bonus"""
+        ss = ScoreSequence()
+
+        same_roll = ThrowRoll([1, 2, 3, 2, 1])
+
+        ss.set_category(Category.ONES, ThrowRoll([1, 2, 2, 2, 2]))
+        ss.set_category(Category.TWOS, ThrowRoll([1, 1, 1, 1, 1]))
+        ss.set_category(Category.THREES, ThrowRoll([1, 1, 1, 1, 1]))
+        ss.set_category(Category.FOURS, ThrowRoll([4, 4, 1, 1, 1]))
+        ss.set_category(Category.FIVES, ThrowRoll([5, 5, 5, 5, 5]))
+        ss.set_category(Category.SIXES, ThrowRoll([6, 6, 6, 6, 6]))
+        ss.set_category(Category.CHANCE, ThrowRoll([1, 1, 1, 1, 1]))
+        ss.set_category(Category.THREE_OF_A_KIND, same_roll)
+        ss.set_category(Category.FOUR_OF_A_KIND, same_roll)
+        ss.set_category(Category.FIVE_OF_A_KIND, same_roll)
+        ss.set_category(Category.SHORT_STRAIGHT, same_roll)
+        ss.set_category(Category.LONG_STRAIGHT, same_roll)
+        ss.set_category(Category.FULL_HOUSE, same_roll)
+
+        score = ss.get_score()
+
+        self.assertEqual(69 + 35, score)
 
 class YahtzeeScorerTest(unittest.TestCase):
     def test_000(self):
