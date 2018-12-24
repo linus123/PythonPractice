@@ -43,3 +43,18 @@ class ThrowRoll:
             index += 1
 
         return True
+
+    def is_short_straight(self) -> bool:
+        if 1 in self.value_dic \
+                and 2 in self.value_dic \
+                and 3 in self.value_dic \
+                and 4 in self.value_dic:
+            return True
+
+        if 2 in self.value_dic \
+                and 3 in self.value_dic \
+                and 4 in self.value_dic \
+                and 5 in self.value_dic:
+            return True
+
+        return False
