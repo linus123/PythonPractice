@@ -75,6 +75,9 @@ class ThrowRollTest(unittest.TestCase):
         roll = ThrowRoll([1, 3, 4, 2, 1])
         self.assertEqual(25, roll.get_score(Category.SHORT_STRAIGHT))
 
+        roll = ThrowRoll([3, 4, 5, 6, 3])
+        self.assertEqual(25, roll.get_score(Category.SHORT_STRAIGHT))
+
     def test_007(self):
         """get_five_of_a_kind_sum should return 0"""
 
@@ -278,9 +281,11 @@ class ScoreSequenceFactoryTest(unittest.TestCase):
 
         for combo in combos:
             # print(combo)
-            if count > 1000000:
+            if count > 2000000:
                 break
             count += 1
+
+        print(count)
 
         self.assertEqual(1, 1)
 
@@ -309,6 +314,8 @@ class ScoreSequenceFactoryTest(unittest.TestCase):
             if count > 1000000:
                 break
             count += 1
+
+        print(count)
 
         self.assertEqual(1, 1)
 

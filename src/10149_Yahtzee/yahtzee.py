@@ -130,6 +130,12 @@ class ThrowRoll:
                 and 5 in self.count_dic:
             return True
 
+        if 3 in self.count_dic \
+                and 4 in self.count_dic \
+                and 5 in self.count_dic \
+                and 6 in self.count_dic:
+            return True
+
         return False
 
     def __has_x_of_the_same_value(self, x: int) -> bool:
@@ -214,9 +220,7 @@ class ScoreSequenceFactory:
                      Category.SIXES,
                      Category.CHANCE,
                      Category.THREE_OF_A_KIND,
-                     Category.FOUR_OF_A_KIND,
-                     Category.SHORT_STRAIGHT,
-                     Category.LONG_STRAIGHT]
+                     Category.FOUR_OF_A_KIND]
 
         ss = ScoreSequence()
         target_rolls = copy.copy(self.rolls)
@@ -245,6 +249,28 @@ class ScoreSequenceFactory:
 
         # **
 
+        smallest_long_straight_roll_index, smallest_long_straight_roll = self.__get_smallest_roll(
+            target_rolls,
+            Category.LONG_STRAIGHT
+        )
+
+        if smallest_long_straight_roll is not None:
+            ss.set_category(Category.LONG_STRAIGHT, smallest_long_straight_roll)
+            del target_rolls[smallest_long_straight_roll_index]
+
+        # **
+
+        smallest_short_straight_roll_index, smallest_short_straight_roll = self.__get_smallest_roll(
+            target_rolls,
+            Category.SHORT_STRAIGHT
+        )
+
+        if smallest_short_straight_roll is not None:
+            ss.set_category(Category.SHORT_STRAIGHT, smallest_short_straight_roll)
+            del target_rolls[smallest_short_straight_roll_index]
+
+        # **
+
         sequences = self.__recurse(cat_array, target_rolls, ss)
 
         for s in sequences:
@@ -254,6 +280,7 @@ class ScoreSequenceFactory:
 
         if len(categories) == 0:
             yield current_ss.create_copy()
+            return
 
         for roll_index in range(len(rolls)):
             roll = rolls[roll_index]
