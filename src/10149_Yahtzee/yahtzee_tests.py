@@ -1,0 +1,25 @@
+import unittest
+
+from yahtzee import ThrowRoll
+
+
+class ThrowRollTest(unittest.TestCase):
+    def test_001(self):
+        """is_full_house should return false when non full house"""
+        roll = ThrowRoll([1, 2, 3, 4, 5])
+        self.assertFalse(roll.is_full_house())
+
+        roll = ThrowRoll([1, 1, 1, 1, 1])
+        self.assertFalse(roll.is_full_house())
+
+        roll = ThrowRoll([2, 2, 3, 4, 4])
+        self.assertFalse(roll.is_full_house())
+
+    def test_002(self):
+        """is_full_houlse should return true given values in predictable order"""
+
+        roll = ThrowRoll([1, 1, 2, 2, 2])
+        self.assertTrue(roll.is_full_house())
+
+        roll = ThrowRoll([2, 2, 3, 3, 3])
+        self.assertTrue(roll.is_full_house())
