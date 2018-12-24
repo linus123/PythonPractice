@@ -143,14 +143,3 @@ class ThrowRollTest(unittest.TestCase):
 
         roll = ThrowRoll([1, 2, 3, 4, 1])
         self.assertEqual(0, roll.get_sum_of_all(5))
-
-    def test_013(self):
-        """get_top_scores should return full house first"""
-
-        roll = ThrowRoll([1, 1, 1, 2, 2])
-
-        ts = roll.get_top_scores()
-
-        self.assertEqual(1, len(ts))
-        self.assertEqual(Category.FULL_HOUSE, ts[0][0])
-        self.assertEqual(40, ts[0][1])
