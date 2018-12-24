@@ -71,3 +71,21 @@ class ThrowRollTest(unittest.TestCase):
 
         roll = ThrowRoll([1, 3, 4, 2, 1])
         self.assertTrue(roll.is_short_straight())
+
+    def test_007(self):
+        """is_five_of_a_kind should be false when not 5 of any dice"""
+
+        roll = ThrowRoll([1, 2, 3, 4, 1])
+        self.assertFalse(roll.is_five_of_a_kind())
+
+        roll = ThrowRoll([1, 1, 1, 1, 4])
+        self.assertFalse(roll.is_five_of_a_kind())
+
+    def test_008(self):
+        """is_five_of_a_kind should be true when there is 5 of any dice"""
+
+        roll = ThrowRoll([1, 1, 1, 1, 1])
+        self.assertTrue(roll.is_five_of_a_kind())
+
+        roll = ThrowRoll([2, 2, 2, 2, 2])
+        self.assertTrue(roll.is_five_of_a_kind())
