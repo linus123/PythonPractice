@@ -1,6 +1,6 @@
 import unittest
 
-from yahtzee import ThrowRoll, Category, YahtzeeScorer, ScoreSequence
+from yahtzee import ThrowRoll, Category, YahtzeeScorer, ScoreSequence, ScoreSequenceFactory
 
 
 class ThrowRollTest(unittest.TestCase):
@@ -43,16 +43,16 @@ class ThrowRollTest(unittest.TestCase):
         """is_long_straight should return true when is sequence"""
 
         roll = ThrowRoll([1, 2, 3, 4, 5])
-        self.assertEqual(30, roll.get_score(Category.LONG_STRAIGHT))
+        self.assertEqual(35, roll.get_score(Category.LONG_STRAIGHT))
 
         roll = ThrowRoll([2, 3, 4, 5, 6])
-        self.assertEqual(30, roll.get_score(Category.LONG_STRAIGHT))
+        self.assertEqual(35, roll.get_score(Category.LONG_STRAIGHT))
 
         roll = ThrowRoll([1, 5, 2, 4, 3])
-        self.assertEqual(30, roll.get_score(Category.LONG_STRAIGHT))
+        self.assertEqual(35, roll.get_score(Category.LONG_STRAIGHT))
 
         roll = ThrowRoll([6, 5, 4, 3, 2])
-        self.assertEqual(30, roll.get_score(Category.LONG_STRAIGHT))
+        self.assertEqual(35, roll.get_score(Category.LONG_STRAIGHT))
 
     def test_005(self):
         """is_short_straight should return false when there is no 4 sequence"""
@@ -227,7 +227,6 @@ class ScoreSequenceTests(unittest.TestCase):
 
         self.assertEqual(68 + 35, score)
 
-
     def test_003(self):
         """get_score should return total score with bonus"""
         ss = ScoreSequence()
@@ -252,25 +251,36 @@ class ScoreSequenceTests(unittest.TestCase):
 
         self.assertEqual(69 + 35, score)
 
-class YahtzeeScorerTest(unittest.TestCase):
+
+class ScoreSequenceFactoryTest(unittest.TestCase):
     def test_000(self):
         """"""
-        s = YahtzeeScorer()
-        s.add_roll([1, 2, 3, 4, 5])
-        self.assertFalse(s.is_complete())
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        s.add_roll([1, 2, 3, 4, 5])
-        self.assertTrue(s.is_complete())
+        factory = ScoreSequenceFactory()
+        factory.add_roll([1, 2, 3, 4, 5], "r01")
+        self.assertFalse(factory.is_complete())
+        factory.add_roll([1, 2, 3, 4, 5], "r02")
+        factory.add_roll([1, 2, 3, 4, 5], "r03")
+        factory.add_roll([1, 2, 3, 4, 5], "r04")
+        factory.add_roll([1, 2, 3, 4, 5], "r05")
+        factory.add_roll([1, 2, 3, 4, 5], "r06")
+        factory.add_roll([1, 2, 3, 4, 5], "r07")
+        factory.add_roll([1, 2, 3, 4, 5], "r08")
+        factory.add_roll([1, 2, 3, 4, 5], "r09")
+        factory.add_roll([1, 2, 3, 4, 5], "r10")
+        factory.add_roll([1, 2, 3, 4, 5], "r11")
+        factory.add_roll([1, 2, 3, 4, 5], "r12")
+        factory.add_roll([1, 2, 3, 4, 5], "r13")
+        self.assertTrue(factory.is_complete())
 
-        self.assertEqual("1 2 3 4 5 0 15 0 0 0 25 35 0 0 90", s.get_game_score())
+        combos = factory.get_all_combinations()
+
+        count = 0
+
+        for combo in combos:
+            print(combo)
+            if count > 10:
+                break
+            count += 1
+
+        self.assertEqual(1, 1)
 

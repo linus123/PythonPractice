@@ -1,3 +1,4 @@
+import copy
 from enum import Enum
 
 
@@ -29,6 +30,11 @@ class ThrowRoll:
 
         self.count_dic = self.__create_count_dic()
         self.score_dic = self.__create_score_dic()
+
+        self.name = ""
+
+    def __repr__(self) -> str:
+        return "%s - %s" % (self.name, str(self.dice_values))
 
     def __create_count_dic(self):
         value_dic = {}
@@ -149,15 +155,20 @@ class ThrowRoll:
 class ScoreSequence:
 
     def __init__(self):
-        self.sequence_dic = {}
+        self.__sequence_dic = {}
 
     def set_category(self, cat: Category, roll: ThrowRoll):
-        self.sequence_dic[cat] = roll
+        self.__sequence_dic[cat] = roll
+
+    def create_copy(self):
+        ss = ScoreSequence()
+        ss.__sequence_dic = copy.copy(self.__sequence_dic)
+        return ss
 
     def get_score(self) -> int:
         grand_total = 0
 
-        for key, roll in self.sequence_dic.items():
+        for key, roll in self.__sequence_dic.items():
             grand_total += roll.get_score(key)
 
         if self.__should_add_bonus():
@@ -166,19 +177,65 @@ class ScoreSequence:
         return grand_total
 
     def __should_add_bonus(self):
-        single_number_categories = [Category.ONES,
-                                    Category.TWOS,
-                                    Category.THREES,
-                                    Category.FOURS,
-                                    Category.FIVES,
-                                    Category.SIXES]
+        bonus_categories = [Category.ONES,
+                            Category.TWOS,
+                            Category.THREES,
+                            Category.FOURS,
+                            Category.FIVES,
+                            Category.SIXES]
 
         total = 0
 
-        for c in single_number_categories:
-            total += self.sequence_dic[c].get_score(c)
+        for c in bonus_categories:
+            total += self.__sequence_dic[c].get_score(c)
 
         return total >= 63
+
+
+class ScoreSequenceFactory:
+    def __init__(self) -> None:
+        self.rolls = []
+
+    def add_roll(self, values: list, name: str):
+        roll = ThrowRoll(values)
+        if name is not None:
+            roll.name = name
+        self.rolls.append(roll)
+
+    def is_complete(self) -> bool:
+        return len(self.rolls) >= 13
+
+    def get_all_combinations(self):
+        cat_array = []
+
+        for cat in Category:
+            cat_array.append(cat)
+
+        ss = ScoreSequence()
+
+        opts = self.__recurse(cat_array, self.rolls, ss)
+
+        for o in opts:
+            yield o
+
+    def __recurse(self, categories, rolls, current_ss):
+
+        if len(categories) == 0:
+            yield current_ss.create_copy()
+
+        for roll_index in range(len(rolls)):
+            roll = rolls[roll_index]
+            current_ss.set_category(categories[0], roll)
+
+            less_rolls1 = rolls[0:roll_index]
+            less_rolls2 = rolls[roll_index + 1:]
+
+            less_rolls = less_rolls1 + less_rolls2
+
+            foo = self.__recurse(categories[1:], less_rolls, current_ss)
+
+            for f in foo:
+                yield f
 
 
 class YahtzeeScorer:
