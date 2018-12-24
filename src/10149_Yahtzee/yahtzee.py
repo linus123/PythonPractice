@@ -106,9 +106,6 @@ class ThrowRoll:
     def get_score(self, cat: Category) -> int:
         return self.score_dic[cat]
 
-    def is_long_straight(self) -> bool:
-        return self.score_dic[Category.LONG_STRAIGHT] > 0
-
     def is_short_straight(self) -> bool:
         return self.score_dic[Category.SHORT_STRAIGHT] > 0
 
