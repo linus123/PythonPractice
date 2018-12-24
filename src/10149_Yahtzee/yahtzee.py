@@ -4,6 +4,8 @@ class ThrowRoll:
         if len(dice_values) != 5:
             raise ValueError("Array must have 5 values")
 
+        dice_values.sort()
+
         self.dice_values = dice_values
 
         self.value_dic = self.create_value_dic(dice_values)
@@ -29,3 +31,15 @@ class ThrowRoll:
                 has_three_count = True
 
         return has_two_count and has_three_count
+
+    def is_long_straight(self) -> bool:
+        index = 1
+
+        while index < 5:
+
+            if self.dice_values[index] - (self.dice_values[0] + index) != 0:
+                return False
+
+            index += 1
+
+        return True

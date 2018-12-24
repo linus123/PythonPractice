@@ -23,3 +23,30 @@ class ThrowRollTest(unittest.TestCase):
 
         roll = ThrowRoll([2, 2, 3, 3, 3])
         self.assertTrue(roll.is_full_house())
+
+    def test_003(self):
+        """is_long_straight should return false when not sequence"""
+
+        roll = ThrowRoll([1, 1, 2, 2, 2])
+        self.assertFalse(roll.is_long_straight())
+
+        roll = ThrowRoll([1, 2, 3, 4, 4])
+        self.assertFalse(roll.is_long_straight())
+
+        roll = ThrowRoll([1, 1, 2, 3, 4])
+        self.assertFalse(roll.is_long_straight())
+
+    def test_004(self):
+        """is_long_straight should return true when is sequence"""
+
+        roll = ThrowRoll([1, 2, 3, 4, 5])
+        self.assertTrue(roll.is_long_straight())
+
+        roll = ThrowRoll([2, 3, 4, 5, 6])
+        self.assertTrue(roll.is_long_straight())
+
+        roll = ThrowRoll([1, 5, 2, 4, 3])
+        self.assertTrue(roll.is_long_straight())
+
+        roll = ThrowRoll([6, 5, 4, 3, 2])
+        self.assertTrue(roll.is_long_straight())
