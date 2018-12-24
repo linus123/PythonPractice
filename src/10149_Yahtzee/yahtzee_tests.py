@@ -73,43 +73,46 @@ class ThrowRollTest(unittest.TestCase):
         self.assertTrue(roll.is_short_straight())
 
     def test_007(self):
-        """has_five_of_a_kind should be false when not 5 of any dice"""
+        """get_five_of_a_kind_sum should return 0"""
 
         roll = ThrowRoll([1, 2, 3, 4, 1])
-        self.assertFalse(roll.has_five_of_a_kind())
+        self.assertEqual(0, roll.get_five_of_a_kind_sum())
 
         roll = ThrowRoll([1, 1, 1, 1, 4])
-        self.assertFalse(roll.has_five_of_a_kind())
+        self.assertEqual(0, roll.get_five_of_a_kind_sum())
 
     def test_008(self):
-        """has_five_of_a_kind should be true when there is 5 of any dice"""
+        """has_five_of_a_kind should return sum when there is 5 of any dice"""
 
         roll = ThrowRoll([1, 1, 1, 1, 1])
-        self.assertTrue(roll.has_five_of_a_kind())
+        self.assertEqual(5, roll.get_five_of_a_kind_sum())
 
         roll = ThrowRoll([2, 2, 2, 2, 2])
-        self.assertTrue(roll.has_five_of_a_kind())
+        self.assertEqual(10, roll.get_five_of_a_kind_sum())
+
+        roll = ThrowRoll([5, 5, 5, 5, 5])
+        self.assertEqual(25, roll.get_five_of_a_kind_sum())
 
     def test_009(self):
-        """has_four_of_a_kind should be false when there is NOT 4 of any dice"""
+        """get_four_of_a_kind_sum should be 0 when there is NOT 4 of any dice"""
 
         roll = ThrowRoll([1, 2, 3, 4, 1])
-        self.assertFalse(roll.has_four_of_a_kind())
+        self.assertEqual(0, roll.get_four_of_a_kind_sum())
 
         roll = ThrowRoll([1, 1, 1, 2, 3])
-        self.assertFalse(roll.has_four_of_a_kind())
+        self.assertEqual(0, roll.get_four_of_a_kind_sum())
 
     def test_010(self):
-        """has_four_of_a_kind should be true when there is 4 of any dice"""
+        """get_four_of_a_kind_sum should be sum when there is 4 of any dice"""
 
         roll = ThrowRoll([1, 1, 1, 1, 3])
-        self.assertTrue(roll.has_four_of_a_kind())
+        self.assertEqual(4, roll.get_four_of_a_kind_sum())
 
         roll = ThrowRoll([4, 6, 6, 6, 6])
-        self.assertTrue(roll.has_four_of_a_kind())
+        self.assertEqual(6 * 4, roll.get_four_of_a_kind_sum())
 
         roll = ThrowRoll([3, 3, 5, 3, 3])
-        self.assertTrue(roll.has_four_of_a_kind())
+        self.assertEqual(3 * 4, roll.get_four_of_a_kind_sum())
 
     def test_011(self):
         """get_change_value should return sum of all dice"""

@@ -66,14 +66,21 @@ class ThrowRoll:
 
         return False
 
-    def has_five_of_a_kind(self) -> bool:
-        return self.has_x_of_a_kind(5)
+    def get_x_of_a_kind_sum(self, x: int) -> int:
+        for key, value in self.value_dic.items():
+            if value == x:
+                return value * key
 
-    def has_four_of_a_kind(self) -> bool:
-        return self.has_x_of_a_kind(4)
+        return 0
 
-    def has_three_of_a_kind(self) -> bool:
-        return self.has_x_of_a_kind(3)
+    def get_five_of_a_kind_sum(self) -> int:
+        return self.get_x_of_a_kind_sum(5)
+
+    def get_four_of_a_kind_sum(self) -> int:
+        return self.get_x_of_a_kind_sum(4)
+
+    def get_three_of_a_kind_sum(self) -> int:
+        return self.get_x_of_a_kind_sum(3)
 
     def get_change_value(self) -> int:
         s = 0
