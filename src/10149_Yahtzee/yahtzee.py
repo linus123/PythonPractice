@@ -206,17 +206,33 @@ class ScoreSequenceFactory:
         return len(self.rolls) >= 13
 
     def get_all_combinations(self):
-        cat_array = []
-
-        for cat in Category:
-            cat_array.append(cat)
+        cat_array = [Category.ONES,
+                     Category.TWOS,
+                     Category.THREES,
+                     Category.FOURS,
+                     Category.FIVES,
+                     Category.SIXES,
+                     Category.CHANCE,
+                     Category.THREE_OF_A_KIND,
+                     Category.FOUR_OF_A_KIND,
+                     Category.SHORT_STRAIGHT,
+                     Category.LONG_STRAIGHT,
+                     Category.FULL_HOUSE]
 
         ss = ScoreSequence()
+        target_rolls = copy.copy(self.rolls)
 
-        opts = self.__recurse(cat_array, self.rolls, ss)
+        smallest_five_of_a_kind_roll_index, smallest_five_of_a_kind_roll = self.__get_smallest_five_of_a_kind_roll(
+            target_rolls)
 
-        for o in opts:
-            yield o
+        if smallest_five_of_a_kind_roll is not None:
+            ss.set_category(Category.FIVE_OF_A_KIND, smallest_five_of_a_kind_roll)
+            del target_rolls[smallest_five_of_a_kind_roll_index]
+
+        sequences = self.__recurse(cat_array, target_rolls, ss)
+
+        for s in sequences:
+            yield s
 
     def __recurse(self, categories, rolls, current_ss):
 
@@ -232,10 +248,29 @@ class ScoreSequenceFactory:
 
             less_rolls = less_rolls1 + less_rolls2
 
-            foo = self.__recurse(categories[1:], less_rolls, current_ss)
+            sub_categories = categories[1:]
 
-            for f in foo:
-                yield f
+            recurse_results = self.__recurse(sub_categories, less_rolls, current_ss)
+
+            for ss in recurse_results:
+                if ss is not None:
+                    yield ss
+
+    def __get_smallest_five_of_a_kind_roll(self, rolls):
+        smallest_roll = None
+        smallest_index = -1
+        for roll_index in range(len(rolls)):
+            current_five_score = self.rolls[roll_index].get_score(Category.FIVE_OF_A_KIND)
+            if current_five_score > 0:
+                if smallest_roll is None:
+                    smallest_roll = rolls[roll_index]
+                    smallest_index = roll_index
+                else:
+                    if current_five_score < smallest_roll.get_score(Category.FIVE_OF_A_KIND):
+                        smallest_roll = rolls[roll_index]
+                        smallest_index = roll_index
+
+        return smallest_index, smallest_roll
 
 
 class YahtzeeScorer:

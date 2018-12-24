@@ -277,10 +277,39 @@ class ScoreSequenceFactoryTest(unittest.TestCase):
         count = 0
 
         for combo in combos:
-            print(combo)
-            if count > 10:
+            # print(combo)
+            if count > 1000000:
                 break
             count += 1
 
         self.assertEqual(1, 1)
+
+    def test_001(self):
+        """"""
+        factory = ScoreSequenceFactory()
+        factory.add_roll([1, 1, 1, 1, 1], "r01")
+        factory.add_roll([6, 6, 6, 6, 6], "r02")
+        factory.add_roll([6, 6, 6, 1, 1], "r03")
+        factory.add_roll([1, 1, 1, 2, 2], "r04")
+        factory.add_roll([1, 1, 1, 2, 3], "r05")
+        factory.add_roll([1, 2, 3, 4, 5], "r06")
+        factory.add_roll([1, 2, 3, 4, 6], "r07")
+        factory.add_roll([6, 1, 2, 6, 6], "r08")
+        factory.add_roll([1, 4, 5, 5, 5], "r09")
+        factory.add_roll([5, 5, 5, 5, 6], "r10")
+        factory.add_roll([4, 4, 4, 5, 6], "r11")
+        factory.add_roll([3, 1, 3, 6, 3], "r12")
+        factory.add_roll([2, 2, 2, 4, 6], "r13")
+
+        combos = factory.get_all_combinations()
+
+        count = 0
+
+        for combo in combos:
+            if count > 1000000:
+                break
+            count += 1
+
+        self.assertEqual(1, 1)
+
 
