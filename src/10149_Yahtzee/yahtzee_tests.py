@@ -1,6 +1,6 @@
 import unittest
 
-from yahtzee import ThrowRoll, Category, YahtzeeScorer
+from yahtzee import ThrowRoll, Category, YahtzeeScorer, ScoreSequence
 
 
 class ThrowRollTest(unittest.TestCase):
@@ -175,8 +175,35 @@ class ThrowRollTest(unittest.TestCase):
         self.assertEqual(0, roll.get_score(Category.FIVES))
 
 
+class ScoreSequenceTests(unittest.TestCase):
+    def test_000(self):
+        """get_score should return total score without bonus"""
+        ss = ScoreSequence()
+
+        same_roll = ThrowRoll([1, 2, 3, 4, 5])
+
+        ss.set_category(Category.ONES, same_roll)
+        ss.set_category(Category.TWOS, same_roll)
+        ss.set_category(Category.THREES, same_roll)
+        ss.set_category(Category.FOURS, same_roll)
+        ss.set_category(Category.FIVES, same_roll)
+        ss.set_category(Category.SIXES, same_roll)
+        ss.set_category(Category.CHANCE, same_roll)
+        ss.set_category(Category.THREE_OF_A_KIND, same_roll)
+        ss.set_category(Category.FOUR_OF_A_KIND, same_roll)
+        ss.set_category(Category.FIVE_OF_A_KIND, same_roll)
+        ss.set_category(Category.SHORT_STRAIGHT, same_roll)
+        ss.set_category(Category.LONG_STRAIGHT, same_roll)
+        ss.set_category(Category.FULL_HOUSE, same_roll)
+
+        score = ss.get_score()
+
+        self.assertEqual(90, score)
+
+
 class YahtzeeScorerTest(unittest.TestCase):
     def test_000(self):
+        """"""
         s = YahtzeeScorer()
         s.add_roll([1, 2, 3, 4, 5])
         self.assertFalse(s.is_complete())
@@ -195,3 +222,4 @@ class YahtzeeScorerTest(unittest.TestCase):
         self.assertTrue(s.is_complete())
 
         self.assertEqual("1 2 3 4 5 0 15 0 0 0 25 35 0 0 90", s.get_game_score())
+

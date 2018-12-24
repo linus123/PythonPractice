@@ -53,7 +53,7 @@ class ThrowRoll:
             score_dic[Category.FULL_HOUSE] = 0
 
         if self.__is_long_straight():
-            score_dic[Category.LONG_STRAIGHT] = 30
+            score_dic[Category.LONG_STRAIGHT] = 35
         else:
             score_dic[Category.LONG_STRAIGHT] = 0
 
@@ -144,6 +144,23 @@ class ThrowRoll:
 
     def get_score(self, cat: Category) -> int:
         return self.score_dic[cat]
+
+
+class ScoreSequence:
+
+    def __init__(self):
+        self.sequence_dic = {}
+
+    def set_category(self, cat: Category, roll: ThrowRoll):
+        self.sequence_dic[cat] = roll
+
+    def get_score(self) -> int:
+        grand_total = 0
+
+        for key, roll in self.sequence_dic.items():
+            grand_total += roll.get_score(key)
+
+        return grand_total
 
 
 class YahtzeeScorer:
