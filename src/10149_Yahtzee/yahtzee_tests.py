@@ -139,31 +139,37 @@ class ThrowRollTest(unittest.TestCase):
         self.assertEqual(3 * 3, roll.get_score(Category.THREE_OF_A_KIND))
 
     def test_013(self):
-        """get_three_of_a_kind_sum should return sum of all dice"""
+        """CHANCE should return sum of all dice"""
 
         roll = ThrowRoll([1, 1, 1, 1, 1])
-        self.assertEqual(5, roll.get_change_value())
+        self.assertEqual(5, roll.get_score(Category.CHANCE))
 
         roll = ThrowRoll([1, 1, 1, 6, 1])
-        self.assertEqual(10, roll.get_change_value())
+        self.assertEqual(10, roll.get_score(Category.CHANCE))
 
         roll = ThrowRoll([1, 2, 3, 4, 5])
-        self.assertEqual(15, roll.get_change_value())
+        self.assertEqual(15, roll.get_score(Category.CHANCE))
 
     def test_014(self):
         """get_sum_of_all should return the sum of all of a single value"""
 
-        roll = ThrowRoll([1, 1, 1, 1, 1])
-        self.assertEqual(5, roll.get_sum_of_all(1))
+        roll = ThrowRoll([1, 1, 1, 1, 6])
+        self.assertEqual(0, roll.get_score(Category.TWOS))
+        self.assertEqual(4, roll.get_score(Category.ONES))
+        self.assertEqual(6, roll.get_score(Category.SIXES))
 
         roll = ThrowRoll([1, 2, 3, 4, 5])
-        self.assertEqual(5, roll.get_sum_of_all(5))
+        self.assertEqual(1, roll.get_score(Category.ONES))
+        self.assertEqual(2, roll.get_score(Category.TWOS))
+        self.assertEqual(3, roll.get_score(Category.THREES))
+        self.assertEqual(4, roll.get_score(Category.FOURS))
+        self.assertEqual(5, roll.get_score(Category.FIVES))
 
         roll = ThrowRoll([1, 2, 3, 5, 5])
-        self.assertEqual(10, roll.get_sum_of_all(5))
+        self.assertEqual(10, roll.get_score(Category.FIVES))
 
         roll = ThrowRoll([5, 2, 3, 5, 5])
-        self.assertEqual(15, roll.get_sum_of_all(5))
+        self.assertEqual(15, roll.get_score(Category.FIVES))
 
         roll = ThrowRoll([1, 2, 3, 4, 1])
-        self.assertEqual(0, roll.get_sum_of_all(5))
+        self.assertEqual(0, roll.get_score(Category.FIVES))
