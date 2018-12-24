@@ -67,6 +67,9 @@ class ThrowRoll:
         else:
             score_dic[Category.FIVE_OF_A_KIND] = 0
 
+        score_dic[Category.FOUR_OF_A_KIND] = self.__get_x_of_a_kind_sum(4)
+        score_dic[Category.THREE_OF_A_KIND] = self.__get_x_of_a_kind_sum(3)
+
         return score_dic
 
     def __is_full_house(self, has_three_of_any_kind, has_two_of_any_kind):
@@ -113,26 +116,17 @@ class ThrowRoll:
 
         return False
 
+    def __get_x_of_a_kind_sum(self, x: int) -> int:
+        for key, value in self.count_dic.items():
+            if value >= x:
+                return x * key
+
+        return 0
+
     # **
 
     def get_score(self, cat: Category) -> int:
         return self.score_dic[cat]
-
-    def get_x_of_a_kind_sum(self, x: int) -> int:
-        for key, value in self.count_dic.items():
-            if value == x:
-                return value * key
-
-        return 0
-
-    def get_five_of_a_kind_sum(self) -> int:
-        return self.get_x_of_a_kind_sum(5)
-
-    def get_four_of_a_kind_sum(self) -> int:
-        return self.get_x_of_a_kind_sum(4)
-
-    def get_three_of_a_kind_sum(self) -> int:
-        return self.get_x_of_a_kind_sum(3)
 
     def get_change_value(self) -> int:
         s = 0
