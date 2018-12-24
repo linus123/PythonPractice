@@ -1,3 +1,22 @@
+from enum import Enum
+
+
+class Category(Enum):
+    ONES = 1,
+    TWOS = 2,
+    THREES = 3,
+    FOURS = 4,
+    FIVES = 5,
+    SIXES = 6,
+    CHANCE = 7,
+    THREE_OF_A_KIND = 8,
+    FOUR_OF_A_KIND = 9,
+    FIVE_OF_A_KIND = 10,
+    SHORT_STRAIGHT = 11,
+    LONG_STRAIGHT = 12,
+    FULL_HOUSE = 13
+
+
 class ThrowRoll:
     def __init__(self, dice_values: list) -> None:
 
@@ -94,3 +113,11 @@ class ThrowRoll:
             return self.value_dic[v] * v
 
         return 0
+
+    def get_top_scores(self):
+        top_scores = []
+
+        if self.is_full_house():
+            top_scores.append((Category.FULL_HOUSE, 40))
+
+        return top_scores
