@@ -5,24 +5,27 @@ from yahtzee import ThrowRoll, Category
 
 class ThrowRollTest(unittest.TestCase):
     def test_001(self):
-        """is_full_house should return false when non full house"""
+        """get_score should return false when non full house"""
         roll = ThrowRoll([1, 2, 3, 4, 5])
-        self.assertFalse(roll.is_full_house())
+        self.assertEqual(0, roll.get_score(Category.FULL_HOUSE))
 
         roll = ThrowRoll([1, 1, 1, 1, 1])
-        self.assertFalse(roll.is_full_house())
+        self.assertEqual(0, roll.get_score(Category.FULL_HOUSE))
 
         roll = ThrowRoll([2, 2, 3, 4, 4])
-        self.assertFalse(roll.is_full_house())
+        self.assertEqual(0, roll.get_score(Category.FULL_HOUSE))
 
     def test_002(self):
-        """is_full_houlse should return true given values in predictable order"""
+        """get_score should return true given full_house_numbers"""
 
         roll = ThrowRoll([1, 1, 2, 2, 2])
-        self.assertTrue(roll.is_full_house())
+        self.assertEqual(40, roll.get_score(Category.FULL_HOUSE))
 
         roll = ThrowRoll([2, 2, 3, 3, 3])
-        self.assertTrue(roll.is_full_house())
+        self.assertEqual(40, roll.get_score(Category.FULL_HOUSE))
+
+        roll = ThrowRoll([6, 2, 2, 2, 6])
+        self.assertEqual(40, roll.get_score(Category.FULL_HOUSE))
 
     def test_003(self):
         """is_long_straight should return false when not sequence"""

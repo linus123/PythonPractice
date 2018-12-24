@@ -45,14 +45,9 @@ class ThrowRoll:
 
         score_dic = {}
 
-        for key, value in self.count_dic.items():
-            if value == 2:
-                has_two_of_any_kind = True
+        is_full_house = self.__is_full_house(has_three_of_any_kind, has_two_of_any_kind)
 
-            if value == 3:
-                has_three_of_any_kind = True
-
-        if has_two_of_any_kind and has_three_of_any_kind:
+        if is_full_house:
             score_dic[Category.FULL_HOUSE] = 40
         else:
             score_dic[Category.FULL_HOUSE] = 0
@@ -68,6 +63,16 @@ class ThrowRoll:
             score_dic[Category.SHORT_STRAIGHT] = 0
 
         return score_dic
+
+    def __is_full_house(self, has_three_of_any_kind, has_two_of_any_kind):
+        for key, value in self.count_dic.items():
+            if value == 2:
+                has_two_of_any_kind = True
+
+            if value == 3:
+                has_three_of_any_kind = True
+
+        return has_two_of_any_kind and has_three_of_any_kind
 
     def __is_long_straight(self) -> bool:
         index = 1
@@ -98,8 +103,8 @@ class ThrowRoll:
 
     # **
 
-    def is_full_house(self) -> bool:
-        return self.score_dic[Category.FULL_HOUSE] > 0
+    def get_score(self, cat: Category) -> int:
+        return self.score_dic[cat]
 
     def is_long_straight(self) -> bool:
         return self.score_dic[Category.LONG_STRAIGHT] > 0
