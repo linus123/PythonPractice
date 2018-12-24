@@ -59,10 +59,15 @@ class ThrowRoll:
 
         return False
 
-    def is_five_of_a_kind(self) -> bool:
-
+    def has_x_of_a_kind(self, x: int) -> bool:
         for key, value in self.value_dic.items():
-            if value == 5:
+            if value == x:
                 return True
 
         return False
+
+    def has_five_of_a_kind(self) -> bool:
+        return self.has_x_of_a_kind(5)
+
+    def has_four_of_a_kind(self) -> bool:
+        return self.has_x_of_a_kind(4)
