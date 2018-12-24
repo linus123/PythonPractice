@@ -1,6 +1,6 @@
 import unittest
 
-from yahtzee import ThrowRoll, Category
+from yahtzee import ThrowRoll, Category, YahtzeeScorer
 
 
 class ThrowRollTest(unittest.TestCase):
@@ -173,3 +173,25 @@ class ThrowRollTest(unittest.TestCase):
 
         roll = ThrowRoll([1, 2, 3, 4, 1])
         self.assertEqual(0, roll.get_score(Category.FIVES))
+
+
+class YahtzeeScorerTest(unittest.TestCase):
+    def test_000(self):
+        s = YahtzeeScorer()
+        s.add_roll([1, 2, 3, 4, 5])
+        self.assertFalse(s.is_complete())
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        s.add_roll([1, 2, 3, 4, 5])
+        self.assertTrue(s.is_complete())
+
+        self.assertEqual("1 2 3 4 5 0 15 0 0 0 25 35 0 0 90", s.get_game_score())

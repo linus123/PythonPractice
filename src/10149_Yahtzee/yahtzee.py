@@ -71,40 +71,21 @@ class ThrowRoll:
         score_dic[Category.THREE_OF_A_KIND] = self.__get_x_of_a_kind_sum(3)
 
         chance_sum = 0
-        sum_of_sixes = 0
-        sum_of_fives = 0
-        sum_of_fours = 0
-        sum_of_threes = 0
-        sum_of_twos = 0
-        sum_of_ones = 0
+        sums = [0, 0, 0, 0, 0, 0]
         for v in self.dice_values:
             chance_sum += v
 
-            if v == 6:
-                sum_of_sixes += 6
-
-            if v == 5:
-                sum_of_fives += 5
-
-            if v == 4:
-                sum_of_fours += 4
-
-            if v == 3:
-                sum_of_threes += 3
-
-            if v == 2:
-                sum_of_twos += 2
-
-            if v == 1:
-                sum_of_ones += 1
+            for i in range(6):
+                if v == i:
+                    sums[i - 1] += i
 
         score_dic[Category.CHANCE] = chance_sum
-        score_dic[Category.SIXES] = sum_of_sixes
-        score_dic[Category.FIVES] = sum_of_fives
-        score_dic[Category.FOURS] = sum_of_fours
-        score_dic[Category.THREES] = sum_of_threes
-        score_dic[Category.TWOS] = sum_of_twos
-        score_dic[Category.ONES] = sum_of_ones
+        score_dic[Category.SIXES] = sums[5]
+        score_dic[Category.FIVES] = sums[4]
+        score_dic[Category.FOURS] = sums[3]
+        score_dic[Category.THREES] = sums[2]
+        score_dic[Category.TWOS] = sums[1]
+        score_dic[Category.ONES] = sums[0]
 
         return score_dic
 
@@ -164,3 +145,50 @@ class ThrowRoll:
     def get_score(self, cat: Category) -> int:
         return self.score_dic[cat]
 
+
+class YahtzeeScorer:
+    def __init__(self) -> None:
+        self.rolls = []
+
+    def add_roll(self, values: list):
+        self.rolls.append(ThrowRoll(values))
+
+    def is_complete(self) -> bool:
+        return len(self.rolls) >= 13
+
+    def get_game_score(self) -> str:
+        score_array = ["0"] * 15
+
+        score_array[0] = str(self.rolls[0].get_score(Category.ONES))
+        score_array[1] = str(self.rolls[1].get_score(Category.TWOS))
+        score_array[2] = str(self.rolls[2].get_score(Category.THREES))
+        score_array[3] = str(self.rolls[3].get_score(Category.FOURS))
+        score_array[4] = str(self.rolls[4].get_score(Category.FIVES))
+        score_array[5] = str(self.rolls[5].get_score(Category.SIXES))
+        score_array[6] = str(self.rolls[6].get_score(Category.CHANCE))
+        score_array[7] = str(self.rolls[7].get_score(Category.THREE_OF_A_KIND))
+        score_array[8] = str(self.rolls[8].get_score(Category.FOUR_OF_A_KIND))
+        score_array[9] = str(self.rolls[9].get_score(Category.FIVE_OF_A_KIND))
+        score_array[10] = str(self.rolls[10].get_score(Category.SHORT_STRAIGHT))
+        score_array[11] = str(self.rolls[11].get_score(Category.LONG_STRAIGHT))
+        score_array[12] = str(self.rolls[12].get_score(Category.FULL_HOUSE))
+        score_array[13] = str(0)
+
+        grand_total = self.rolls[0].get_score(Category.ONES) \
+                      + self.rolls[1].get_score(Category.TWOS) \
+                      + self.rolls[2].get_score(Category.THREES) \
+                      + self.rolls[3].get_score(Category.FOURS) \
+                      + self.rolls[4].get_score(Category.FIVES) \
+                      + self.rolls[5].get_score(Category.SIXES) \
+                      + self.rolls[6].get_score(Category.CHANCE) \
+                      + self.rolls[7].get_score(Category.THREE_OF_A_KIND) \
+                      + self.rolls[8].get_score(Category.FOUR_OF_A_KIND) \
+                      + self.rolls[9].get_score(Category.FIVE_OF_A_KIND) \
+                      + self.rolls[10].get_score(Category.SHORT_STRAIGHT) \
+                      + self.rolls[11].get_score(Category.LONG_STRAIGHT) \
+                      + self.rolls[12].get_score(Category.FULL_HOUSE) \
+                      + 0
+
+        score_array[14] = str(grand_total)
+
+        return " ".join(score_array)
