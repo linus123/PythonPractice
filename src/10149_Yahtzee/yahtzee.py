@@ -76,8 +76,14 @@ class ThrowRoll:
         return self.has_x_of_a_kind(3)
 
     def get_change_value(self) -> int:
-        sum = 0
+        s = 0
         for dice_value in self.dice_values:
-            sum += dice_value
+            s += dice_value
 
-        return sum
+        return s
+
+    def get_sum_of_all(self, v) -> int:
+        if v in self.value_dic:
+            return self.value_dic[v] * v
+
+        return 0

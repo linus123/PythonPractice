@@ -122,3 +122,21 @@ class ThrowRollTest(unittest.TestCase):
 
         roll = ThrowRoll([1, 2, 3, 4, 5])
         self.assertEqual(15, roll.get_change_value())
+
+    def test_012(self):
+        """get_sum_of_all should return the sum of all of a single value"""
+
+        roll = ThrowRoll([1, 1, 1, 1, 1])
+        self.assertEqual(5, roll.get_sum_of_all(1))
+
+        roll = ThrowRoll([1, 2, 3, 4, 5])
+        self.assertEqual(5, roll.get_sum_of_all(5))
+
+        roll = ThrowRoll([1, 2, 3, 5, 5])
+        self.assertEqual(10, roll.get_sum_of_all(5))
+
+        roll = ThrowRoll([5, 2, 3, 5, 5])
+        self.assertEqual(15, roll.get_sum_of_all(5))
+
+        roll = ThrowRoll([1, 2, 3, 4, 1])
+        self.assertEqual(0, roll.get_sum_of_all(5))
