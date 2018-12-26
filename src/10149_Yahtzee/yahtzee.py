@@ -197,6 +197,40 @@ class ScoreSequence:
 
         return total >= 63
 
+    def __get_score_as_string(self, cat: Category):
+        if cat in self.__sequence_dic:
+            return str(self.__sequence_dic[cat].get_score(cat))
+        else:
+            return "0"
+
+    def get_formatted_score(self):
+
+        score_array = []
+
+        score_array.append(self.__get_score_as_string(Category.ONES))
+        score_array.append(self.__get_score_as_string(Category.TWOS))
+        score_array.append(self.__get_score_as_string(Category.THREES))
+        score_array.append(self.__get_score_as_string(Category.THREES))
+        score_array.append(self.__get_score_as_string(Category.FOURS))
+        score_array.append(self.__get_score_as_string(Category.FIVES))
+        score_array.append(self.__get_score_as_string(Category.SIXES))
+        score_array.append(self.__get_score_as_string(Category.CHANCE))
+        score_array.append(self.__get_score_as_string(Category.THREE_OF_A_KIND))
+        score_array.append(self.__get_score_as_string(Category.FOUR_OF_A_KIND))
+        score_array.append(self.__get_score_as_string(Category.FIVE_OF_A_KIND))
+        score_array.append(self.__get_score_as_string(Category.SHORT_STRAIGHT))
+        score_array.append(self.__get_score_as_string(Category.LONG_STRAIGHT))
+        score_array.append(self.__get_score_as_string(Category.FULL_HOUSE))
+
+        if self.__should_add_bonus():
+            score_array.append("35")
+        else:
+            score_array.append("0")
+
+        score_array.append(str(self.get_score()))
+
+        return " ".join(score_array)
+
 
 class ScoreSequenceFactory:
     def __init__(self) -> None:
@@ -318,47 +352,32 @@ class ScoreSequenceFactory:
 
 class YahtzeeScorer:
     def __init__(self) -> None:
-        self.rolls = []
+        self.factory = ScoreSequenceFactory()
 
-    def add_roll(self, values: list):
-        self.rolls.append(ThrowRoll(values))
+    def add_roll(self, values: list, name=None):
+        self.factory.add_roll(values, name)
 
     def is_complete(self) -> bool:
-        return len(self.rolls) >= 13
+        return self.factory.is_complete()
 
-    def get_game_score(self) -> str:
-        score_array = ["0"] * 15
+    def get_max_game_score(self, max_count) -> str:
 
-        score_array[0] = str(self.rolls[0].get_score(Category.ONES))
-        score_array[1] = str(self.rolls[1].get_score(Category.TWOS))
-        score_array[2] = str(self.rolls[2].get_score(Category.THREES))
-        score_array[3] = str(self.rolls[3].get_score(Category.FOURS))
-        score_array[4] = str(self.rolls[4].get_score(Category.FIVES))
-        score_array[5] = str(self.rolls[5].get_score(Category.SIXES))
-        score_array[6] = str(self.rolls[6].get_score(Category.CHANCE))
-        score_array[7] = str(self.rolls[7].get_score(Category.THREE_OF_A_KIND))
-        score_array[8] = str(self.rolls[8].get_score(Category.FOUR_OF_A_KIND))
-        score_array[9] = str(self.rolls[9].get_score(Category.FIVE_OF_A_KIND))
-        score_array[10] = str(self.rolls[10].get_score(Category.SHORT_STRAIGHT))
-        score_array[11] = str(self.rolls[11].get_score(Category.LONG_STRAIGHT))
-        score_array[12] = str(self.rolls[12].get_score(Category.FULL_HOUSE))
-        score_array[13] = str(0)
+        max_score_sequence = None
 
-        grand_total = self.rolls[0].get_score(Category.ONES) \
-                      + self.rolls[1].get_score(Category.TWOS) \
-                      + self.rolls[2].get_score(Category.THREES) \
-                      + self.rolls[3].get_score(Category.FOURS) \
-                      + self.rolls[4].get_score(Category.FIVES) \
-                      + self.rolls[5].get_score(Category.SIXES) \
-                      + self.rolls[6].get_score(Category.CHANCE) \
-                      + self.rolls[7].get_score(Category.THREE_OF_A_KIND) \
-                      + self.rolls[8].get_score(Category.FOUR_OF_A_KIND) \
-                      + self.rolls[9].get_score(Category.FIVE_OF_A_KIND) \
-                      + self.rolls[10].get_score(Category.SHORT_STRAIGHT) \
-                      + self.rolls[11].get_score(Category.LONG_STRAIGHT) \
-                      + self.rolls[12].get_score(Category.FULL_HOUSE) \
-                      + 0
+        combos = self.factory.get_all_combinations()
 
-        score_array[14] = str(grand_total)
+        count = 0
 
-        return " ".join(score_array)
+        for combo in combos:
+
+            if count == 0:
+                max_score_sequence = combo
+            else:
+                if combo.get_score() > max_score_sequence.get_score():
+                    max_score_sequence = combo
+
+            if count > max_count:
+                break
+            count += 1
+
+        return max_score_sequence.get_formatted_score()
