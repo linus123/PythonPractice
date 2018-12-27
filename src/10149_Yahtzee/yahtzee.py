@@ -1,5 +1,6 @@
 import copy
 from enum import Enum
+from queue import Queue
 
 
 class Category(Enum):
@@ -280,7 +281,6 @@ class ScoreSequenceFactory:
             del current_rolls[ls_index]
 
         for cat in Category:
-
             if cat == Category.LONG_STRAIGHT:
                 continue
 
@@ -291,6 +291,20 @@ class ScoreSequenceFactory:
                 if roll.get_score(cat) > 0:
                     valid_cat_seq_dic[cat].append(roll)
 
+        valid_cat_seq_dic[Category.FULL_HOUSE].sort(key=lambda r: r.get_score(Category.CHANCE))
+        valid_cat_seq_dic[Category.SHORT_STRAIGHT].sort(key=lambda r: r.get_score(Category.CHANCE))
+        valid_cat_seq_dic[Category.FIVE_OF_A_KIND].sort(key=lambda r: r.get_score(Category.CHANCE))
+        valid_cat_seq_dic[Category.FOUR_OF_A_KIND].sort(key=lambda r: r.get_score(Category.CHANCE))
+        valid_cat_seq_dic[Category.THREE_OF_A_KIND].sort(key=lambda r: r.get_score(Category.CHANCE))
+
+        valid_cat_seq_dic[Category.CHANCE].sort(key=lambda r: r.get_score(Category.CHANCE))
+
+        valid_cat_seq_dic[Category.ONES].sort(key=lambda r: r.get_score(Category.ONES), reverse=True)
+        valid_cat_seq_dic[Category.TWOS].sort(key=lambda r: r.get_score(Category.TWOS), reverse=True)
+        valid_cat_seq_dic[Category.THREES].sort(key=lambda r: r.get_score(Category.THREES), reverse=True)
+        valid_cat_seq_dic[Category.FOURS].sort(key=lambda r: r.get_score(Category.FOURS), reverse=True)
+        valid_cat_seq_dic[Category.FIVES].sort(key=lambda r: r.get_score(Category.FIVES), reverse=True)
+        valid_cat_seq_dic[Category.SIXES].sort(key=lambda r: r.get_score(Category.SIXES), reverse=True)
 
 
         cat_array = [Category.ONES,
