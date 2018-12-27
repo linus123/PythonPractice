@@ -157,6 +157,13 @@ class ThrowRoll:
     def get_score(self, cat: Category) -> int:
         return self.score_dic[cat]
 
+    def get_unique_number(self):
+        return self.dice_values[0] \
+            + self.dice_values[1] * 10 \
+            + self.dice_values[2] * 100 \
+            + self.dice_values[3] * 1000 \
+            + self.dice_values[4] * 10000
+
 
 class ScoreSequence:
 
@@ -252,7 +259,39 @@ class ScoreSequenceFactory:
     def is_complete(self) -> bool:
         return len(self.__rolls) >= 13
 
+    def __get_index_of_first_long_straight(self, rolls):
+
+        for roll_index in range(len(rolls)):
+            roll = rolls[roll_index]
+            if roll.get_score(Category.LONG_STRAIGHT) > 0:
+                return roll_index
+
+        return -1
+
     def get_all_combinations(self):
+
+        valid_cat_seq_dic = {}
+        current_rolls = copy.copy(self.__rolls)
+
+        ls_index = self.__get_index_of_first_long_straight(current_rolls)
+
+        if ls_index >= 0:
+            valid_cat_seq_dic[Category.LONG_STRAIGHT] = [current_rolls[ls_index]]
+            del current_rolls[ls_index]
+
+        for cat in Category:
+
+            if cat == Category.LONG_STRAIGHT:
+                continue
+
+            valid_cat_seq_dic[cat] = []
+
+            for roll in current_rolls:
+
+                if roll.get_score(cat) > 0:
+                    valid_cat_seq_dic[cat].append(roll)
+
+
 
         cat_array = [Category.ONES,
                      Category.TWOS,

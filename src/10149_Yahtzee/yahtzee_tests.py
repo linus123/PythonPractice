@@ -180,6 +180,24 @@ class ThrowRollTest(unittest.TestCase):
         roll = ThrowRoll([6, 6, 6, 6, 6])
         self.assertEqual(30, roll.get_score(Category.SIXES))
 
+    def test_015(self):
+        """get_unique_number should return unique for roll"""
+        roll = ThrowRoll([1, 1, 1, 1, 1])
+        n = roll.get_unique_number()
+        self.assertEqual(11111, n)
+
+        roll = ThrowRoll([1, 1, 1, 1, 2])
+        n = roll.get_unique_number()
+        self.assertEqual(21111, n)
+
+        roll = ThrowRoll([6, 1, 1, 1, 2])
+        n = roll.get_unique_number()
+        self.assertEqual(62111, n)
+
+        roll = ThrowRoll([6, 5, 6, 1, 2])
+        n = roll.get_unique_number()
+        self.assertEqual(66521, n)
+
 
 class ScoreSequenceTests(unittest.TestCase):
     def test_000(self):
