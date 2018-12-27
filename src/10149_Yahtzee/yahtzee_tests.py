@@ -186,23 +186,21 @@ class ScoreSequenceTests(unittest.TestCase):
         """get_score should return total score without bonus"""
         ss = ScoreSequence()
 
-        same_roll = ThrowRoll([1, 2, 3, 4, 5])
+        ss.set_category(Category.ONES, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.TWOS, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.THREES, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.FOURS, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.FIVES, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.SIXES, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.CHANCE, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.THREE_OF_A_KIND, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.FOUR_OF_A_KIND, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.FIVE_OF_A_KIND, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.SHORT_STRAIGHT, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.LONG_STRAIGHT, ThrowRoll([1, 2, 3, 4, 5]))
+        ss.set_category(Category.FULL_HOUSE, ThrowRoll([1, 2, 3, 4, 5]))
 
-        ss.set_category(Category.ONES, same_roll)
-        ss.set_category(Category.TWOS, same_roll)
-        ss.set_category(Category.THREES, same_roll)
-        ss.set_category(Category.FOURS, same_roll)
-        ss.set_category(Category.FIVES, same_roll)
-        ss.set_category(Category.SIXES, same_roll)
-        ss.set_category(Category.CHANCE, same_roll)
-        ss.set_category(Category.THREE_OF_A_KIND, same_roll)
-        ss.set_category(Category.FOUR_OF_A_KIND, same_roll)
-        ss.set_category(Category.FIVE_OF_A_KIND, same_roll)
-        ss.set_category(Category.SHORT_STRAIGHT, same_roll)
-        ss.set_category(Category.LONG_STRAIGHT, same_roll)
-        ss.set_category(Category.FULL_HOUSE, same_roll)
-
-        score = ss.get_score()
+        score = ss.get_total_score()
 
         self.assertEqual(90, score)
 
@@ -226,7 +224,7 @@ class ScoreSequenceTests(unittest.TestCase):
         ss.set_category(Category.LONG_STRAIGHT, same_roll)
         ss.set_category(Category.FULL_HOUSE, same_roll)
 
-        score = ss.get_score()
+        score = ss.get_total_score()
 
         self.assertEqual(68 + 35, score)
 
@@ -250,7 +248,7 @@ class ScoreSequenceTests(unittest.TestCase):
         ss.set_category(Category.LONG_STRAIGHT, same_roll)
         ss.set_category(Category.FULL_HOUSE, same_roll)
 
-        score = ss.get_score()
+        score = ss.get_total_score()
 
         self.assertEqual(69 + 35, score)
 
@@ -277,11 +275,11 @@ class ScoreSequenceFactoryTest(unittest.TestCase):
         scorer.add_roll([1, 2, 3, 4, 5], "r13")
         self.assertTrue(scorer.is_complete())
 
-        score = scorer.get_max_game_score(100)
+        score = scorer.get_max_game_score(10000)
 
         print(score)
 
-        self.assertEqual(1, 1)
+        self.assertEqual("1 2 3 4 5 0 15 0 0 0 25 35 0 0 90", score)
 
     def test_001(self):
         """Should find max score for example 2 in original problem"""
@@ -302,9 +300,8 @@ class ScoreSequenceFactoryTest(unittest.TestCase):
         scorer.add_roll([3, 1, 3, 6, 3], "r12")
         scorer.add_roll([2, 2, 2, 4, 6], "r13")
 
-        score = scorer.get_max_game_score(100)
+        score = scorer.get_max_game_score(10000)
 
         print(score)
 
-        self.assertEqual(1, 1)
-
+        self.assertEqual("3 6 9 12 15 30 21 20 26 50 25 35 40 35 327", score)

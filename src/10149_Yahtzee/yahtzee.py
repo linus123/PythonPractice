@@ -162,16 +162,23 @@ class ScoreSequence:
 
     def __init__(self):
         self.__sequence_dic = {}
+        self.__roll_list = []
 
-    def set_category(self, cat: Category, roll: ThrowRoll):
+    def set_category(self, cat: Category, roll: ThrowRoll) -> bool:
+        if roll in self.__roll_list:
+            return False
+
         self.__sequence_dic[cat] = roll
+        self.__roll_list.append(roll)
+
+        return True
 
     def create_copy(self):
         ss = ScoreSequence()
         ss.__sequence_dic = copy.copy(self.__sequence_dic)
         return ss
 
-    def get_score(self) -> int:
+    def get_total_score(self) -> int:
         grand_total = 0
 
         for key, roll in self.__sequence_dic.items():
@@ -193,7 +200,8 @@ class ScoreSequence:
         total = 0
 
         for c in bonus_categories:
-            total += self.__sequence_dic[c].get_score(c)
+            if c in self.__sequence_dic:
+                total += self.__sequence_dic[c].get_score(c)
 
         return total >= 63
 
@@ -209,7 +217,6 @@ class ScoreSequence:
 
         score_array.append(self.__get_score_as_string(Category.ONES))
         score_array.append(self.__get_score_as_string(Category.TWOS))
-        score_array.append(self.__get_score_as_string(Category.THREES))
         score_array.append(self.__get_score_as_string(Category.THREES))
         score_array.append(self.__get_score_as_string(Category.FOURS))
         score_array.append(self.__get_score_as_string(Category.FIVES))
@@ -227,25 +234,26 @@ class ScoreSequence:
         else:
             score_array.append("0")
 
-        score_array.append(str(self.get_score()))
+        score_array.append(str(self.get_total_score()))
 
         return " ".join(score_array)
 
 
 class ScoreSequenceFactory:
     def __init__(self) -> None:
-        self.rolls = []
+        self.__rolls = []
 
     def add_roll(self, values: list, name: str):
         roll = ThrowRoll(values)
         if name is not None:
             roll.name = name
-        self.rolls.append(roll)
+        self.__rolls.append(roll)
 
     def is_complete(self) -> bool:
-        return len(self.rolls) >= 13
+        return len(self.__rolls) >= 13
 
     def get_all_combinations(self):
+
         cat_array = [Category.ONES,
                      Category.TWOS,
                      Category.THREES,
@@ -257,11 +265,11 @@ class ScoreSequenceFactory:
                      Category.FOUR_OF_A_KIND]
 
         ss = ScoreSequence()
-        target_rolls = copy.copy(self.rolls)
+        target_rolls = copy.copy(self.__rolls)
 
         # **
 
-        smallest_five_of_a_kind_roll_index, smallest_five_of_a_kind_roll = self.__get_smallest_roll(
+        smallest_five_of_a_kind_roll_index, smallest_five_of_a_kind_roll = self.__get_roll_of_categoy_with_smallest_score(
             target_rolls,
             Category.FIVE_OF_A_KIND
         )
@@ -272,7 +280,7 @@ class ScoreSequenceFactory:
 
         # **
 
-        smallest_full_house_roll_index, smallest_full_house_roll = self.__get_smallest_roll(
+        smallest_full_house_roll_index, smallest_full_house_roll = self.__get_roll_of_categoy_with_smallest_score(
             target_rolls,
             Category.FULL_HOUSE
         )
@@ -283,7 +291,7 @@ class ScoreSequenceFactory:
 
         # **
 
-        smallest_long_straight_roll_index, smallest_long_straight_roll = self.__get_smallest_roll(
+        smallest_long_straight_roll_index, smallest_long_straight_roll = self.__get_roll_of_categoy_with_smallest_score(
             target_rolls,
             Category.LONG_STRAIGHT
         )
@@ -294,7 +302,7 @@ class ScoreSequenceFactory:
 
         # **
 
-        smallest_short_straight_roll_index, smallest_short_straight_roll = self.__get_smallest_roll(
+        smallest_short_straight_roll_index, smallest_short_straight_roll = self.__get_roll_of_categoy_with_smallest_score(
             target_rolls,
             Category.SHORT_STRAIGHT
         )
@@ -333,21 +341,60 @@ class ScoreSequenceFactory:
                 if ss is not None:
                     yield ss
 
-    def __get_smallest_roll(self, rolls, category):
+    def __get_roll_of_categoy_with_smallest_score2(self,
+                                                  rolls,
+                                                  target_category,
+                                                  categories_to_check):
         smallest_roll = None
         smallest_index = -1
+
         for roll_index in range(len(rolls)):
-            current_five_score = rolls[roll_index].get_score(category)
-            if current_five_score > 0:
+            current_score = rolls[roll_index].get_total_score(target_category)
+            if current_score > 0:
                 if smallest_roll is None:
                     smallest_roll = rolls[roll_index]
                     smallest_index = roll_index
                 else:
-                    if current_five_score < smallest_roll.get_score(category):
+                    if current_score < smallest_roll.get_score(target_category):
                         smallest_roll = rolls[roll_index]
                         smallest_index = roll_index
 
         return smallest_index, smallest_roll
+
+
+    def __get_roll_of_categoy_with_smallest_score(self,
+                                                  rolls,
+                                                  target_category):
+        smallest_roll = None
+        smallest_index = -1
+        for roll_index in range(len(rolls)):
+            current_score = rolls[roll_index].get_score(target_category)
+            if current_score > 0:
+                if smallest_roll is None:
+                    smallest_roll = rolls[roll_index]
+                    smallest_index = roll_index
+                else:
+                    if current_score < smallest_roll.get_score(target_category):
+                        smallest_roll = rolls[roll_index]
+                        smallest_index = roll_index
+
+        return smallest_index, smallest_roll
+
+    def __get_roll_of_categoy_with_largest_score(self, rolls, category):
+        largest_roll = None
+        largest_index = -1
+        for roll_index in range(len(rolls)):
+            current_score = rolls[roll_index].get_total_score(category)
+            if current_score > 0:
+                if largest_roll is None:
+                    largest_roll = rolls[roll_index]
+                    largest_index = roll_index
+                else:
+                    if current_score > largest_roll.get_score(category):
+                        largest_roll = rolls[roll_index]
+                        largest_index = roll_index
+
+        return largest_index, largest_roll
 
 
 class YahtzeeScorer:
@@ -373,7 +420,7 @@ class YahtzeeScorer:
             if count == 0:
                 max_score_sequence = combo
             else:
-                if combo.get_score() > max_score_sequence.get_score():
+                if combo.get_total_score() > max_score_sequence.get_total_score():
                     max_score_sequence = combo
 
             if count > max_count:
