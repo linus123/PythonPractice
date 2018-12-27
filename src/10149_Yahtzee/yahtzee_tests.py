@@ -112,13 +112,13 @@ class ThrowRollTest(unittest.TestCase):
         """get_four_of_a_kind_sum should be sum when there is 4 of any dice"""
 
         roll = ThrowRoll([1, 1, 1, 1, 3])
-        self.assertEqual(4, roll.get_score(Category.FOUR_OF_A_KIND))
+        self.assertEqual(7, roll.get_score(Category.FOUR_OF_A_KIND))
 
         roll = ThrowRoll([4, 6, 6, 6, 6])
-        self.assertEqual(6 * 4, roll.get_score(Category.FOUR_OF_A_KIND))
+        self.assertEqual(6 * 4 + 4, roll.get_score(Category.FOUR_OF_A_KIND))
 
         roll = ThrowRoll([3, 3, 5, 3, 3])
-        self.assertEqual(3 * 4, roll.get_score(Category.FOUR_OF_A_KIND))
+        self.assertEqual(3 * 4 + 5, roll.get_score(Category.FOUR_OF_A_KIND))
 
     def test_011(self):
         """get_three_of_a_kind_sum should be 0 when there is NOT 4 of any dice"""
@@ -133,13 +133,13 @@ class ThrowRollTest(unittest.TestCase):
         """get_three_of_a_kind_sum should be sum when there is 4 of any dice"""
 
         roll = ThrowRoll([1, 1, 1, 1, 3])
-        self.assertEqual(3, roll.get_score(Category.THREE_OF_A_KIND))
+        self.assertEqual(3 + 4, roll.get_score(Category.THREE_OF_A_KIND))
 
         roll = ThrowRoll([4, 6, 6, 6, 6])
-        self.assertEqual(6 * 3, roll.get_score(Category.THREE_OF_A_KIND))
+        self.assertEqual(6 * 3 + 10, roll.get_score(Category.THREE_OF_A_KIND))
 
         roll = ThrowRoll([3, 6, 5, 3, 3])
-        self.assertEqual(3 * 3, roll.get_score(Category.THREE_OF_A_KIND))
+        self.assertEqual(3 * 3 + 11, roll.get_score(Category.THREE_OF_A_KIND))
 
     def test_013(self):
         """CHANCE should return sum of all dice"""
@@ -271,7 +271,141 @@ class ScoreSequenceTests(unittest.TestCase):
         self.assertEqual(69 + 35, score)
 
 
-class ScoreSequenceFactoryTest(unittest.TestCase):
+class ScoreSequenceFactoryTests(unittest.TestCase):
+    def test_001(self):
+        """Should return single option when there is only one option"""
+        categories_by_volatility = [Category.FIVE_OF_A_KIND]
+
+        valid_cat_seq_dic = {}
+
+        roll01 = ThrowRoll([1, 1, 1, 1, 1])
+        roll01.name = "r01"
+
+        valid_cat_seq_dic[Category.FIVE_OF_A_KIND] = [roll01]
+
+        ss = ScoreSequence()
+
+        results = list(ScoreSequenceFactory.recurse(categories_by_volatility, valid_cat_seq_dic, ss))
+
+        self.assertEqual(1, len(results))
+
+    def test_002(self):
+        """Should ignore categories with no valid rolls"""
+
+        categories_by_volatility = [
+            Category.FIVE_OF_A_KIND,
+            Category.FOUR_OF_A_KIND,
+            Category.CHANCE]
+
+        valid_cat_seq_dic = {}
+
+        roll01 = ThrowRoll([1, 1, 1, 1, 1])
+        roll01.name = "r01"
+
+        valid_cat_seq_dic[Category.FIVE_OF_A_KIND] = [roll01]
+
+        valid_cat_seq_dic[Category.FOUR_OF_A_KIND] = []
+
+        roll02 = ThrowRoll([1, 2, 3, 4, 5])
+        roll02.name = "r02"
+
+        roll03 = ThrowRoll([1, 2, 3, 4, 1])
+        roll02.name = "r03"
+
+        valid_cat_seq_dic[Category.CHANCE] = [roll02, roll03]
+
+        ss = ScoreSequence()
+
+        results = list(ScoreSequenceFactory.recurse(categories_by_volatility, valid_cat_seq_dic, ss))
+
+        self.assertEqual(2, len(results))
+
+    def test_003(self):
+        """Should duplicates should case a combination"""
+
+        categories_by_volatility = [
+            Category.FIVE_OF_A_KIND,
+            Category.FOUR_OF_A_KIND]
+
+        valid_cat_seq_dic = {}
+
+        roll01 = ThrowRoll([1, 1, 1, 1, 1])
+        roll01.name = "r01"
+
+        valid_cat_seq_dic[Category.FIVE_OF_A_KIND] = [roll01]
+
+        valid_cat_seq_dic[Category.FOUR_OF_A_KIND] = [roll01]
+
+        ss = ScoreSequence()
+
+        results = list(ScoreSequenceFactory.recurse(categories_by_volatility, valid_cat_seq_dic, ss))
+
+        self.assertEqual(0, len(results))
+
+    def test_004(self):
+        """Should ignore categories with no valid rolls"""
+
+        categories_by_volatility = [
+            Category.FIVE_OF_A_KIND,
+            Category.CHANCE]
+
+        valid_cat_seq_dic = {}
+
+        roll01 = ThrowRoll([1, 1, 1, 1, 1])
+        roll01.name = "r01"
+
+        roll02 = ThrowRoll([1, 2, 3, 4, 5])
+        roll02.name = "r02"
+
+        valid_cat_seq_dic[Category.FIVE_OF_A_KIND] = [roll01, roll02]
+
+        roll03 = ThrowRoll([1, 2, 3, 4, 1])
+        roll03.name = "r03"
+
+        roll04 = ThrowRoll([6, 6, 6, 6, 6])
+        roll04.name = "r04"
+
+        valid_cat_seq_dic[Category.CHANCE] = [roll03, roll04]
+
+        ss = ScoreSequence()
+
+        results = list(ScoreSequenceFactory.recurse(categories_by_volatility, valid_cat_seq_dic, ss))
+
+        self.assertEqual(4, len(results))
+
+    def test_005(self):
+        """Should ignore duplicates with other items"""
+
+        categories_by_volatility = [
+            Category.FIVE_OF_A_KIND,
+            Category.CHANCE]
+
+        valid_cat_seq_dic = {}
+
+        roll01 = ThrowRoll([1, 1, 1, 1, 1])
+        roll01.name = "r01"
+
+        roll02 = ThrowRoll([1, 2, 3, 4, 5])
+        roll02.name = "r02"
+
+        valid_cat_seq_dic[Category.FIVE_OF_A_KIND] = [roll01, roll02]
+
+        roll03 = ThrowRoll([1, 2, 3, 4, 1])
+        roll03.name = "r03"
+
+        roll04 = ThrowRoll([6, 6, 6, 6, 6])
+        roll04.name = "r04"
+
+        valid_cat_seq_dic[Category.CHANCE] = [roll03, roll01, roll04]
+
+        ss = ScoreSequence()
+
+        results = list(ScoreSequenceFactory.recurse(categories_by_volatility, valid_cat_seq_dic, ss))
+
+        self.assertEqual(5, len(results))
+
+
+class YahtzeeScorerTests(unittest.TestCase):
     def test_000(self):
         """Should find max score for example 1 in original problem"""
 
@@ -323,3 +457,4 @@ class ScoreSequenceFactoryTest(unittest.TestCase):
         print(score)
 
         self.assertEqual("3 6 9 12 15 30 21 20 26 50 25 35 40 35 327", score)
+
