@@ -366,6 +366,10 @@ class ScoreSequenceFactory:
         for s in sequences:
             yield s
 
+    # TODO:  Stopping for now.
+    # Problem:  The duplicate guesses are causing the recursion to net to many combinations or to exit early.
+    # I just don't understand how to handle this in a better way.
+
     @staticmethod
     def recurse(categories_by_volatility, valid_cat_seq_dic, current_ss, level=0):
         print("******* level %i" % level)
