@@ -2,6 +2,8 @@ import unittest
 
 from crypt_kicker import crypt_decrypt, SingleWord
 
+#TODO:  Try this : https://stackoverflow.com/questions/2175356/how-do-i-resolve-the-crypt-kicker-exercise-proposed-in-programming-challenges
+
 
 class CryptKickerTests(unittest.TestCase):
     def test_100(self):

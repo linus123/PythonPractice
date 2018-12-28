@@ -276,7 +276,7 @@ class WordMap:
     def remove_all_decode_words_from_all_other_items_where_word_only_has_single_decode_option(self) -> (bool, bool):
         word_was_removed = False
 
-        for key, decode_word_array in sorted(self.decode_words.items()):
+        for key, decode_word_array in sorted(self.decode_words.items(), key=lambda kv: len(kv[0]), reverse=True):
             if decode_word_array.get_solution_word_count() == 1:
 
                 has_solution, removed = self.remove_word_from_other_decode_words(
