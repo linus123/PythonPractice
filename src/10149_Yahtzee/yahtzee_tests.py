@@ -340,7 +340,7 @@ class ScoreSequenceFactoryTests(unittest.TestCase):
 
         results = list(ScoreSequenceFactory.recurse(categories_by_volatility, valid_cat_seq_dic, ss))
 
-        self.assertEqual(0, len(results))
+        self.assertEqual(1, len(results))
 
     def test_004(self):
         """Should ignore categories with no valid rolls"""
@@ -402,7 +402,7 @@ class ScoreSequenceFactoryTests(unittest.TestCase):
 
         results = list(ScoreSequenceFactory.recurse(categories_by_volatility, valid_cat_seq_dic, ss))
 
-        self.assertEqual(5, len(results))
+        self.assertEqual(6, len(results))
 
 
 class YahtzeeScorerTests(unittest.TestCase):
@@ -427,7 +427,7 @@ class YahtzeeScorerTests(unittest.TestCase):
         scorer.add_roll([1, 2, 3, 4, 5], "r13")
         self.assertTrue(scorer.is_complete())
 
-        score = scorer.get_max_game_score(10000)
+        score = scorer.get_max_game_score(100)
 
         print(score)
 
@@ -458,3 +458,28 @@ class YahtzeeScorerTests(unittest.TestCase):
 
         self.assertEqual("3 6 9 12 15 30 21 20 26 50 25 35 40 35 327", score)
 
+    def test_003(self):
+        """Should find max score for udebug 3"""
+
+        scorer = YahtzeeScorer()
+
+        scorer.add_roll([4, 4, 4, 4, 4], "r01")
+        scorer.add_roll([2, 2, 3, 6, 6], "r02")
+        scorer.add_roll([4, 3, 2, 1, 5], "r03")
+        scorer.add_roll([1, 1, 3, 3, 1], "r04")
+        scorer.add_roll([5, 2, 2, 5, 4], "r05")
+        scorer.add_roll([5, 1, 2, 2, 6], "r06")
+        scorer.add_roll([4, 3, 1, 2, 6], "r07")
+        scorer.add_roll([5, 1, 6, 5, 4], "r08")
+        scorer.add_roll([3, 3, 6, 4, 1], "r09")
+        scorer.add_roll([2, 4, 2, 4, 6], "r10")
+        scorer.add_roll([2, 2, 1, 1, 4], "r11")
+        scorer.add_roll([3, 3, 4, 4, 4], "r12")
+        scorer.add_roll([1, 5, 4, 1, 4], "r13")
+
+
+        score = scorer.get_max_game_score(200000)
+
+        print(score)
+
+        self.assertEqual("2 4 6 8 10 12 21 18 0 50 25 35 40 0 231", score)

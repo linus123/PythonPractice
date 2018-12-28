@@ -1,4 +1,5 @@
 import copy
+import sys
 from enum import Enum
 from queue import Queue
 
@@ -195,13 +196,13 @@ class ScoreSequence:
         self.__sequence_dic[cat] = roll
 
     def print_state(self):
-        pass
-        # print("***")
-        # for cat in Category:
-        #     if cat in self.__sequence_dic:
-        #         print("%s || %r" % (cat, self.__sequence_dic[cat]))
-        #     else:
-        #         print("%s || None" % cat)
+        # pass
+        print("***")
+        for cat in Category:
+            if cat in self.__sequence_dic:
+                print("%s || %r" % (cat, self.__sequence_dic[cat]))
+            else:
+                print("%s || None" % cat)
 
     def create_copy(self):
         ss = ScoreSequence()
@@ -291,6 +292,21 @@ class ScoreSequenceFactory:
 
         return -1
 
+    def __get_index_of_smallest_five_of_kind(self, rolls):
+
+        smallest_index = -1
+
+        for roll_index in range(len(rolls)):
+            roll = rolls[roll_index]
+            if roll.get_score(Category.FIVE_OF_A_KIND) > 0:
+                if smallest_index == -1:
+                    smallest_index = roll_index
+                else:
+                    if rolls[smallest_index].get_score(Category.CHANCE) > roll.get_score(Category.CHANCE):
+                        smallest_index = roll_index
+
+        return -1
+
     def get_all_combinations(self):
 
         valid_cat_seq_dic = {}
@@ -306,7 +322,6 @@ class ScoreSequenceFactory:
                       Category.FULL_HOUSE,
                       Category.LONG_STRAIGHT,
                       Category.SHORT_STRAIGHT,
-                      Category.FIVE_OF_A_KIND,
                       Category.FOUR_OF_A_KIND,
                       Category.THREE_OF_A_KIND,
                       Category.SIXES,
@@ -352,28 +367,44 @@ class ScoreSequenceFactory:
             yield s
 
     @staticmethod
-    def recurse(categories_by_volatility, valid_cat_seq_dic, current_ss):
+    def recurse(categories_by_volatility, valid_cat_seq_dic, current_ss, level=0):
+        print("******* level %i" % level)
+        current_ss.print_state()
 
         if len(categories_by_volatility) <= 0:
+            print("no more categories")
             yield current_ss
             return
 
         cat = categories_by_volatility[0]
+        print("current category %s" % cat)
         if len(valid_cat_seq_dic[cat]) > 0:
+            print("we have rolls: %i" % len(valid_cat_seq_dic[cat]))
             for roll in valid_cat_seq_dic[cat]:
-                if not current_ss.set_would_duplicate(roll):
+                if current_ss.set_would_duplicate(roll):
+                    print("found duplication: %s" % repr(roll))
+                    # pass
+                else:
+                    print("NO duplication found: %s" % repr(roll))
                     current_ss.set_category(cat, roll)
                     current_ss.print_state()
-                    sequences = ScoreSequenceFactory.recurse(categories_by_volatility[1:], valid_cat_seq_dic, current_ss.create_copy())
+                print("recurse 1")
+                sequences = ScoreSequenceFactory.recurse(categories_by_volatility[1:], valid_cat_seq_dic, current_ss.create_copy(), level + 1)
 
-                    for s in sequences:
-                            yield s
+                for s in sequences:
+                        yield s
+
+                print("exit recurse %i" % level)
+
         else:
-            sequences = ScoreSequenceFactory.recurse(categories_by_volatility[1:], valid_cat_seq_dic, current_ss.create_copy())
+            print("we DO NOT have rolls")
+            print("recurse 2")
+            sequences = ScoreSequenceFactory.recurse(categories_by_volatility[1:], valid_cat_seq_dic, current_ss.create_copy(), level + 1)
 
             for s in sequences:
                 yield s
 
+            print("exit recurse %i" % level)
 
 class YahtzeeScorer:
     def __init__(self) -> None:
@@ -385,7 +416,7 @@ class YahtzeeScorer:
     def is_complete(self) -> bool:
         return self.factory.is_complete()
 
-    def get_max_game_score(self, max_count) -> str:
+    def     get_max_game_score(self, max_count) -> str:
 
         max_score_sequence = None
 
@@ -405,6 +436,39 @@ class YahtzeeScorer:
                 break
             count += 1
 
-        # print("Number of combos %i" % count)
+        print("Number of combos %i" % count)
 
         return max_score_sequence.get_formatted_score()
+
+
+def run_from_standard_in():
+
+    ys = YahtzeeScorer()
+    counter = 0
+
+    for values_string in sys.stdin:
+        split_values = values_string.strip().split(' ')
+
+        roll_values = []
+
+        for split_value in split_values:
+            roll_values.append(int(split_value))
+
+        ys.add_roll(roll_values, "r" + str(counter))
+
+        if ys.is_complete():
+            seq = ys.get_max_game_score(10000)
+            print(seq)
+            ys = YahtzeeScorer()
+            counter = 0
+        else:
+            counter += 1
+
+
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
