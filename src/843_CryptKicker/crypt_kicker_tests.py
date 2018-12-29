@@ -2,6 +2,7 @@ import unittest
 
 from crypt_kicker import crypt_decrypt, SingleWord
 
+
 class CryptKickerTests(unittest.TestCase):
     def test_200(self):
         """Should return no solution when work is not letter possible for a long word"""
@@ -65,7 +66,7 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("pex pyy", dictionary)
         self.assertEqual("*** ***", result)
 
-        result = crypt_decrypt("pyy, pex", dictionary)
+        result = crypt_decrypt("pyy pex", dictionary)
         self.assertEqual("*** ***", result)
 
         dictionary = ["foo", "fol"]
@@ -73,7 +74,7 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("pex pyy", dictionary)
         self.assertEqual("*** ***", result)
 
-        result = crypt_decrypt("pyy, pex", dictionary)
+        result = crypt_decrypt("pyy pex", dictionary)
         self.assertEqual("*** ***", result)
 
     def test_207(self):

@@ -159,12 +159,40 @@ class SolutionMap:
     def __init__(self) -> None:
         self.__encrypted_word_dict = {}
         self.__taken_solution_word_dict = {}
+        self.__letter_map = {}
+        self.__taken_solution_letter = {}
 
     def try_to_set_word(self, enc_word: SingleWord, sol_word: SingleWord) -> bool:
-        if enc_word.is_word_possible(sol_word):
-            self.__encrypted_word_dict[enc_word.word] = sol_word
-            self.__taken_solution_word_dict[sol_word.word] = 1
-            return True
+        if not enc_word.is_word_possible(sol_word):
+            return False
+
+        if self.__violates_letter_map(enc_word, sol_word):
+            return False
+
+        self.__encrypted_word_dict[enc_word.word] = sol_word
+        self.__taken_solution_word_dict[sol_word.word] = 1
+        self.__update_letter_map(enc_word, sol_word)
+        return True
+
+    def __update_letter_map(self, enc_word: SingleWord, sol_word: SingleWord):
+        for letter_index in range(enc_word.unique_letter_word_length):
+            enc_letter = enc_word.unique_letter_word[letter_index]
+            sol_letter = sol_word.unique_letter_word[letter_index]
+
+            self.__letter_map[enc_letter] = sol_letter
+            self.__taken_solution_letter[sol_letter] = 1
+
+    def __violates_letter_map(self, enc_word: SingleWord, sol_word: SingleWord):
+        for letter_index in range(enc_word.unique_letter_word_length):
+            enc_letter = enc_word.unique_letter_word[letter_index]
+            sol_letter = sol_word.unique_letter_word[letter_index]
+
+            if enc_letter in self.__letter_map:
+                if self.__letter_map[enc_letter] != sol_letter:
+                    return True
+            else:
+                if sol_letter in self.__taken_solution_letter:
+                    return True
 
         return False
 
