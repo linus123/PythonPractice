@@ -28,23 +28,41 @@ def crypt_decrypt(encrypted_line, solution_words):
         return None
 
     encrypted_words = convert_to_array_of_strings(encrypted_line)
-    converted = remove_duplicates_and_convert(encrypted_words)
-    sored_encrypted_words = create_sorted_list_with_largest_word_first(converted)
+    encrypted_words_dict = LengthKeyedDict(encrypted_words)
 
     if len(encrypted_words) == 0:
         return get_no_solution(encrypted_words)
 
     solution_words = clean_array(solution_words)
-    sorted_solution_words = create_sorted_list_with_largest_word_first(solution_words)
+    solution_words_dict = LengthKeyedDict(solution_words)
 
     solution_map = SolutionMap()
 
-    word_was_set = solution_map.try_to_set_word(sored_encrypted_words[0], sorted_solution_words[0])
+    # for current_len in range(encrypted_words_dict.largest_word_length, 1, -1):
+    current_len = encrypted_words_dict.largest_word_length
 
-    if word_was_set:
-        return solution_map.get_decrypted_line(encrypted_words)
+    current_enc_word_list = encrypted_words_dict.get_words(current_len)
 
-    return get_no_solution(encrypted_words)
+    for target_encrypted_word in current_enc_word_list:
+
+        if not solution_words_dict.has_words_of_length(current_len):
+            return get_no_solution(encrypted_words)
+
+        current_sol_word_list = solution_words_dict.get_words(current_len)
+
+        for sol_word in current_sol_word_list:
+            if solution_map.has_mapped_solution_word(sol_word):
+                continue
+
+            word_was_set = solution_map.try_to_set_word(target_encrypted_word, sol_word)
+
+            if word_was_set:
+                break
+
+        if not solution_map.has_solution_for_encrypted_word(target_encrypted_word):
+            return get_no_solution(encrypted_words)
+
+    return solution_map.get_decrypted_line(encrypted_words)
 
 
 def remove_duplicates_and_convert(encrypted_words: list):
@@ -56,6 +74,7 @@ def remove_duplicates_and_convert(encrypted_words: list):
         final.append(SingleWord(itm))
 
     return final
+
 
 def create_sorted_list_with_largest_word_first(encrypted_words):
     return sorted(encrypted_words, key=lambda w: w.word_length, reverse=True)
@@ -139,13 +158,18 @@ class SingleWord:
 class SolutionMap:
     def __init__(self) -> None:
         self.__enc_dictionary = {}
+        self.__taken_solution_word = {}
 
     def try_to_set_word(self, enc_word: SingleWord, sol_word: SingleWord) -> bool:
         if enc_word.is_word_possible(sol_word):
             self.__enc_dictionary[enc_word.word] = sol_word
+            self.__taken_solution_word[sol_word.word] = 1
             return True
 
         return False
+
+    def has_mapped_solution_word(self, sol_word):
+        return sol_word.word in self.__taken_solution_word
 
     def get_decrypted_line(self, encrypted_words: list):
 
@@ -155,6 +179,44 @@ class SolutionMap:
             word_array.append(self.__enc_dictionary[word].word)
 
         return ' '.join(word_array)
+
+    def has_solution_for_encrypted_word(self, enc_word):
+        return enc_word.word in self.__enc_dictionary
+
+class LengthKeyedDict:
+
+    def __init__(self, words) -> None:
+
+        largest_word_length = 0
+
+        word_dict = {}
+
+        for word in words:
+            word_len = len(word)
+
+            if word_len > largest_word_length:
+                largest_word_length = word_len
+
+            if word_len in word_dict:
+                word_dict[word_len].add(word)
+            else:
+                word_dict[word_len] = {word}
+
+        sw_word_dict = {}
+
+        for key in word_dict.keys():
+            sw_word_dict[key] = []
+            for word in word_dict[key]:
+                sw_word_dict[key].append(SingleWord(word))
+
+        self.__dict = sw_word_dict
+        self.largest_word_length = largest_word_length
+
+    def has_words_of_length(self, word_len) -> bool:
+        return word_len in self.__dict
+
+    def get_words(self, word_len) -> list:
+        return self.__dict[word_len]
 
 
 def convert_to_array_of_strings(encrypted_line: str) -> list:
@@ -177,7 +239,7 @@ def convert_to_array_of_strings(encrypted_line: str) -> list:
 
 
 def clean_array(word_dictionary):
-    return [SingleWord(word.strip()) for word in word_dictionary]
+    return [word.strip() for word in word_dictionary]
 
 
 # *******************************************

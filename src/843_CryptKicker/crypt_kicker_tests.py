@@ -2,9 +2,6 @@ import unittest
 
 from crypt_kicker import crypt_decrypt, SingleWord
 
-#TODO:  Try this : https://stackoverflow.com/questions/2175356/how-do-i-resolve-the-crypt-kicker-exercise-proposed-in-programming-challenges
-
-
 class CryptKickerTests(unittest.TestCase):
     def test_200(self):
         """Should return no solution when work is not letter possible for a long word"""
@@ -35,11 +32,19 @@ class CryptKickerTests(unittest.TestCase):
         self.assertEqual("documentation documentation", result)
 
     def test_204(self):
-        """Should return miss when second word does not have dictionary word"""
-        dictionary = ["documentation"]
+        """Should return hit for two words with no common letters"""
+        dictionary = ["fun", "ask"]
 
-        result = crypt_decrypt("nymewoxdkdsyx nym", dictionary)
-        self.assertEqual("************ ***", result)
+        result = crypt_decrypt("pex kcu", dictionary)
+        self.assertNotEqual("*** ***", result)
+        self.assertTrue(result == "fun ask" or result == "ask fun", "result was : " + result)
+
+    def test_205(self):
+        """Should return hit for two words"""
+        dictionary = ["fun", "foo"]
+
+        result = crypt_decrypt("pex pyy", dictionary)
+        self.assertEqual("fun foo", result)
 
     # ***********
 
