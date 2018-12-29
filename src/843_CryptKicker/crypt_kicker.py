@@ -1,4 +1,3 @@
-import copy
 import sys
 from typing import List
 
@@ -38,8 +37,6 @@ def crypt_decrypt(encrypted_line, solution_words):
     solution_words = clean_array(solution_words)
     solution_words_dict = LengthKeyedDict(solution_words)
 
-    solution_map = SolutionMap()
-
     # for current_len in range(encrypted_words_dict.largest_word_length, 1, -1):
     current_len = encrypted_words_dict.largest_word_length
 
@@ -50,15 +47,21 @@ def crypt_decrypt(encrypted_line, solution_words):
 
     current_sol_word_list = solution_words_dict.get_words(current_len)
 
-    solution_maps = list(foobar_recurse(solution_map, copy.copy(current_enc_word_list), copy.copy(current_sol_word_list)))
+    for enc_word_index in range(len(current_enc_word_list)):
+        empty_solution_map = SolutionMap()
+        solution_maps = foobar_recurse(enc_word_index, empty_solution_map, copy.copy(current_enc_word_list), copy.copy(current_sol_word_list))
 
-    for s in solution_maps:
-        return s.get_decrypted_line(encrypted_words)
+        for s in solution_maps:
+            return s.get_decrypted_line(encrypted_words)
 
     return get_no_solution(encrypted_words)
 
 
-def foobar_recurse(solution_map: SolutionMap, current_enc_word_list: list, current_sol_word_list: list):
+def foobar_recurse(
+        enc_word_index: int,
+        solution_map: SolutionMap,
+        current_enc_word_list: list,
+        current_sol_word_list: list):
 
     if len(current_enc_word_list) <= 0:
         yield solution_map
@@ -67,7 +70,7 @@ def foobar_recurse(solution_map: SolutionMap, current_enc_word_list: list, curre
     if len(current_sol_word_list) <= 0:
         return
 
-    target_encrypted_word = current_enc_word_list[0]
+    target_encrypted_word = current_enc_word_list[enc_word_index]
 
     sol_word_index = -1
 
@@ -85,14 +88,18 @@ def foobar_recurse(solution_map: SolutionMap, current_enc_word_list: list, curre
     if not solution_map.has_solution_for_encrypted_word(target_encrypted_word):
         return
     else:
-        new_enc_word_list = current_enc_word_list[1:]
+        new_enc_word_list = current_enc_word_list[:enc_word_index] + current_enc_word_list[enc_word_index+1:]
         new_sol_word_list = current_sol_word_list[:sol_word_index] + current_sol_word_list[sol_word_index+1:]
 
-        r = foobar_recurse(solution_map.create_copy(), new_enc_word_list, new_sol_word_list)
+        if len(new_enc_word_list) <= 0:
+            yield solution_map
 
-        for s in r:
-            if s is not None:
-                yield s
+        for new_enc_word_index in range(len(new_enc_word_list)):
+            r = foobar_recurse(new_enc_word_index, solution_map.create_copy(), new_enc_word_list, new_sol_word_list)
+
+            for s in r:
+                if s is not None:
+                    yield s
 
 
 def remove_duplicates_and_convert(encrypted_words: list):
