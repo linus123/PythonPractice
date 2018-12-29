@@ -6,6 +6,27 @@ from crypt_kicker import crypt_decrypt, SingleWord
 
 
 class CryptKickerTests(unittest.TestCase):
+    def test_200(self):
+        """Should return no solution when work is not letter possible for a long word"""
+        dictionary = ["documentation"]
+
+        result = crypt_decrypt("nymewoxdkdsax", dictionary)
+        self.assertEqual("*************", result)
+
+    def test_201(self):
+        """Should return no solution when long word does not have matching word length"""
+        dictionary = ["documentation"]
+
+        result = crypt_decrypt("nymewoxdkdsy", dictionary)
+        self.assertEqual("************", result)
+
+    def test_202(self):
+        """Should return hit for a single long word"""
+        dictionary = ["documentation"]
+
+        result = crypt_decrypt("nymewoxdkdsyx", dictionary)
+        self.assertEqual("documentation", result)
+
     def test_100(self):
         dictionary = ["foo"]
 

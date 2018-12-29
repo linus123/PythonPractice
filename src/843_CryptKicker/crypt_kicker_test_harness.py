@@ -4,6 +4,17 @@ from crypt_kicker import crypt_decrypt, SingleWord
 
 
 class CryptKickerHarnessTests(unittest.TestCase):
+    def test_000(self):
+        """Print word"""
+
+        letter_key = self.create_letter_key_via_offset(10)
+
+        expected_result = "documentation"
+        enc_line = self.encrypt_line(expected_result, letter_key)
+
+        print(enc_line)
+
+
     def test_001(self):
         letter_key = self.create_letter_key_via_offset(10)
 

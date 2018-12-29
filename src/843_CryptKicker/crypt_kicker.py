@@ -2,6 +2,25 @@ import copy
 import sys
 from typing import List
 
+"""
+KeyArray will hold the replacement table.
+
+- Start with an empty KeyArray, this is version 0
+- Match longest encrypted word to longest dictionary word and add to KeyArray (if there are two longest, pick any),
+    this is version 1.
+- Decrypt some letters of the next longest encrypted word.
+- Check if the decrypted letters match the letter in the same position in any dictionary word of the same length.
+- If none matches, go back to version 0 and try another word.
+- If some letters match, add the rest of the letters to KeyArray, this is version 2.
+- Decrypt some letters of the next longest encrypted word.
+- Check if the decrypted letters match the letter in the same position in any dictionary word.
+- If none matches, go back to version 1 and try another word
+- If some letters match, add the rest of the letters to KeyArray, this is version 3.
+- Repeat until all words are decrypted.
+
+If at version 0 none of the longest words creates a partial decrypt in shorter words,
+    very probably there is no solution.
+"""
 
 def crypt_decrypt(encrypted_line, solution_words):
 
@@ -9,63 +28,35 @@ def crypt_decrypt(encrypted_line, solution_words):
         return None
 
     encrypted_words = convert_to_array(encrypted_line)
+    sored_encrypted_words = create_sorted_list_with_largest_word_first(encrypted_words)
 
     if len(encrypted_words) == 0:
         return get_no_solution(encrypted_words)
 
     solution_words = clean_array(solution_words)
+    sorted_solution_words = create_sorted_list_with_largest_word_first(solution_words)
 
-    word_map = WordMap(solution_words)
+    solution_map = SolutionMap()
 
-    for encrypted_word in encrypted_words:
-        word_map.process_encrypted_word(encrypted_word)
+    word_was_set = solution_map.try_to_set_word(sored_encrypted_words[0], sorted_solution_words[0])
 
-    word_map.prune_options()
+    if word_was_set:
+        return solution_map.get_decrypted_line(encrypted_words)
 
-    if word_map.has_no_solution:
-        return get_no_solution(encrypted_words)
-    # else MIGHT have a solution
-
-    has_single_solution = word_map.has_single_solution()
-
-    if not has_single_solution:
-        solution = recurse_guesses(word_map)
-
-        if solution is None:
-            return get_no_solution(encrypted_words)
-
-        word_map = solution
-
-    return word_map.get_decrypted_line(encrypted_words)
+    return get_no_solution(encrypted_words)
 
 
-def recurse_guesses(current_guess):
-    # print("Starting Recursing Guesses")
-    for guess_word_map in current_guess.get_guesses():
+def create_sorted_list_with_largest_word_first(encrypted_words):
+    return sorted(encrypted_words, key=lambda w: w.word_length, reverse=True)
 
-        # print("Process Guess has_no_solution" + str(guess_word_map.has_no_solution))
 
-        guess_word_map.prune_options()
+def get_no_solution(encrypted_words: list):
+    word_array = []
 
-        if guess_word_map.has_no_solution:
-            # print("Not a solution")
-            continue
+    for word in encrypted_words:
+        word_array.append(word.get_no_solution_string())
 
-        has_single_solution = guess_word_map.has_single_solution()
-
-        if has_single_solution:
-            # print("Found Single Solution")
-            return guess_word_map
-        else:
-            # print("did NOT Found Single Solution")
-            pass
-
-        rg = recurse_guesses(guess_word_map)
-
-        if rg is not None:
-            return rg
-
-    return None
+    return ' '.join(word_array)
 
 
 class SingleWord:
@@ -134,8 +125,25 @@ class SingleWord:
         return True
 
 
-def clean_array(word_dictionary):
-    return [SingleWord(word.strip()) for word in word_dictionary]
+class SolutionMap:
+    def __init__(self) -> None:
+        self.__enc_dictionary = {}
+
+    def try_to_set_word(self, enc_word: SingleWord, sol_word: SingleWord) -> bool:
+        if enc_word.is_word_possible(sol_word):
+            self.__enc_dictionary[enc_word.word] = sol_word
+            return True
+
+        return False
+
+    def get_decrypted_line(self, encrypted_words: list):
+
+        word_array = []
+
+        for word in encrypted_words:
+            word_array.append(self.__enc_dictionary[word.word].word)
+
+        return ' '.join(word_array)
 
 
 def convert_to_array(encrypted_line: str) -> List[SingleWord]:
@@ -157,14 +165,39 @@ def convert_to_array(encrypted_line: str) -> List[SingleWord]:
     return encrypted_words
 
 
-def get_no_solution(encrypted_words: list):
-    word_array = []
+def clean_array(word_dictionary):
+    return [SingleWord(word.strip()) for word in word_dictionary]
 
-    for word in encrypted_words:
-        word_array.append(word.get_no_solution_string())
 
-    return ' '.join(word_array)
+# *******************************************
 
+def recurse_guesses(current_guess):
+    # print("Starting Recursing Guesses")
+    for guess_word_map in current_guess.get_guesses():
+
+        # print("Process Guess has_no_solution" + str(guess_word_map.has_no_solution))
+
+        guess_word_map.prune_options()
+
+        if guess_word_map.has_no_solution:
+            # print("Not a solution")
+            continue
+
+        has_single_solution = guess_word_map.has_single_solution()
+
+        if has_single_solution:
+            # print("Found Single Solution")
+            return guess_word_map
+        else:
+            # print("did NOT Found Single Solution")
+            pass
+
+        rg = recurse_guesses(guess_word_map)
+
+        if rg is not None:
+            return rg
+
+    return None
 
 class WordMap:
     def __init__(self, solution_words: List[SingleWord], decode_words=None):
