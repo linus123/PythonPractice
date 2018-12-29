@@ -27,8 +27,9 @@ def crypt_decrypt(encrypted_line, solution_words):
     if encrypted_line.strip() == "":
         return None
 
-    encrypted_words = convert_to_array(encrypted_line)
-    sored_encrypted_words = create_sorted_list_with_largest_word_first(encrypted_words)
+    encrypted_words = convert_to_array_of_strings(encrypted_line)
+    converted = remove_duplicates_and_convert(encrypted_words)
+    sored_encrypted_words = create_sorted_list_with_largest_word_first(converted)
 
     if len(encrypted_words) == 0:
         return get_no_solution(encrypted_words)
@@ -46,6 +47,16 @@ def crypt_decrypt(encrypted_line, solution_words):
     return get_no_solution(encrypted_words)
 
 
+def remove_duplicates_and_convert(encrypted_words: list):
+    lst = list(set(encrypted_words))
+
+    final = []
+
+    for itm in lst:
+        final.append(SingleWord(itm))
+
+    return final
+
 def create_sorted_list_with_largest_word_first(encrypted_words):
     return sorted(encrypted_words, key=lambda w: w.word_length, reverse=True)
 
@@ -54,7 +65,7 @@ def get_no_solution(encrypted_words: list):
     word_array = []
 
     for word in encrypted_words:
-        word_array.append(word.get_no_solution_string())
+        word_array.append("*" * len(word))
 
     return ' '.join(word_array)
 
@@ -141,12 +152,12 @@ class SolutionMap:
         word_array = []
 
         for word in encrypted_words:
-            word_array.append(self.__enc_dictionary[word.word].word)
+            word_array.append(self.__enc_dictionary[word].word)
 
         return ' '.join(word_array)
 
 
-def convert_to_array(encrypted_line: str) -> List[SingleWord]:
+def convert_to_array_of_strings(encrypted_line: str) -> list:
     encrypted_line = encrypted_line.strip()
 
     if encrypted_line == "":
@@ -160,7 +171,7 @@ def convert_to_array(encrypted_line: str) -> List[SingleWord]:
         word = word.strip()
 
         if word != "":
-            encrypted_words.append(SingleWord(word))
+            encrypted_words.append(word)
 
     return encrypted_words
 

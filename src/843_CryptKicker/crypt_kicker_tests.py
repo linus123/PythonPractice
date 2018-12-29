@@ -27,6 +27,22 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("nymewoxdkdsyx", dictionary)
         self.assertEqual("documentation", result)
 
+    def test_203(self):
+        """Should return hit for a single long word"""
+        dictionary = ["documentation"]
+
+        result = crypt_decrypt("nymewoxdkdsyx nymewoxdkdsyx", dictionary)
+        self.assertEqual("documentation documentation", result)
+
+    def test_204(self):
+        """Should return miss when second word does not have dictionary word"""
+        dictionary = ["documentation"]
+
+        result = crypt_decrypt("nymewoxdkdsyx nym", dictionary)
+        self.assertEqual("************ ***", result)
+
+    # ***********
+
     def test_100(self):
         dictionary = ["foo"]
 
