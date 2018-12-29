@@ -54,9 +54,9 @@ def crypt_decrypt(encrypted_line, solution_words):
             if solution_map.has_mapped_solution_word(sol_word):
                 continue
 
-            word_was_set = solution_map.try_to_set_word(target_encrypted_word, sol_word)
+            has_found_solution_word = solution_map.try_to_set_word(target_encrypted_word, sol_word)
 
-            if word_was_set:
+            if has_found_solution_word:
                 break
 
         if not solution_map.has_solution_for_encrypted_word(target_encrypted_word):
@@ -157,31 +157,31 @@ class SingleWord:
 
 class SolutionMap:
     def __init__(self) -> None:
-        self.__enc_dictionary = {}
-        self.__taken_solution_word = {}
+        self.__encrypted_word_dict = {}
+        self.__taken_solution_word_dict = {}
 
     def try_to_set_word(self, enc_word: SingleWord, sol_word: SingleWord) -> bool:
         if enc_word.is_word_possible(sol_word):
-            self.__enc_dictionary[enc_word.word] = sol_word
-            self.__taken_solution_word[sol_word.word] = 1
+            self.__encrypted_word_dict[enc_word.word] = sol_word
+            self.__taken_solution_word_dict[sol_word.word] = 1
             return True
 
         return False
 
     def has_mapped_solution_word(self, sol_word):
-        return sol_word.word in self.__taken_solution_word
+        return sol_word.word in self.__taken_solution_word_dict
 
     def get_decrypted_line(self, encrypted_words: list):
 
         word_array = []
 
         for word in encrypted_words:
-            word_array.append(self.__enc_dictionary[word].word)
+            word_array.append(self.__encrypted_word_dict[word].word)
 
         return ' '.join(word_array)
 
     def has_solution_for_encrypted_word(self, enc_word):
-        return enc_word.word in self.__enc_dictionary
+        return enc_word.word in self.__encrypted_word_dict
 
 class LengthKeyedDict:
 

@@ -46,6 +46,48 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("pex pyy", dictionary)
         self.assertEqual("fun foo", result)
 
+        result = crypt_decrypt("pyy pex", dictionary)
+        self.assertEqual("foo fun", result)
+
+        dictionary = ["foo", "fun"]
+
+        result = crypt_decrypt("pex pyy", dictionary)
+        self.assertEqual("fun foo", result)
+
+        result = crypt_decrypt("pyy pex", dictionary)
+        self.assertEqual("foo fun", result)
+
+    def test_206(self):
+        """Should return no solution when solution is NOT letter possible"""
+
+        dictionary = ["fol", "foo"]
+
+        result = crypt_decrypt("pex pyy", dictionary)
+        self.assertEqual("*** ***", result)
+
+        result = crypt_decrypt("pyy, pex", dictionary)
+        self.assertEqual("*** ***", result)
+
+        dictionary = ["foo", "fol"]
+
+        result = crypt_decrypt("pex pyy", dictionary)
+        self.assertEqual("*** ***", result)
+
+        result = crypt_decrypt("pyy, pex", dictionary)
+        self.assertEqual("*** ***", result)
+
+    def test_207(self):
+        """Should return no solution when solution is NOT letter possible"""
+
+        dictionary = ["fun", "ask"]
+
+        result = crypt_decrypt("pex kpu", dictionary)
+        self.assertEqual("*** ***", result)
+
+        result = crypt_decrypt("kpu pex", dictionary)
+        self.assertEqual("*** ***", result)
+
+
     # ***********
 
     def test_100(self):
