@@ -37,12 +37,12 @@ def crypt_decrypt(encrypted_line, solution_words):
     solution_words = clean_array(solution_words)
     solution_words_dict = LengthKeyedDict(solution_words)
 
-    current_len = encrypted_words_dict.largest_word_length
+    word_lengths = encrypted_words_dict.word_lengths
 
     solution_map = SolutionMap()
 
     solution_maps = create_solution_maps(
-        current_len,
+        word_lengths,
         solution_map,
         encrypted_words_dict,
         solution_words_dict
@@ -53,11 +53,17 @@ def crypt_decrypt(encrypted_line, solution_words):
 
     return get_no_solution(encrypted_words)
 
+
 def create_solution_maps(
-        current_len: int,
+        word_lengths: list,
         solution_map: SolutionMap,
         encrypted_words_dict: LengthKeyedDict,
         solution_words_dict: LengthKeyedDict):
+
+    if len(word_lengths) <= 0:
+        return solution_map
+
+    current_len = word_lengths[0]
 
     current_enc_word_list = encrypted_words_dict.get_words(current_len)
 

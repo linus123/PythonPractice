@@ -143,12 +143,11 @@ class LengthKeyedDict:
         largest_word_length = 0
 
         word_dict = {}
+        word_lengths = set()
 
         for word in words:
             word_len = len(word)
-
-            if word_len > largest_word_length:
-                largest_word_length = word_len
+            word_lengths.add(word_len)
 
             if word_len in word_dict:
                 word_dict[word_len].add(word)
@@ -166,6 +165,7 @@ class LengthKeyedDict:
 
         self.__dict = sw_word_dict
         self.largest_word_length = largest_word_length
+        self.word_lengths = sorted(list(word_lengths), reverse=True)
 
     def has_words_of_length(self, word_len) -> bool:
         return word_len in self.__dict
