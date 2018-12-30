@@ -37,7 +37,6 @@ def crypt_decrypt(encrypted_line, solution_words):
     solution_words = clean_array(solution_words)
     solution_words_dict = LengthKeyedDict(solution_words)
 
-    # for current_len in range(encrypted_words_dict.largest_word_length, 1, -1):
     current_len = encrypted_words_dict.largest_word_length
 
     current_enc_word_list = encrypted_words_dict.get_words(current_len)
@@ -49,15 +48,19 @@ def crypt_decrypt(encrypted_line, solution_words):
 
     for enc_word_index in range(len(current_enc_word_list)):
         empty_solution_map = SolutionMap()
-        solution_maps = foobar_recurse(enc_word_index, empty_solution_map, copy.copy(current_enc_word_list), copy.copy(current_sol_word_list))
+        solution_maps = create_solution_maps(
+            enc_word_index,
+            empty_solution_map,
+            copy.copy(current_enc_word_list),
+            copy.copy(current_sol_word_list))
 
-        for s in solution_maps:
-            return s.get_decrypted_line(encrypted_words)
+        for solution_map in solution_maps:
+            return solution_map.get_decrypted_line(encrypted_words)
 
     return get_no_solution(encrypted_words)
 
 
-def foobar_recurse(
+def create_solution_maps(
         enc_word_index: int,
         solution_map: SolutionMap,
         current_enc_word_list: list,
@@ -95,7 +98,7 @@ def foobar_recurse(
             yield solution_map
 
         for new_enc_word_index in range(len(new_enc_word_list)):
-            r = foobar_recurse(new_enc_word_index, solution_map.create_copy(), new_enc_word_list, new_sol_word_list)
+            r = create_solution_maps(new_enc_word_index, solution_map.create_copy(), new_enc_word_list, new_sol_word_list)
 
             for s in r:
                 if s is not None:

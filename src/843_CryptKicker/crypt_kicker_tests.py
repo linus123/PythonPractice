@@ -324,8 +324,6 @@ class CryptKickerTests(unittest.TestCase):
 
     def test_023(self):
         """Should find solution that ONLY is solved by letter maps"""
-        # TODO: This test exposes the problem of the first selected word.
-        #   must start with single word and iterate for each one
         dictionary = ["eb", "bc"]
 
         result = crypt_decrypt("yz xy", dictionary)
