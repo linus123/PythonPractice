@@ -76,7 +76,8 @@ class SolutionMap:
         self.__taken_solution_letter_dict = {}
 
     def print_state(self):
-        print(self.__encrypted_word_dict)
+        # print(self.__encrypted_word_dict)
+        pass
 
     def try_to_set_word(self, enc_word: SingleWord, sol_word: SingleWord) -> bool:
         if not enc_word.is_word_possible(sol_word):
@@ -220,6 +221,7 @@ def create_solution_maps(
 
     if len(word_lengths) <= 0:
         yield solution_map
+        return
 
     current_len = word_lengths[0]
 
@@ -277,41 +279,35 @@ def create_solution_maps_for_single_word_length(
 
     target_encrypted_word = current_enc_word_list[enc_word_index]
 
-    sol_word_index = -1
-
     for sol_word_index in range(len(current_sol_word_list)):
+        current_sm = solution_map.create_copy()
         sol_word = current_sol_word_list[sol_word_index]
         # Do we need this?
-        if solution_map.has_mapped_solution_word(sol_word):
+        if current_sm.has_mapped_solution_word(sol_word):
             continue
 
-        has_found_solution_word = solution_map.try_to_set_word(target_encrypted_word, sol_word)
+        has_found_solution_word = current_sm.try_to_set_word(target_encrypted_word, sol_word)
 
         if has_found_solution_word:
-            solution_map.print_state()
-            break
+            current_sm.print_state()
+            new_enc_word_list = current_enc_word_list[:enc_word_index] + current_enc_word_list[enc_word_index+1:]
+            new_sol_word_list = current_sol_word_list[:sol_word_index] + current_sol_word_list[sol_word_index+1:]
 
-    if not solution_map.has_solution_for_encrypted_word(target_encrypted_word):
-        return
-    else:
-        new_enc_word_list = current_enc_word_list[:enc_word_index] + current_enc_word_list[enc_word_index+1:]
-        new_sol_word_list = current_sol_word_list[:sol_word_index] + current_sol_word_list[sol_word_index+1:]
+            if len(new_enc_word_list) <= 0:
+                yield current_sm
 
-        if len(new_enc_word_list) <= 0:
-            yield solution_map
+            for new_enc_word_index in range(len(new_enc_word_list)):
+                r = create_solution_maps_for_single_word_length(
+                    new_enc_word_index,
+                    current_sm.create_copy(),
+                    new_enc_word_list, new_sol_word_list,
+                    level + 1)
 
-        for new_enc_word_index in range(len(new_enc_word_list)):
-            r = create_solution_maps_for_single_word_length(
-                new_enc_word_index,
-                solution_map.create_copy(),
-                new_enc_word_list, new_sol_word_list,
-                level + 1)
+                sml3 = list(r)
 
-            sml3 = list(r)
-
-            for s in sml3:
-                if s is not None:
-                    yield s
+                for s in sml3:
+                    if s is not None:
+                        yield s
 
 
 def remove_duplicates_and_convert(encrypted_words: list):
