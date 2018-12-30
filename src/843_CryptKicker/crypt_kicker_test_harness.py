@@ -13,6 +13,14 @@ class CryptKickerHarnessTests(unittest.TestCase):
         enc_line = self.encrypt_line(expected_result, letter_key)
         print(enc_line)
 
+        expected_result = "cake"
+        enc_line = self.encrypt_line(expected_result, letter_key)
+        print(enc_line)
+
+        expected_result = "term"
+        enc_line = self.encrypt_line(expected_result, letter_key)
+        print(enc_line)
+
         expected_result = "fun"
         enc_line = self.encrypt_line(expected_result, letter_key)
         print(enc_line)
@@ -21,7 +29,7 @@ class CryptKickerHarnessTests(unittest.TestCase):
         enc_line = self.encrypt_line(expected_result, letter_key)
         print(enc_line)
 
-        expected_result = "ask"
+        expected_result = "the"
         enc_line = self.encrypt_line(expected_result, letter_key)
         print(enc_line)
 

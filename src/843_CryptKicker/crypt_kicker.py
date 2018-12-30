@@ -203,7 +203,9 @@ def crypt_decrypt(encrypted_line, solution_words):
         solution_words_dict
     )
 
-    for solution_map in solution_maps:
+    sml = list(solution_maps)
+
+    for solution_map in sml:
         return solution_map.get_decrypted_line(encrypted_words)
 
     return get_no_solution(encrypted_words)
@@ -213,7 +215,8 @@ def create_solution_maps(
         word_lengths: list,
         solution_map: SolutionMap,
         encrypted_words_dict: LengthKeyedDict,
-        solution_words_dict: LengthKeyedDict):
+        solution_words_dict: LengthKeyedDict,
+        level=0):
 
     if len(word_lengths) <= 0:
         yield solution_map
@@ -232,9 +235,12 @@ def create_solution_maps(
             enc_word_index,
             solution_map.create_copy(),
             copy.copy(current_enc_word_list),
-            copy.copy(current_sol_word_list))
+            copy.copy(current_sol_word_list),
+            level)
 
-        for solution_map in solution_maps:
+        sml1 = list(solution_maps)
+
+        for solution_map in sml1:
             if solution_map is None:
                 continue
 
@@ -242,10 +248,13 @@ def create_solution_maps(
                 word_lengths[1:],
                 solution_map.create_copy(),
                 encrypted_words_dict,
-                solution_words_dict
+                solution_words_dict,
+                level + 1
             )
 
-            for inner_sm in inner_solution_maps:
+            sml2 = list(inner_solution_maps)
+
+            for inner_sm in sml2:
                 if inner_sm is None:
                     continue
 
@@ -256,7 +265,8 @@ def create_solution_maps_for_single_word_length(
         enc_word_index: int,
         solution_map: SolutionMap,
         current_enc_word_list: list,
-        current_sol_word_list: list):
+        current_sol_word_list: list,
+        level: int):
 
     if len(current_enc_word_list) <= 0:
         yield solution_map
@@ -278,6 +288,7 @@ def create_solution_maps_for_single_word_length(
         has_found_solution_word = solution_map.try_to_set_word(target_encrypted_word, sol_word)
 
         if has_found_solution_word:
+            solution_map.print_state()
             break
 
     if not solution_map.has_solution_for_encrypted_word(target_encrypted_word):
@@ -290,9 +301,15 @@ def create_solution_maps_for_single_word_length(
             yield solution_map
 
         for new_enc_word_index in range(len(new_enc_word_list)):
-            r = create_solution_maps_for_single_word_length(new_enc_word_index, solution_map.create_copy(), new_enc_word_list, new_sol_word_list)
+            r = create_solution_maps_for_single_word_length(
+                new_enc_word_index,
+                solution_map.create_copy(),
+                new_enc_word_list, new_sol_word_list,
+                level + 1)
 
-            for s in r:
+            sml3 = list(r)
+
+            for s in sml3:
                 if s is not None:
                     yield s
 

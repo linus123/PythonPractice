@@ -88,6 +88,14 @@ class CryptKickerTests(unittest.TestCase):
         result = crypt_decrypt("kpu pex", dictionary)
         self.assertEqual("*** ***", result)
 
+    def test_208(self):
+        """Should find solution when the first pick of word is caused by the second word"""
+
+        dictionary = ["cake", "term", "the"]
+
+        result = crypt_decrypt("dobw dro", dictionary)
+        self.assertEqual("term the", result)
+
 
     # ***********
 
