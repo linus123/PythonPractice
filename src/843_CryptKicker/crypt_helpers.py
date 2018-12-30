@@ -74,6 +74,9 @@ class SolutionMap:
         self.__letter_map_dict = {}
         self.__taken_solution_letter_dict = {}
 
+    def print_state(self):
+        print(self.__encrypted_word_dict)
+
     def try_to_set_word(self, enc_word: SingleWord, sol_word: SingleWord) -> bool:
         if not enc_word.is_word_possible(sol_word):
             return False

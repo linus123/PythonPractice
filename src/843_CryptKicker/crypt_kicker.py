@@ -61,7 +61,7 @@ def create_solution_maps(
         solution_words_dict: LengthKeyedDict):
 
     if len(word_lengths) <= 0:
-        return solution_map
+        yield solution_map
 
     current_len = word_lengths[0]
 
@@ -80,7 +80,22 @@ def create_solution_maps(
             copy.copy(current_sol_word_list))
 
         for solution_map in solution_maps:
-            yield solution_map
+            if solution_map is None:
+                continue
+
+            inner_solution_maps = create_solution_maps(
+                word_lengths[1:],
+                solution_map.create_copy(),
+                encrypted_words_dict,
+                solution_words_dict
+            )
+
+            for inner_sm in inner_solution_maps:
+                if inner_sm is None:
+                    continue
+
+                yield inner_sm
+
 
 def create_solution_maps_for_single_word_length(
         enc_word_index: int,
