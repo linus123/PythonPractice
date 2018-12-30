@@ -39,28 +39,44 @@ def crypt_decrypt(encrypted_line, solution_words):
 
     current_len = encrypted_words_dict.largest_word_length
 
+    solution_map = SolutionMap()
+
+    solution_maps = create_solution_maps(
+        current_len,
+        solution_map,
+        encrypted_words_dict,
+        solution_words_dict
+    )
+
+    for solution_map in solution_maps:
+        return solution_map.get_decrypted_line(encrypted_words)
+
+    return get_no_solution(encrypted_words)
+
+def create_solution_maps(
+        current_len: int,
+        solution_map: SolutionMap,
+        encrypted_words_dict: LengthKeyedDict,
+        solution_words_dict: LengthKeyedDict):
+
     current_enc_word_list = encrypted_words_dict.get_words(current_len)
 
     if not solution_words_dict.has_words_of_length(current_len):
-        return get_no_solution(encrypted_words)
+        return
 
     current_sol_word_list = solution_words_dict.get_words(current_len)
 
     for enc_word_index in range(len(current_enc_word_list)):
-        empty_solution_map = SolutionMap()
-        solution_maps = create_solution_maps(
+        solution_maps = create_solution_maps_for_single_word_length(
             enc_word_index,
-            empty_solution_map,
+            solution_map.create_copy(),
             copy.copy(current_enc_word_list),
             copy.copy(current_sol_word_list))
 
         for solution_map in solution_maps:
-            return solution_map.get_decrypted_line(encrypted_words)
+            yield solution_map
 
-    return get_no_solution(encrypted_words)
-
-
-def create_solution_maps(
+def create_solution_maps_for_single_word_length(
         enc_word_index: int,
         solution_map: SolutionMap,
         current_enc_word_list: list,
@@ -98,7 +114,7 @@ def create_solution_maps(
             yield solution_map
 
         for new_enc_word_index in range(len(new_enc_word_list)):
-            r = create_solution_maps(new_enc_word_index, solution_map.create_copy(), new_enc_word_list, new_sol_word_list)
+            r = create_solution_maps_for_single_word_length(new_enc_word_index, solution_map.create_copy(), new_enc_word_list, new_sol_word_list)
 
             for s in r:
                 if s is not None:
