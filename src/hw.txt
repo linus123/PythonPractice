@@ -1,0 +1,97 @@
+Week 1
+------
+110101 The 3n+1 problem
+110102 Minesweeper
+110103 The Trip
+110106 Interpreter
+
+Week 2
+------
+110201 Jolly Jumpers
+110204 Crypt Kicker
+110205 Stack 'em Up
+110208 Yahtzee
+
+Week 3
+------
+110302 Where's Waldorf?
+110304 Crypt Kicker II
+110306 File Fragmentation
+110307 Doublets  (USE UVA JUDGE -- NOT PC JUDGE)
+
+Week 4
+------
+110401 Vito's Family
+110403 Bridge
+110405 Shoemaker's Problem
+110406 CDVII
+
+Week 5
+------
+110502 Reverse and Add
+110503 The Archeologists' Dilemma
+110504 Ones
+110505 A multiplication game
+
+Week 6
+------
+110603 Counting
+110604 Expressions
+110606 The Priest Mathematician
+110607 Selfdescribing Sequence
+
+Week 7
+------
+110702 Carmichael Numbers  (USE UVA JUDGE -- NOT PC JUDGE)
+110704 Factovisors
+110707 Marbles
+110708 Repackaging
+
+Week 8
+------
+110801 Bishops
+110802 15-Puzzle Problem  (USE UVA JUDGE -- NOT PC JUDGE)
+110806 Garden of Eden
+110807 Colour Hash
+
+Week 9
+------
+110902 Playing with Wheels
+110903 The Tourist Guide
+110906 Tower of Cubes  (USE UVA JUDGE -- NOT PC JUDGE)
+110907 From Dusk Till Dawn
+
+Week 10
+-------
+111001 Freckles
+111002 The Necklace  (USE UVA JUDGE -- NOT PC JUDGE)
+111006 Tourist Guide
+111007 The Grand Dinner  (USE UVA JUDGE -- NOT PC JUDGE)
+
+Week 11
+-------
+111101 Is Bigger Smarter?  (USE UVA JUDGE -- NOT PC JUDGE)
+111103 Weights and Measures
+111104 Unidirectional TSP
+111106 Ferry Loading  (USE UVA JUDGE -- NOT PC JUDGE)
+
+Week 12
+-------
+111202 The Monocycle
+111203 Star
+111205 Robbery
+111207 Dermuba Triangle
+
+Week 13
+-------
+111301 Dog and Gopher
+111302 Rope Crisis in Ropeland!
+111305 Birthday Cake  (USE UVA JUDGE -- NOT PC JUDGE)
+111308 How Big Is It?
+
+Week 14
+-------
+111401 Herding Frosh
+111403 Chainsaw Massacre
+111404 Hotter Colder
+111408 Nice Milk
