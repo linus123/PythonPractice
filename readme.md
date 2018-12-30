@@ -16,5 +16,6 @@ Professor is: Steven Skiena
 - Minesweeper : Completed
 - Interpreter : Completed
 - JollyJumpers : Completed
-- CryptKicker : Time Limit
+- CryptKicker : Completed
 - Stack 'em Up : Completed
+- Yahtzee : Time Limit
