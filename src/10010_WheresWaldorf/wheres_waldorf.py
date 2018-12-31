@@ -18,12 +18,17 @@ class WaldorfGrid:
         self.row_count = m
         self.column_count = n
 
-    def __is_empty(self) -> bool:
+    def is_valid(self) -> bool:
         if self.column_count <= 0:
-            return True
+            return False
+
+        if self.__grid[0].strip() == "":
+            return False
+
+        return True
 
     def get_char(self, row_index: int, col_index: int) -> chr:
-        if self.__is_empty():
+        if not self.is_valid():
             return None
 
         if row_index >= self.row_count:
@@ -129,3 +134,45 @@ class WaldorfGrid:
             return "".join(char_array)
 
         raise ValueError("Invalid Direction")
+
+
+def find_waldorf(grid: WaldorfGrid, words: list):
+
+    if not grid.is_valid():
+        return []
+
+    if len(words) <= 0:
+        return []
+
+    word_dic = {}
+
+    for word in words:
+        first_letter = word[0]
+
+        if first_letter in word_dic:
+            word_dic[first_letter].append(word)
+        else:
+            word_dic[first_letter] = [word]
+
+    found_words = {}
+
+    for row_index in range(grid.row_count):
+        for col_index in range(grid.column_count):
+            letter = grid.get_char(row_index, col_index)
+
+            if letter in word_dic:
+                for word in word_dic[letter]:
+
+                    if word in found_words:
+                        continue
+
+                    for dir in Direction:
+                        proj = grid.get_projection(row_index, col_index, len(word), dir)
+                        if proj == word:
+                            found_words[word] = (row_index + 1, col_index + 1)
+
+    for word in words:
+        yield found_words[word]
+
+
+

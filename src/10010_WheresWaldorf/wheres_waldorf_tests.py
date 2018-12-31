@@ -1,6 +1,6 @@
 import unittest
 
-from wheres_waldorf import WaldorfGrid, Direction
+from wheres_waldorf import WaldorfGrid, Direction, find_waldorf
 
 
 class WaldorfGridTests(unittest.TestCase):
@@ -314,3 +314,51 @@ class WaldorfGridTests(unittest.TestCase):
 
         projection = grid.get_projection(0, 2, 3, Direction.SOUTH_WEST)
         self.assertEqual("abc", projection)
+
+    def test_029(self):
+        """find_waldorf should return empty array given invalid grid"""
+        grid = WaldorfGrid([""], 1, 0)
+        result = list(find_waldorf(grid, []))
+        self.assertEqual(0, len(result))
+
+    def test_030(self):
+        """find_waldorf should return empty array no words"""
+        grid = WaldorfGrid(["a"], 1, 1)
+        result = list(find_waldorf(grid, []))
+        self.assertEqual(0, len(result))
+
+    def test_031(self):
+        """Should find words given sample test"""
+        ar = ["abcDEFGhigg".lower(),
+              "hEbkWalDork".lower(),
+              "FtyAwaldORm".lower(),
+              "FtsimrLqsrc".lower(),
+              "byoArBeDeyv".lower(),
+              "Klcbqwikomk".lower(),
+              "strEBGadhrb".lower(),
+              "yUiqlxcnBjf".lower()
+              ]
+
+        grid = WaldorfGrid(ar, 8, 11)
+
+        words = ["Waldorf".lower(),
+                 "Bambi".lower(),
+                 "Betty".lower(),
+                 "Dagbert".lower()
+                 ]
+
+        result = list(find_waldorf(grid, words))
+
+        self.assertEqual(4, len(result))
+
+        self.assertEqual(2, result[0][0])
+        self.assertEqual(5, result[0][1])
+
+        self.assertEqual(2, result[1][0])
+        self.assertEqual(3, result[1][1])
+
+        self.assertEqual(1, result[2][0])
+        self.assertEqual(2, result[2][1])
+
+        self.assertEqual(7, result[3][0])
+        self.assertEqual(8, result[3][1])
