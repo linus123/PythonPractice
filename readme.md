@@ -13,13 +13,15 @@ Professor is: [Steven Skiena](https://www3.cs.stonybrook.edu/~skiena/)
 ## Progress
 
 - 3n + 1 Problem : Completed
-- The Trip : Completed
 - Minesweeper : Completed
 - Interpreter : Completed
+- The Trip : Completed
+
 - JollyJumpers : Completed
 - CryptKicker : Completed
 - Stack 'em Up : Completed
 - Yahtzee : Time Limit
+
 - Where's Waldorf : Completed
 
 
