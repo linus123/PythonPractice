@@ -20,4 +20,6 @@ Professor is: [Steven Skiena](https://www3.cs.stonybrook.edu/~skiena/)
 - CryptKicker : Completed
 - Stack 'em Up : Completed
 - Yahtzee : Time Limit
+- Where's Waldorf : Completed
+
 
