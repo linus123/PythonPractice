@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 
 
@@ -175,4 +176,46 @@ def find_waldorf(grid: WaldorfGrid, words: list):
         yield found_words[word]
 
 
+def run_from_standard_in():
 
+    first_line = sys.stdin.readline()
+    number_of_test_cases = int(first_line.strip())
+
+    for test_case_counter in range(number_of_test_cases):
+        blank_line = sys.stdin.readline()
+
+        grid_dim_line = sys.stdin.readline().strip()
+        grid_dim_ar = grid_dim_line.split(" ")
+
+        row_count = int(grid_dim_ar[0])
+        col_count = int(grid_dim_ar[1])
+
+        grid_array = []
+
+        for row_counter in range(row_count):
+            grid_array.append(sys.stdin.readline().strip().lower())
+
+        grid = WaldorfGrid(grid_array, row_count, col_count)
+
+        word_count_line = sys.stdin.readline()
+        number_of_words = int(word_count_line.strip())
+
+        word_array = []
+
+        for word_counter in range(number_of_words):
+            word_array.append(sys.stdin.readline().strip().lower())
+
+        word_locations = find_waldorf(grid, word_array)
+
+        for loc in word_locations:
+            print("%i %i" % loc)
+
+        if test_case_counter < number_of_test_cases - 1:
+            print("")
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
