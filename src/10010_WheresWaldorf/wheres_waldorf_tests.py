@@ -1,5 +1,7 @@
 import unittest
 
+from wheres_waldorf import WaldorfGrid, Direction
+
 
 class WaldorfGridTests(unittest.TestCase):
     def test_001(self):
@@ -35,101 +37,79 @@ class WaldorfGridTests(unittest.TestCase):
         self.assertEqual("a", result)
 
     def test_005(self):
-        """get_projection_east should return none given long length"""
+        """get_projection east should return none given long length"""
         grid = WaldorfGrid(["a"], 1, 1)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_east(0, 0, 2)
+        projection = grid.get_projection(0, 0, 2, Direction.EAST)
         self.assertEqual(None, projection)
 
     def test_006(self):
-        """get_projection_east should return string given valid length"""
+        """get_projection east should return string given valid length"""
         grid = WaldorfGrid(["ab"], 1, 2)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_east(0, 0, 2)
+        projection = grid.get_projection(0, 0, 1, Direction.EAST)
+        self.assertEqual("a", projection)
+
+        projection = grid.get_projection(0, 0, 2, Direction.EAST)
         self.assertEqual("ab", projection)
 
     def test_007(self):
-        """get_projection_east should return string given longer valid length"""
+        """get_projection east should return string given longer valid length"""
         grid = WaldorfGrid(["abcdefg"], 1, 7)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_east(0, 0, 3)
+        projection = grid.get_projection(0, 0, 3, Direction.EAST)
         self.assertEqual("abc", projection)
 
     def test_008(self):
-        """get_projection_west should none given long length"""
+        """get_projection west should none given long length"""
         grid = WaldorfGrid(["a"], 1, 1)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_west(0, 0, 2)
+        projection = grid.get_projection(0, 0, 2, Direction.WEST)
         self.assertEqual(None, projection)
 
     def test_009(self):
-        """get_projection_west should return string given valid length"""
+        """get_projection west should return string given valid length"""
         grid = WaldorfGrid(["ab"], 1, 2)
 
         result = grid.get_char(0, 1)
         self.assertEqual("b", result)
 
-        projection = grid.get_projection_west(0, 1, 2)
+        projection = grid.get_projection(0, 1, 1, Direction.WEST)
+        self.assertEqual("b", projection)
+
+        projection = grid.get_projection(0, 1, 2, Direction.WEST)
         self.assertEqual("ba", projection)
 
     def test_010(self):
-        """get_projection_west should return string given longer valid length"""
+        """get_projection west should return string given longer valid length"""
         grid = WaldorfGrid(["abcdefg"], 1, 7)
 
         result = grid.get_char(0, 4)
         self.assertEqual("e", result)
 
-        projection = grid.get_projection_west(0, 4, 3)
+        projection = grid.get_projection(0, 4, 3, Direction.WEST)
         self.assertEqual("edc", projection)
 
+    def test_011(self):
+        """get_projection_north should none given long length"""
+        grid = WaldorfGrid(["a"], 1, 1)
 
-class WaldorfGrid:
-    def __init__(self, grid: list, m: int, n: int) -> None:
-        self.__grid = grid
-        self.row_count = m
-        self.column_count = n
+        result = grid.get_char(0, 0)
+        self.assertEqual("a", result)
 
-    def __is_empty(self) -> bool:
-        if self.column_count <= 0:
-            return True
+        projection = grid.get_projection_north(0, 0, 2)
+        self.assertEqual(None, projection)
 
-    def get_char(self, row_index: int, col_index: int) -> chr:
-        if self.__is_empty():
-            return None
-
-        if row_index >= self.row_count:
-            return None
-
-        if col_index >= self.column_count:
-            return None
-
-        return self.__grid[row_index][col_index]
-
-    def get_projection_east(self, row_index: int, col_index: int, length: int):
-
-        if col_index + length > self.column_count:
-            return None
-
-        return self.__grid[row_index][col_index: col_index + length]
-
-    def get_projection_west(self, row_index: int, col_index: int, length: int):
-
-        if col_index - length + 1 < 0:
-            return None
-
-        raw_string = self.__grid[row_index][col_index - length + 1: col_index + 1]
-
-        return raw_string[::-1]
 

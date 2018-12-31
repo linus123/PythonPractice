@@ -1,7 +1,6 @@
 import copy
 import sys
 from enum import Enum
-from queue import Queue
 
 
 class Category(Enum):
