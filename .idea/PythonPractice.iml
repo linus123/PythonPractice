@@ -11,6 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/843_CryptKicker" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/10205_StackEmUp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/10149_Yahtzee" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/10010_WheresWaldorf" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv35" />
     </content>
