@@ -103,13 +103,31 @@ class WaldorfGridTests(unittest.TestCase):
         self.assertEqual("edc", projection)
 
     def test_011(self):
-        """get_projection_north should none given long length"""
+        """get_projection north should none given long length"""
         grid = WaldorfGrid(["a"], 1, 1)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_north(0, 0, 2)
+        projection = grid.get_projection(0, 0, 2, Direction.NORTH)
         self.assertEqual(None, projection)
 
+    def test_012(self):
+        """get_projection north should value given valid length"""
+        grid = WaldorfGrid(["b", "a"], 2, 1)
 
+        result = grid.get_char(1, 0)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(1, 0, 2, Direction.NORTH)
+        self.assertEqual("ab", projection)
+
+    def test_013(self):
+        """get_projection north should value given longer valid length"""
+        grid = WaldorfGrid(["d", "c", "b", "a"], 4, 1)
+
+        result = grid.get_char(3, 0)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(3, 0, 3, Direction.NORTH)
+        self.assertEqual("abc", projection)

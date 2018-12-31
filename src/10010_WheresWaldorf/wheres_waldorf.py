@@ -50,5 +50,15 @@ class WaldorfGrid:
 
             return raw_string[::-1]
 
-    def get_projection_north(self, row_index: int, col_index: int, length: int):
-        return None
+        if direction == Direction.NORTH:
+            if row_index - length + 1 < 0:
+                return None
+
+            char_array = []
+
+            for row_count in range(row_index, row_index - length, -1):
+                char_array.append(self.__grid[row_count][col_index])
+
+            return "".join(char_array)
+
+        raise ValueError("Invalid Direction")
