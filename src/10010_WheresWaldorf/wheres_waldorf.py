@@ -86,4 +86,46 @@ class WaldorfGrid:
 
             return "".join(char_array)
 
+        if direction == Direction.NORTH_WEST:
+            if row_index - length + 1 < 0:
+                return None
+
+            if col_index - length + 1 < 0:
+                return None
+
+            char_array = []
+
+            for len_count in range(length):
+                char_array.append(self.__grid[row_index - len_count][col_index - len_count])
+
+            return "".join(char_array)
+
+        if direction == Direction.NORTH_EAST:
+            if row_index - length + 1 < 0:
+                return None
+
+            if col_index + length > self.column_count:
+                return None
+
+            char_array = []
+
+            for len_count in range(length):
+                char_array.append(self.__grid[row_index - len_count][col_index + len_count])
+
+            return "".join(char_array)
+
+        if direction == Direction.SOUTH_WEST:
+            if row_index + length > self.row_count:
+                return None
+
+            if col_index - length + 1 < 0:
+                return None
+
+            char_array = []
+
+            for len_count in range(length):
+                char_array.append(self.__grid[row_index + len_count][col_index - len_count])
+
+            return "".join(char_array)
+
         raise ValueError("Invalid Direction")

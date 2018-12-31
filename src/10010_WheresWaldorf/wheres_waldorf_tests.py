@@ -200,3 +200,117 @@ class WaldorfGridTests(unittest.TestCase):
         projection = grid.get_projection(0, 0, 3, Direction.SOUTH_EAST)
         self.assertEqual("abc", projection)
 
+    # **
+
+    def test_020(self):
+        """get_projection north west should return none given long length"""
+        grid = WaldorfGrid(["a"], 1, 1)
+
+        result = grid.get_char(0, 0)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(0, 0, 2, Direction.NORTH_WEST)
+        self.assertEqual(None, projection)
+
+    def test_021(self):
+        """get_projection north west should value given valid length"""
+        grid = WaldorfGrid(["bc", "ea"], 2, 2)
+
+        result = grid.get_char(1, 1)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(1, 1, 1, Direction.NORTH_WEST)
+        self.assertEqual("a", projection)
+
+        projection = grid.get_projection(1, 1, 2, Direction.NORTH_WEST)
+        self.assertEqual("ab", projection)
+
+    def test_022(self):
+        """get_projection north west should value given longer valid length"""
+        grid = WaldorfGrid(["cxy", "xby", "xya"], 3, 3)
+
+        result = grid.get_char(2, 2)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(2, 2, 3, Direction.NORTH_WEST)
+        self.assertEqual("abc", projection)
+
+    # **
+
+    def test_023(self):
+        """get_projection north east should return none given long length"""
+        grid = WaldorfGrid(["a"], 1, 1)
+
+        result = grid.get_char(0, 0)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(0, 0, 2, Direction.NORTH_EAST)
+        self.assertEqual(None, projection)
+
+    def test_024(self):
+        """get_projection north east should value given valid length"""
+        grid = WaldorfGrid([
+            "yb",
+            "ax"], 2, 2)
+
+        result = grid.get_char(1, 0)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(1, 0, 1, Direction.NORTH_EAST)
+        self.assertEqual("a", projection)
+
+        projection = grid.get_projection(1, 0, 2, Direction.NORTH_EAST)
+        self.assertEqual("ab", projection)
+
+    def test_025(self):
+        """get_projection north east should value given longer valid length"""
+        grid = WaldorfGrid([
+            "yxc",
+            "xby",
+            "axy"], 3, 3)
+
+        result = grid.get_char(2, 0)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(2, 0, 3, Direction.NORTH_EAST)
+        self.assertEqual("abc", projection)
+
+    # **
+
+    def test_026(self):
+        """get_projection south west should return none given long length"""
+        grid = WaldorfGrid(["a"], 1, 1)
+
+        result = grid.get_char(0, 0)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(0, 0, 2, Direction.SOUTH_WEST)
+        self.assertEqual(None, projection)
+
+    def test_027(self):
+        """get_projection south west should value given valid length"""
+        grid = WaldorfGrid([
+            "ya",
+            "bx"], 2, 2)
+
+        result = grid.get_char(0, 1)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(0, 1, 1, Direction.SOUTH_WEST)
+        self.assertEqual("a", projection)
+
+        projection = grid.get_projection(0, 1, 2, Direction.SOUTH_WEST)
+        self.assertEqual("ab", projection)
+
+    def test_028(self):
+        """get_projection south west should value given longer valid length"""
+        grid = WaldorfGrid([
+            "yxa",
+            "xby",
+            "cxy"], 3, 3)
+
+        result = grid.get_char(0, 2)
+        self.assertEqual("a", result)
+
+        projection = grid.get_projection(0, 2, 3, Direction.SOUTH_WEST)
+        self.assertEqual("abc", projection)
