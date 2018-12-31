@@ -35,63 +35,63 @@ class WaldorfGridTests(unittest.TestCase):
         self.assertEqual("a", result)
 
     def test_005(self):
-        """get_projection_left_to_right should return none given long length"""
+        """get_projection_east should return none given long length"""
         grid = WaldorfGrid(["a"], 1, 1)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_left_to_right(0, 0, 2)
+        projection = grid.get_projection_east(0, 0, 2)
         self.assertEqual(None, projection)
 
     def test_006(self):
-        """get_projection_left_to_right should return string given valid length"""
+        """get_projection_east should return string given valid length"""
         grid = WaldorfGrid(["ab"], 1, 2)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_left_to_right(0, 0, 2)
+        projection = grid.get_projection_east(0, 0, 2)
         self.assertEqual("ab", projection)
 
     def test_007(self):
-        """get_projection_left_to_right should return string given longer valid length"""
+        """get_projection_east should return string given longer valid length"""
         grid = WaldorfGrid(["abcdefg"], 1, 7)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_left_to_right(0, 0, 3)
+        projection = grid.get_projection_east(0, 0, 3)
         self.assertEqual("abc", projection)
 
     def test_008(self):
-        """get_projection_right_to_left should none given long length"""
+        """get_projection_west should none given long length"""
         grid = WaldorfGrid(["a"], 1, 1)
 
         result = grid.get_char(0, 0)
         self.assertEqual("a", result)
 
-        projection = grid.get_projection_right_to_left(0, 0, 2)
+        projection = grid.get_projection_west(0, 0, 2)
         self.assertEqual(None, projection)
 
     def test_009(self):
-        """get_projection_right_to_left should return string given valid length"""
+        """get_projection_west should return string given valid length"""
         grid = WaldorfGrid(["ab"], 1, 2)
 
         result = grid.get_char(0, 1)
         self.assertEqual("b", result)
 
-        projection = grid.get_projection_right_to_left(0, 1, 2)
+        projection = grid.get_projection_west(0, 1, 2)
         self.assertEqual("ba", projection)
 
     def test_010(self):
-        """get_projection_right_to_left should return string given longer valid length"""
+        """get_projection_west should return string given longer valid length"""
         grid = WaldorfGrid(["abcdefg"], 1, 7)
 
         result = grid.get_char(0, 4)
         self.assertEqual("e", result)
 
-        projection = grid.get_projection_right_to_left(0, 4, 3)
+        projection = grid.get_projection_west(0, 4, 3)
         self.assertEqual("edc", projection)
 
 
@@ -117,14 +117,14 @@ class WaldorfGrid:
 
         return self.__grid[row_index][col_index]
 
-    def get_projection_left_to_right(self, row_index: int, col_index: int, length: int):
+    def get_projection_east(self, row_index: int, col_index: int, length: int):
 
         if col_index + length > self.column_count:
             return None
 
         return self.__grid[row_index][col_index: col_index + length]
 
-    def get_projection_right_to_left(self, row_index: int, col_index: int, length: int):
+    def get_projection_west(self, row_index: int, col_index: int, length: int):
 
         if col_index - length + 1 < 0:
             return None
