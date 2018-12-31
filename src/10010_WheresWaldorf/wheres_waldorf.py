@@ -50,6 +50,17 @@ class WaldorfGrid:
 
             return raw_string[::-1]
 
+        if direction == Direction.SOUTH:
+            if row_index + length > self.row_count:
+                return None
+
+            char_array = []
+
+            for row_count in range(row_index, row_index + length):
+                char_array.append(self.__grid[row_count][col_index])
+
+            return "".join(char_array)
+
         if direction == Direction.NORTH:
             if row_index - length + 1 < 0:
                 return None
