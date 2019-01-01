@@ -1,6 +1,8 @@
 import copy
 import sys
 
+main_line = "the quick brown fox jumps over the lazy dog"
+
 
 class SingleWord:
     def __init__(self, word: str):
@@ -74,6 +76,9 @@ class SolutionMap:
         self.__taken_solution_word_dict = {}
         self.__letter_map_dict = {}
         self.__taken_solution_letter_dict = {}
+
+    def get_letter_map(self):
+        return self.__letter_map_dict
 
     def print_state(self):
         # print(self.__encrypted_word_dict)
@@ -179,6 +184,56 @@ class LengthKeyedDict:
         return self.__dict[word_len]
 
 
+# **********************************
+# **********************************
+# **********************************
+
+def decrypt_lines(lines: list) -> list:
+
+    encrypted_main = get_letter_map_from_encrypted_main_line(lines)
+
+    if encrypted_main is None:
+        return ["No solution."]
+
+    return []
+
+
+def get_letter_map_from_encrypted_main_line(all_lines: list):
+    for line in all_lines:
+        if len(line) != len(main_line):
+            continue
+
+        solution_words = convert_to_array_of_strings(main_line)
+
+        solution_map = crypt_decrypt(line, solution_words)
+
+        if solution_map is None:
+            return None
+
+        return solution_map.get_letter_map()
+
+    return None
+
+
+def convert_to_array_of_strings(encrypted_line: str) -> list:
+    encrypted_line = encrypted_line.strip()
+
+    if encrypted_line == "":
+        return []
+
+    split_line = encrypted_line.split(' ')
+
+    encrypted_words = []
+
+    for word in split_line:
+        word = word.strip()
+
+        if word != "":
+            encrypted_words.append(word)
+
+    return encrypted_words
+
+
 def crypt_decrypt(encrypted_line, solution_words):
 
     if encrypted_line.strip() == "":
@@ -188,7 +243,7 @@ def crypt_decrypt(encrypted_line, solution_words):
     encrypted_words_dict = LengthKeyedDict(encrypted_words)
 
     if len(encrypted_words) == 0:
-        return get_no_solution(encrypted_words)
+        return None
 
     solution_words = clean_array(solution_words)
     solution_words_dict = LengthKeyedDict(solution_words)
@@ -207,9 +262,9 @@ def crypt_decrypt(encrypted_line, solution_words):
     sml = list(solution_maps)
 
     for solution_map in sml:
-        return solution_map.get_decrypted_line(encrypted_words)
+        return solution_map
 
-    return get_no_solution(encrypted_words)
+    return None
 
 
 def create_solution_maps(
@@ -262,7 +317,6 @@ def create_solution_maps(
 
                 yield inner_sm
 
-
 def create_solution_maps_for_single_word_length(
         enc_word_index: int,
         solution_map: SolutionMap,
@@ -309,83 +363,5 @@ def create_solution_maps_for_single_word_length(
                     if s is not None:
                         yield s
 
-
-def remove_duplicates_and_convert(encrypted_words: list):
-    lst = list(set(encrypted_words))
-
-    final = []
-
-    for itm in lst:
-        final.append(SingleWord(itm))
-
-    return final
-
-
-def create_sorted_list_with_largest_word_first(encrypted_words):
-    return sorted(encrypted_words, key=lambda w: w.word_length, reverse=True)
-
-
-def get_no_solution(encrypted_words: list):
-    word_array = []
-
-    for word in encrypted_words:
-        word_array.append("*" * len(word))
-
-    return ' '.join(word_array)
-
-
-def convert_to_array_of_strings(encrypted_line: str) -> list:
-    encrypted_line = encrypted_line.strip()
-
-    if encrypted_line == "":
-        return []
-
-    split_line = encrypted_line.split(' ')
-
-    encrypted_words = []
-
-    for word in split_line:
-        word = word.strip()
-
-        if word != "":
-            encrypted_words.append(word)
-
-    return encrypted_words
-
-
 def clean_array(word_dictionary):
     return [word.strip() for word in word_dictionary]
-
-
-def run_from_standard_in():
-
-    line_counter = 0
-
-    dictionary_word_count = 0
-    dictionary_words = []
-
-    for line in sys.stdin:
-
-        clean_line = line.strip().lower()
-
-        if clean_line == "":
-            continue
-
-        if line_counter == 0:
-            dictionary_word_count = int(clean_line)
-        elif line_counter <= dictionary_word_count:
-            dictionary_words.append(clean_line)
-        else:
-            result = crypt_decrypt(clean_line, dictionary_words)
-            if result is not None:
-                print(result)
-
-        line_counter += 1
-
-
-def main():
-    run_from_standard_in()
-
-
-if __name__ == '__main__':
-    main()
