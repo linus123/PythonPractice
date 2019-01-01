@@ -217,7 +217,7 @@ def get_letter_map_from_encrypted_main_line(all_lines: list):
 
         solution_words = convert_to_array_of_strings(main_line)
 
-        solution_maps = crypt_decrypt(line, solution_words)
+        solution_maps = list(crypt_decrypt(line, solution_words))
 
         solution_map = None
 
@@ -227,7 +227,7 @@ def get_letter_map_from_encrypted_main_line(all_lines: list):
                 break
 
         if solution_map is None:
-            return None
+            continue
 
         return solution_map.get_letter_map()
 

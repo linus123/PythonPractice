@@ -98,3 +98,25 @@ class CryptKicker2Tests(unittest.TestCase):
         self.assertEqual(result[0], "now is the time for all good men to come to the aid of the party")
         self.assertEqual(result[1], "the quick brown fox jumps over the lazy dog")
         self.assertEqual(result[2], "programming contests are fun arent they")
+
+    def test_501(self):
+        """Should solve the problem given in udebug"""
+        lines = [
+            "vtz ud xnm xugm itr pyy jttk gmv xt otgm xt xnm puk ti xnm fprxq",
+            "xnm ceuob lrtzv ita hegfd tsmr znm ypwq ktj",
+            "frtjrpgguvj otvxmdxd prm iev prmvx xnmq",
+            "xnm ceuob lrtzv ita hegfd tsmr xnm ypwq ktj",
+            "vtz ud xnm xugm itr pyy jttk gmv xt otgm xt xnm puk ti xnm fprxq",
+            "frtjrpgguvj otvxmdxd prm iev prmvx xnmq"
+        ]
+
+        result = decrypt_lines(lines)
+
+        self.assertEqual(6, len(result))
+
+        self.assertEqual(result[0], "now is the time for all good men to come to the aid of the party")
+        self.assertEqual(result[1], "the quick brown fox jumps over whe lazy dog")
+        self.assertEqual(result[2], "programming contests are fun arent they")
+        self.assertEqual(result[3], "the quick brown fox jumps over the lazy dog")
+        self.assertEqual(result[4], "now is the time for all good men to come to the aid of the party")
+        self.assertEqual(result[5], "programming contests are fun arent they")
