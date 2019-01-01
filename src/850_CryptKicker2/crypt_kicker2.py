@@ -190,12 +190,24 @@ class LengthKeyedDict:
 
 def decrypt_lines(lines: list) -> list:
 
-    encrypted_main = get_letter_map_from_encrypted_main_line(lines)
+    letter_map = get_letter_map_from_encrypted_main_line(lines)
 
-    if encrypted_main is None:
+    if letter_map is None:
         return ["No solution."]
 
-    return []
+    return_array = []
+
+    for line in lines:
+        char_array = []
+        for enc_letter in line:
+            if enc_letter == " ":
+                char_array.append(" ")
+            else:
+                char_array.append(letter_map[enc_letter])
+
+        return_array.append("".join(char_array))
+
+    return return_array
 
 
 def get_letter_map_from_encrypted_main_line(all_lines: list):
@@ -205,7 +217,14 @@ def get_letter_map_from_encrypted_main_line(all_lines: list):
 
         solution_words = convert_to_array_of_strings(main_line)
 
-        solution_map = crypt_decrypt(line, solution_words)
+        solution_maps = crypt_decrypt(line, solution_words)
+
+        solution_map = None
+
+        for decrypted_line, sm in solution_maps:
+            if decrypted_line == main_line:
+                solution_map = sm
+                break
 
         if solution_map is None:
             return None
@@ -262,7 +281,7 @@ def crypt_decrypt(encrypted_line, solution_words):
     sml = list(solution_maps)
 
     for solution_map in sml:
-        return solution_map
+        yield solution_map.get_decrypted_line(encrypted_words), solution_map
 
     return None
 
