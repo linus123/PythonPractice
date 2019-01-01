@@ -150,7 +150,7 @@ def has_more_grids(line):
 def get_next_non_blank_line_from_standard_in():
     line = sys.stdin.readline().rstrip()
 
-    while line == "" :
+    while line == "":
         line = sys.stdin.readline().rstrip()
 
     return line

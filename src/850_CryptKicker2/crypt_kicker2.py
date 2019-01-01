@@ -384,3 +384,34 @@ def create_solution_maps_for_single_word_length(
 
 def clean_array(word_dictionary):
     return [word.strip() for word in word_dictionary]
+
+
+def run_from_standard_in():
+
+    first_line = sys.stdin.readline()
+    number_of_test_cases = int(first_line.strip())
+    blank_line = sys.stdin.readline()
+
+    for test_case_counter in range(number_of_test_cases):
+        enc_lines = []
+
+        line = sys.stdin.readline().strip()
+        while line != "":
+            enc_lines.append(line)
+            line = sys.stdin.readline().strip()
+
+        solutions = decrypt_lines(enc_lines)
+
+        for sol in solutions:
+            print(sol)
+
+        if test_case_counter < number_of_test_cases - 1:
+            print("")
+
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
