@@ -29,10 +29,15 @@ class DoubletWord:
         return self.word[index]
 
 
-def has_more_than_one_difference(sword1: str, sword2: str):
+def has_more_than_one_difference_primitive(sword1: str, sword2: str):
 
-    word1 = DoubletWord(sword1)
-    word2 = DoubletWord(sword2)
+    return has_more_than_one_difference(
+        DoubletWord(sword1),
+        DoubletWord(sword2)
+    )
+
+
+def has_more_than_one_difference(word1: DoubletWord, word2: DoubletWord):
 
     if abs(word1.length - word2.length) > 1:
         return True
