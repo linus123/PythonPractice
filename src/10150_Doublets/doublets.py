@@ -1,4 +1,5 @@
 import copy
+import queue
 
 
 class DoubletWord:
@@ -47,26 +48,68 @@ class DoubletPathFinder:
     def find_shortest_path(self, start_word_raw: str, end_word_raw: str):
         start_word_index = -1
 
-        for index in range(len(self.doublet_words)):
-            if start_word_raw == self.doublet_words[index].word:
-                start_word_index = index
+        for word_under_eval_index in range(len(self.doublet_words)):
+            if start_word_raw == self.doublet_words[word_under_eval_index].word:
+                start_word_index = word_under_eval_index
                 break
 
         if start_word_index < 0:
             return []
 
-        new_words = self.doublet_words[:start_word_index] + self.doublet_words[start_word_index + 1:]
+        visited_dict = {}
+        visited_dict[start_word_index] = -1
 
-        word_path = [self.doublet_words[start_word_index].word]
+        next_item_q = queue.Queue()
+        next_item_q.put(start_word_index)
 
-        path = self.__recurse(
-            new_words,
-            self.doublet_words[start_word_index],
-            DoubletWord(end_word_raw),
-            word_path
-        )
+        found = False
+        word_under_eval_index = -1
 
-        return path
+        while not found:
+
+            if next_item_q.empty():
+                break
+
+            parent_word_index = next_item_q.get()
+            parent_word = self.doublet_words[parent_word_index]
+
+            for word_under_eval_index in range(len(self.doublet_words)):
+                if word_under_eval_index == parent_word_index:
+                    continue
+
+                if word_under_eval_index in visited_dict:
+                    continue
+
+                word_under_eval = self.doublet_words[word_under_eval_index]
+
+                has_more_that_one_diff = has_more_than_one_difference(
+                    parent_word,
+                    word_under_eval
+                )
+
+                if not has_more_that_one_diff:
+                    visited_dict[word_under_eval_index] = parent_word_index
+
+                    if word_under_eval.word == end_word_raw:
+                        found = True
+                        break
+
+                    next_item_q.put(word_under_eval_index)
+
+        if found:
+            path = []
+
+            current = word_under_eval_index
+
+            while current != -1:
+                path.append(self.doublet_words[current].word)
+                current = visited_dict[current]
+
+            path.reverse()
+
+            return path
+        else:
+            return None
 
     def __recurse(
             self,
