@@ -1,54 +1,79 @@
-def has_more_than_one_difference(word1: str, word2: str):
-    if abs(len(word1) - len(word2)) > 1:
+
+class DoubletWord:
+    def __init__(self, word: str) -> None:
+        self.word = word
+        self.length = len(word)
+
+    def __repr__(self) -> str:
+        return self.word
+
+    def __getitem__(self, item):
+        return self.word[item]
+
+    def has_letter(self, index: int):
+        if index < 0:
+            return False
+
+        if index >= len(self.word):
+            return False
+
         return True
 
-    diff_count = 0
+    def get_letter_or_blank(self, index: int):
+        if index < 0:
+            return ""
 
-    longer_len = len(word1)
+        if index >= len(self.word):
+            return ""
 
-    if len(word2) > longer_len:
-        longer_len = len(word2)
+        return self.word[index]
+
+def has_more_than_one_difference(sword1: str, sword2: str):
+
+    word1 = DoubletWord(sword1)
+    word2 = DoubletWord(sword2)
+
+    if abs(word1.length - word2.length) > 1:
+        return True
 
     letter_index = 0
     word1_index = 0
     word2_index = 0
+    diff_count = 0
 
-    while letter_index < longer_len:
+    word_scan_is_done = False
 
-        if word1_index >= len(word1):
+    while not word_scan_is_done:
+
+        if diff_count > 1:
+            return True
+
+        if not word1.has_letter(word1_index) and not word2.has_letter(word2_index):
+            word_scan_is_done = True
+            continue
+
+        if not word1.has_letter(word1_index) and word2.has_letter(word2_index):
             diff_count += 1
-            if diff_count > 1:
-                return True
+            word_scan_is_done = True
+            continue
 
-        elif word2_index >= len(word2):
+        if word1.has_letter(word1_index) and not word2.has_letter(word2_index):
             diff_count += 1
-            if diff_count > 1:
-                return True
+            word_scan_is_done = True
+            continue
 
-        elif word1[word1_index] != word2[word2_index]:
+        if word1[word1_index] != word2[word2_index]:
             diff_count += 1
-            if diff_count > 1:
-                return True
 
-            if word1_index + 1 < len(word1)\
-                    and word1[word1_index + 1] == word2[word2_index]:
-
+            if word1.get_letter_or_blank(word1_index + 1) == word2[word2_index]:
                 word2_index -= 1
 
-                if len(word1) == len(word2):
-                    longer_len += 1
-
-            if word2_index + 1 < len(word2)\
-                    and word1[word1_index] == word2[word2_index + 1]:
-
+            if word1[word1_index] == word2.get_letter_or_blank(word2_index + 1):
                 word1_index -= 1
-
-                if len(word1) == len(word2):
-                    longer_len += 1
 
         word1_index += 1
         word2_index += 1
         letter_index += 1
 
-    return False
+    return diff_count > 1
 
