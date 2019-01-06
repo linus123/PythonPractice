@@ -69,7 +69,7 @@ class DoubletsTests(unittest.TestCase):
         self.assertFalse(result)
 
     def test_206(self):
-        """foobar should return true when one letter is different and one letter is missing"""
+        """has_more_than_one_difference should return true when one letter is different and one letter is missing"""
 
         result = has_more_than_one_difference("foobar", "fobara")
         self.assertTrue(result)
@@ -84,7 +84,7 @@ class DoubletsTests(unittest.TestCase):
         self.assertTrue(result)
 
     def test_207(self):
-        """Should return true when missing two letters"""
+        """has_more_than_one_difference should return true when missing two letters"""
 
         result = has_more_than_one_difference("foobar", "foobaroo")
         self.assertTrue(result)
