@@ -25,6 +25,7 @@ Professor is: [Steven Skiena](https://www3.cs.stonybrook.edu/~skiena/)
 
 - Where's Waldorf : Completed
 - Crypt Kicker II : Completed
+- File Fragmentation : Completed
 
 
 
