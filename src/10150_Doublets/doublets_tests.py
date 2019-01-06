@@ -59,7 +59,6 @@ class DoubletsTests(unittest.TestCase):
         self.assert_match(expected, result)
 
     def assert_match(self, expected, result):
-
         self.assertIsNotNone(result)
 
         match = all([a == b for a, b in zip(result, expected)])
@@ -168,3 +167,36 @@ class DoubletsTests(unittest.TestCase):
 
         result = has_more_than_one_difference_primitive("abacus", "aback")
         self.assertTrue(result)
+
+    def test_300(self):
+        """get_word_combinations should return every combination for single letter"""
+
+        result = list(get_word_combinations("a"))
+
+        self.assert_match(
+            ["", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
+             "w", "x", "y", "z"], result)
+
+    def test_301(self):
+        """get_word_combinations should return every word combination for two letters"""
+
+        result = list(get_word_combinations("aa"))
+
+        self.assertIn("ab", result)
+        self.assertIn("ac", result)
+        self.assertIn("ba", result)
+        self.assertIn("a", result)
+        self.assertNotIn("bb", result)
+
+    def test_302(self):
+        """get_word_combinations should return every word combination for two letters"""
+
+        result = list(get_word_combinations("abc"))
+
+        self.assertIn("abf", result)
+        self.assertIn("fbc", result)
+        self.assertIn("afc", result)
+        self.assertIn("bc", result)
+        self.assertIn("ac", result)
+        self.assertIn("bc", result)
+        self.assertNotIn("bbb", result)
