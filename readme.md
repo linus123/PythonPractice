@@ -3,7 +3,7 @@ We are using the judge at [https://uva.onlinejudge.org](https://uva.onlinejudge.
 
 The user name is linus_pagan@hotmail.com
 
-The videos can be found at https://www.youtube.com/watch?v=3dkbFf82_b8&list=PL07B3F10B48592010
+The videos can be found at [here](https://www.youtube.com/watch?v=3dkbFf82_b8&list=PL07B3F10B48592010)
 
 Slides : [here](https://www3.cs.stonybrook.edu/~skiena/392/audio/)
 

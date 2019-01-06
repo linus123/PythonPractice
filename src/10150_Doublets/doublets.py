@@ -58,7 +58,7 @@ class DoubletPathFinder:
 
         for saved_word_index in range(len(self.doublet_words)):
             saved_word = self.doublet_words[saved_word_index]
-            if not has_more_than_one_difference_same_length_match(new_word, saved_word):
+            if not has_more_than_one_difference(new_word, saved_word):
                 new_word.add_related_word_index(saved_word_index)
                 saved_word.add_related_word_index(len(self.doublet_words))
 
