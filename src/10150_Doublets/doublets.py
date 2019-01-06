@@ -1,14 +1,23 @@
 import copy
 import queue
+import sys
 
 
 class DoubletWord:
-    def __str__(self) -> str:
-        return self.word
-
     def __init__(self, word: str) -> None:
         self.word = word
         self.length = len(word)
+
+        self.related_words = []
+
+    def add_related_word_index(self, index: int):
+        self.related_words.append(index)
+
+    def has_any_related_words(self) -> bool:
+        return len(self.related_words) > 0
+
+    def __str__(self) -> str:
+        return self.word
 
     def __repr__(self) -> str:
         return self.word
@@ -34,16 +43,26 @@ class DoubletWord:
 
         return self.word[index]
 
+
 class DoubletPathFinder:
 
-    def __init__(self, words: list) -> None:
+    def __init__(self, words) -> None:
 
-        doublet_words = []
+        self.doublet_words = []
 
-        for word in words:
-            doublet_words.append(DoubletWord(word))
+        for w in words:
+            self.__add_word(w)
 
-        self.doublet_words = doublet_words
+    def __add_word(self, sword):
+        new_word = DoubletWord(sword)
+
+        for saved_word_index in range(len(self.doublet_words)):
+            saved_word = self.doublet_words[saved_word_index]
+            if not has_more_than_one_difference_same_length_match(new_word, saved_word):
+                new_word.add_related_word_index(saved_word_index)
+                saved_word.add_related_word_index(len(self.doublet_words))
+
+        self.doublet_words.append(new_word)
 
     def find_shortest_path(self, start_word_raw: str, end_word_raw: str):
         start_word_index = -1
@@ -56,8 +75,7 @@ class DoubletPathFinder:
         if start_word_index < 0:
             return []
 
-        visited_dict = {}
-        visited_dict[start_word_index] = -1
+        visited_dict = {start_word_index: -1}
 
         next_item_q = queue.Queue()
         next_item_q.put(start_word_index)
@@ -73,7 +91,10 @@ class DoubletPathFinder:
             parent_word_index = next_item_q.get()
             parent_word = self.doublet_words[parent_word_index]
 
-            for word_under_eval_index in range(len(self.doublet_words)):
+            if not parent_word.has_any_related_words():
+                continue
+
+            for word_under_eval_index in parent_word.related_words:
                 if word_under_eval_index == parent_word_index:
                     continue
 
@@ -82,19 +103,13 @@ class DoubletPathFinder:
 
                 word_under_eval = self.doublet_words[word_under_eval_index]
 
-                has_more_that_one_diff = has_more_than_one_difference(
-                    parent_word,
-                    word_under_eval
-                )
+                visited_dict[word_under_eval_index] = parent_word_index
 
-                if not has_more_that_one_diff:
-                    visited_dict[word_under_eval_index] = parent_word_index
+                if word_under_eval.word == end_word_raw:
+                    found = True
+                    break
 
-                    if word_under_eval.word == end_word_raw:
-                        found = True
-                        break
-
-                    next_item_q.put(word_under_eval_index)
+                next_item_q.put(word_under_eval_index)
 
         if found:
             path = []
@@ -233,3 +248,39 @@ def has_more_than_one_difference(
         letter_index += 1
 
     return diff_count > 1
+
+def run_from_standard_in():
+
+    line = sys.stdin.readline().strip()
+    words = []
+    while line != "":
+        words.append(line)
+        line = sys.stdin.readline().strip()
+
+    dpf = DoubletPathFinder(words)
+
+    line = sys.stdin.readline().strip()
+    while line != "":
+        line_s = line.split(" ")
+
+        result = dpf.find_shortest_path(line_s[0], line_s[1])
+
+        if result is None:
+            print("No solution.")
+        else:
+            for wd in result:
+                print(wd)
+
+        line = sys.stdin.readline().strip()
+
+        if line != "":
+            print("")
+
+
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
