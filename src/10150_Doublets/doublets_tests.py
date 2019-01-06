@@ -6,7 +6,65 @@ from doublets import *
 class DoubletsTests(unittest.TestCase):
     def test_001(self):
         """sample should work"""
-        pass
+
+        words = [
+            "booster",
+            "rooster",
+            "roaster",
+            "coasted",
+            "roasted",
+            "coastal",
+            "postal"
+        ]
+
+        dpf = DoubletPathFinder(words)
+
+        result = dpf.find_shortest_path(
+            "booster",
+            "roasted"
+        )
+
+        expected = [
+            "booster",
+            "rooster",
+            "roaster",
+            "roasted"
+        ]
+
+        self.assert_match(expected, result)
+
+    def test_002(self):
+        """Should pass short test"""
+
+        words = [
+            "aa",
+            "ab",
+            "ac",
+            "bb"
+        ]
+
+        dpf = DoubletPathFinder(words)
+
+        result = dpf.find_shortest_path(
+            "ac",
+            "bb"
+        )
+
+        expected = [
+            "ac",
+            "ab",
+            "bb"
+        ]
+
+        self.assert_match(expected, result)
+
+    def assert_match(self, expected, result):
+
+        self.assertIsNotNone(result)
+
+        match = all([a == b for a, b in zip(result, expected)])
+
+        self.assertTrue(match, "%s does not match %s" % (result, expected))
 
     def test_200(self):
         """has_more_than_one_difference should be zero for the exact same word"""
@@ -95,3 +153,12 @@ class DoubletsTests(unittest.TestCase):
 
         result = has_more_than_one_difference_primitive("foobaroo", "foobar")
         self.assertTrue(result)
+
+    def test_208(self):
+        """has_more_than_one_difference should work with two letter"""
+
+        result = has_more_than_one_difference_primitive("ac", "ab")
+        self.assertFalse(result)
+
+        result = has_more_than_one_difference_primitive("ab", "bb")
+        self.assertFalse(result)
