@@ -28,6 +28,7 @@ class DoubletWord:
 
         return self.word[index]
 
+
 def has_more_than_one_difference(sword1: str, sword2: str):
 
     word1 = DoubletWord(sword1)
@@ -46,7 +47,8 @@ def has_more_than_one_difference(sword1: str, sword2: str):
     while not word_scan_is_done:
 
         if diff_count > 1:
-            return True
+            word_scan_is_done = True
+            continue
 
         if not word1.has_letter(word1_index) and not word2.has_letter(word2_index):
             word_scan_is_done = True
@@ -65,9 +67,11 @@ def has_more_than_one_difference(sword1: str, sword2: str):
         if word1[word1_index] != word2[word2_index]:
             diff_count += 1
 
+            # word1 look ahead
             if word1.get_letter_or_blank(word1_index + 1) == word2[word2_index]:
                 word2_index -= 1
 
+            # word2 look ahead
             if word1[word1_index] == word2.get_letter_or_blank(word2_index + 1):
                 word1_index -= 1
 
