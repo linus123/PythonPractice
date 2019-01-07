@@ -2,6 +2,7 @@ import queue
 import sys
 from bisect import bisect_left, bisect_right
 
+
 class SortedCollection(object):
     '''Sequence sorted by a key function.
     SortedCollection() is much easier to work with than using bisect() directly.
@@ -183,6 +184,7 @@ class SortedCollection(object):
             return self._items[i]
         raise ValueError('No item found with key above: %r' % (k,))
 
+
 class DoubletWord:
     def __ne__(self, o: object) -> bool:
         return self.word.__ne__(object.word)
@@ -229,8 +231,10 @@ class DoubletWord:
 
         return self.word[index]
 
+
 def get_word(sw: DoubletWord):
     return sw.word
+
 
 class DoubletPathFinder:
 
@@ -245,17 +249,19 @@ class DoubletPathFinder:
 
         self.doublet_words = sc
 
+        touch_count = 0
+
         for word_index in range(len(self.doublet_words)):
             word = self.doublet_words[word_index]
 
-            word_combos = list(get_word_combinations(word.word))
+            word_combos = get_word_combinations(word.word)
 
             for combo_word in word_combos:
-                if combo_word == "rooster":
-                    print("Here")
 
                 find_word = None
                 find_word_index = -1
+
+                touch_count += 1
 
                 try:
                     find_word = self.doublet_words.find(combo_word)
@@ -267,16 +273,16 @@ class DoubletPathFinder:
                     word.add_related_word_index(find_word_index)
                     find_word.add_related_word_index(word_index)
 
-        pass
-
+        print(touch_count)
 
     def find_shortest_path(self, start_word_raw: str, end_word_raw: str):
         start_word_index = -1
 
-        for word_under_eval_index in range(len(self.doublet_words)):
-            if start_word_raw == self.doublet_words[word_under_eval_index].word:
-                start_word_index = word_under_eval_index
-                break
+        try:
+            start_word = self.doublet_words.find(start_word_raw)
+            start_word_index = self.doublet_words.index(start_word)
+        except ValueError:
+            pass
 
         if start_word_index < 0:
             return []
@@ -333,88 +339,6 @@ class DoubletPathFinder:
             return None
 
 
-def has_more_than_one_difference_primitive(sword1: str, sword2: str):
-    return has_more_than_one_difference(
-        DoubletWord(sword1),
-        DoubletWord(sword2)
-    )
-
-
-def has_more_than_one_difference_same_length_match(
-        word1: DoubletWord,
-        word2: DoubletWord
-):
-    letter_index = 0
-    diff_count = 0
-
-    while letter_index < word1.length:
-
-        if diff_count > 1:
-            break
-
-        if word1[letter_index] != word2[letter_index]:
-            diff_count += 1
-
-        letter_index += 1
-
-    return diff_count > 1
-
-
-def has_more_than_one_difference(
-        word1: DoubletWord,
-        word2: DoubletWord
-):
-    if abs(word1.length - word2.length) > 1:
-        return True
-
-    if word1.length == word2.length:
-        return has_more_than_one_difference_same_length_match(word1, word2)
-
-    letter_index = 0
-    word1_index = 0
-    word2_index = 0
-    diff_count = 0
-
-    word_scan_is_done = False
-
-    while not word_scan_is_done:
-
-        if diff_count > 1:
-            word_scan_is_done = True
-            continue
-
-        if not word1.has_letter(word1_index) and not word2.has_letter(word2_index):
-            word_scan_is_done = True
-            continue
-
-        if not word1.has_letter(word1_index) and word2.has_letter(word2_index):
-            diff_count += 1
-            word_scan_is_done = True
-            continue
-
-        if word1.has_letter(word1_index) and not word2.has_letter(word2_index):
-            diff_count += 1
-            word_scan_is_done = True
-            continue
-
-        if word1[word1_index] != word2[word2_index]:
-            diff_count += 1
-
-            # word1 look ahead
-            if word1.get_letter_or_blank(word1_index + 1) == word2[word2_index]:
-                word2_index -= 1
-
-            # word2 look ahead
-            if word1[word1_index] == word2.get_letter_or_blank(word2_index + 1):
-                word1_index -= 1
-
-        word1_index += 1
-        word2_index += 1
-        letter_index += 1
-
-    return diff_count > 1
-
-
 def run_from_standard_in():
 
     line = sys.stdin.readline().strip()
@@ -446,7 +370,6 @@ def run_from_standard_in():
 def get_word_combinations(word: str):
 
     for index in range(len(word)):
-        yield word[:index] + word[index + 1:]
         for c in range(ord('a'), ord('z')+1):
             if chr(c) != word[index]:
                 yield word[:index] + chr(c) + word[index + 1:]
