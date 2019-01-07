@@ -33,7 +33,6 @@ class DoubletsTests(unittest.TestCase):
 
         self.assert_match(expected, result)
 
-
     def test_002(self):
         """Should pass short test"""
 

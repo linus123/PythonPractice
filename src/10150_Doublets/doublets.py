@@ -156,6 +156,13 @@ class SortedCollection(object):
             return self._items[i]
         raise ValueError('No item found with key equal to: %r' % (k,))
 
+    def find_with_index(self, k):
+        'Return first item with a key == k.  Raise ValueError if not found.'
+        i = bisect_left(self._keys, k)
+        if i != len(self) and self._keys[i] == k:
+            return self._items[i], i
+        raise ValueError('No item found with key equal to: %r' % (k,))
+
     def find_le(self, k):
         'Return last item with a key <= k.  Raise ValueError if not found.'
         i = bisect_right(self._keys, k)
@@ -197,6 +204,8 @@ class DoubletWord:
         self.length = len(word)
 
         self.related_words = set()
+
+        self.related_words_populated = False
 
     def add_related_word_index(self, index: int):
         self.related_words.add(index)
@@ -249,38 +258,58 @@ class DoubletPathFinder:
 
         self.doublet_words = sc
 
-        touch_count = 0
+        # touch_count = 0
+        #
+        # for word_index in range(len(self.doublet_words)):
+        #     word = self.doublet_words[word_index]
+        #
+        #     word_combos = get_word_combinations(word.word)
+        #
+        #     for combo_word in word_combos:
+        #
+        #         find_word = None
+        #         find_word_index = -1
+        #
+        #         touch_count += 1
+        #
+        #         try:
+        #             find_word, find_word_index = self.doublet_words.find_with_index(combo_word)
+        #         except ValueError:
+        #             pass
+        #
+        #         if find_word is not None and find_word_index > 0:
+        #             word.add_related_word_index(find_word_index)
+        #             find_word.add_related_word_index(word_index)
+        #
+        # print(touch_count)
 
-        for word_index in range(len(self.doublet_words)):
-            word = self.doublet_words[word_index]
+    def populate_related_words(self, word_index):
+        word = self.doublet_words[word_index]
 
-            word_combos = get_word_combinations(word.word)
+        word_combos = get_word_combinations(word.word)
 
-            for combo_word in word_combos:
+        for combo_word in word_combos:
 
-                find_word = None
-                find_word_index = -1
+            find_word = None
+            find_word_index = -1
 
-                touch_count += 1
+            try:
+                find_word, find_word_index = self.doublet_words.find_with_index(combo_word)
+            except ValueError:
+                pass
 
-                try:
-                    find_word = self.doublet_words.find(combo_word)
-                    find_word_index = self.doublet_words.index(find_word)
-                except ValueError:
-                    pass
+            if find_word is not None and find_word_index > 0:
+                word.add_related_word_index(find_word_index)
+                # find_word.add_related_word_index(word_index)
 
-                if find_word is not None and find_word_index > 0:
-                    word.add_related_word_index(find_word_index)
-                    find_word.add_related_word_index(word_index)
+        word.related_words_populated = True
 
-        print(touch_count)
 
     def find_shortest_path(self, start_word_raw: str, end_word_raw: str):
         start_word_index = -1
 
         try:
-            start_word = self.doublet_words.find(start_word_raw)
-            start_word_index = self.doublet_words.index(start_word)
+            start_word, start_word_index = self.doublet_words.find_with_index(start_word_raw)
         except ValueError:
             pass
 
@@ -302,6 +331,9 @@ class DoubletPathFinder:
 
             parent_word_index = next_item_q.get()
             parent_word = self.doublet_words[parent_word_index]
+
+            if not parent_word.related_words_populated:
+                self.populate_related_words(parent_word_index)
 
             if not parent_word.has_any_related_words():
                 continue
