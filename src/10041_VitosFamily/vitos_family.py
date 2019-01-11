@@ -1,57 +1,15 @@
 import math
+import sys
 
 
 def find_sum_of_distances(numbers: list):
     numbers.sort()
 
-    average = calculate_average(numbers)
+    median_index = math.floor(len(numbers) / 2)
 
-    min_distance = calculate_distances(numbers, average)
+    left_median_dist = calculate_distances(numbers, numbers[median_index])
 
-    right_dist = calculate_distances(numbers, average + 1)
-    right_smaller = False
-
-    if right_dist < min_distance:
-        min_distance = right_dist
-        right_smaller = True
-
-    left_dist = calculate_distances(numbers, average - 1)
-    left_smaller = False
-
-    if left_dist < min_distance:
-        min_distance = left_dist
-        left_smaller = True
-
-    if not right_smaller and not left_smaller:
-        return min_distance
-
-    if right_smaller:
-        return chase_direction(average, min_distance, numbers, 1)
-
-    if left_smaller:
-        return chase_direction(average, min_distance, numbers, -1)
-
-    return min_distance
-
-
-def chase_direction(average, min_distance, numbers, direction):
-    diff_counter = 2 * direction
-    current_target = average + diff_counter
-    current_dist = calculate_distances(numbers, current_target)
-    while current_dist <= min_distance:
-        min_distance = current_dist
-        diff_counter += direction
-        current_target = average + diff_counter
-        current_dist = calculate_distances(numbers, current_target)
-    return min_distance
-
-
-def calculate_average(numbers):
-    sum_for_ave = 0
-    for number in numbers:
-        sum_for_ave += number
-    average = math.ceil(sum_for_ave / len(numbers))
-    return average
+    return left_median_dist
 
 
 def calculate_distances(numbers: list, target: int) -> int:
@@ -62,3 +20,32 @@ def calculate_distances(numbers: list, target: int) -> int:
         sum_of_distances += distance
 
     return sum_of_distances
+
+
+def run_from_standard_in():
+
+    first_line = sys.stdin.readline()
+    number_of_test_cases = int(first_line.strip())
+
+    for test_case_counter in range(number_of_test_cases):
+
+        current_line = sys.stdin.readline().strip()
+        line_split = current_line.split(" ")
+
+        number_count = int(line_split[0])
+
+        numbers = []
+
+        for i in range(number_count):
+            numbers.append(int(line_split[i + 1]))
+
+        min_dist = find_sum_of_distances(numbers)
+
+        print(min_dist)
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
