@@ -44,3 +44,15 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual([5, 10], result.crossings[2])
         self.assertEqual([2], result.crossings[3])
         self.assertEqual([1, 2], result.crossings[4])
+
+    def test_004(self):
+        """Udebug 1"""
+
+        people = [1, 3, 5]
+        result = get_min_time_to_cross(people)
+
+        self.assertEqual(9, result.total_number_of_seconds)
+        self.assertEqual(3, len(result.crossings))
+        self.assertEqual([1, 3], result.crossings[0])
+        self.assertEqual([1], result.crossings[1])
+        self.assertEqual([1, 5], result.crossings[2])

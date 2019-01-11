@@ -248,10 +248,6 @@ def get_min_time_to_cross(people: list) -> CrossResult:
             if len(people_to_cross) == 0:
                 break
 
-            if len(people_to_cross) == 1:
-                cr.add_crossing(people_to_cross[0])
-                break
-
             fastest_person = crossed_people[0]
 
             cr.add_crossing(fastest_person)
@@ -273,6 +269,9 @@ def get_min_time_to_cross(people: list) -> CrossResult:
             crossed_people.insert(next_slowest_person)
 
             cross_type = FlashLightSide.LEFT_SIDE
+
+            if len(people_to_cross) == 0:
+                break
 
             fastest_person = crossed_people[0]
 
