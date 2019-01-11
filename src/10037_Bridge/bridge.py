@@ -231,6 +231,51 @@ def get_min_time_to_cross(people: list) -> CrossResult:
 
     while len(crossed_people) < len(people):
 
+        if should_do_fast_first(people_to_cross):
+            fastest_person = people_to_cross[0]
+            second_slowest = people_to_cross[-2]
+
+            cr.add_crossing(fastest_person, second_slowest)
+
+            people_to_cross.remove(fastest_person)
+            people_to_cross.remove(second_slowest)
+
+            crossed_people.insert(fastest_person)
+            crossed_people.insert(second_slowest)
+
+            # **
+
+            fastest_person = crossed_people[0]
+
+            cr.add_crossing(fastest_person)
+
+            crossed_people.remove(fastest_person)
+            people_to_cross.insert(fastest_person)
+
+            # **
+
+            fastest_person = people_to_cross[0]
+            slowest = people_to_cross[-1]
+
+            cr.add_crossing(fastest_person, slowest)
+
+            people_to_cross.remove(fastest_person)
+            people_to_cross.remove(slowest)
+
+            crossed_people.insert(fastest_person)
+            crossed_people.insert(slowest)
+
+            # **
+
+            fastest_person = crossed_people[0]
+
+            cr.add_crossing(fastest_person)
+
+            crossed_people.remove(fastest_person)
+            people_to_cross.insert(fastest_person)
+
+            continue
+
         if cross_type == MoveTypes.FASTER:
 
             fastest_person = people_to_cross[0]
@@ -282,6 +327,17 @@ def get_min_time_to_cross(people: list) -> CrossResult:
             people_to_cross.insert(fastest_person)
 
     return cr
+
+
+def should_do_fast_first(people_to_cross: list) -> bool:
+    if len(people_to_cross) < 4:
+        return False
+
+    fast_first_time = people_to_cross[-2] + people_to_cross[0] + people_to_cross[-1] + people_to_cross[0]
+
+    slow_only = people_to_cross[1] + people_to_cross[0] + people_to_cross[-1] + people_to_cross[1]
+
+    return fast_first_time < slow_only
 
 
 def run_from_standard_in():
