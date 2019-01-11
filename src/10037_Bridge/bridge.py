@@ -231,7 +231,7 @@ def get_min_time_to_cross(people: list) -> CrossResult:
 
     while len(crossed_people) < len(people):
 
-        if should_do_fast_first(people_to_cross):
+        if should_do_fast_first(people_to_cross) and cross_type == MoveTypes.FASTER:
             fastest_person = people_to_cross[0]
             second_slowest = people_to_cross[-2]
 
@@ -365,7 +365,7 @@ def run_from_standard_in():
         for cross in result.crossings:
             print(" ".join(str(x) for x in cross))
 
-        if test_case_counter != number_of_test_cases:
+        if test_case_counter < number_of_test_cases - 1:
             print("")
             blank_line = sys.stdin.readline()
 

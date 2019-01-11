@@ -148,12 +148,6 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual([1], result.crossings[3])
         self.assertEqual([1, 3], result.crossings[4])
 
-        # self.assertEqual([1, 3], result.crossings[0])
-        # self.assertEqual([1], result.crossings[1])
-        # self.assertEqual([4, 5], result.crossings[2])
-        # self.assertEqual([3], result.crossings[3])
-        # self.assertEqual([1, 3], result.crossings[4])
-
     def test_006(self):
         """Edge cases 2"""
 
@@ -168,3 +162,52 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual([4, 5], result.crossings[2])
         self.assertEqual([2], result.crossings[3])
         self.assertEqual([1, 2], result.crossings[4])
+
+    def test_007(self):
+        """Udbug 5"""
+
+        people = [95, 95, 88, 89, 62, 70, 51, 53, 45, 47, 32, 38, 28, 31, 27, 28, 24, 23, 5, 15]
+
+        result = get_min_time_to_cross(people)
+
+        # self.assertEqual(803, result.total_number_of_seconds)
+        self.assertEqual(37, len(result.crossings))
+
+        self.assertEqual([5, 15], result.crossings[0])
+        self.assertEqual([5], result.crossings[1])
+        self.assertEqual([95, 95], result.crossings[2])
+        self.assertEqual([15], result.crossings[3])
+        self.assertEqual([5, 15], result.crossings[4])
+        self.assertEqual([5], result.crossings[5])
+        self.assertEqual([88, 89], result.crossings[6])
+        self.assertEqual([15], result.crossings[7])
+        self.assertEqual([5, 15], result.crossings[8])
+        self.assertEqual([5], result.crossings[9])
+        self.assertEqual([62, 70], result.crossings[10])
+        self.assertEqual([15], result.crossings[11])
+        self.assertEqual([5, 15], result.crossings[12])
+        self.assertEqual([5], result.crossings[13])
+        self.assertEqual([51, 53], result.crossings[14])
+        self.assertEqual([15], result.crossings[15])
+        self.assertEqual([5, 15], result.crossings[16])
+        self.assertEqual([5], result.crossings[17])
+        self.assertEqual([45, 47], result.crossings[18])
+        self.assertEqual([15], result.crossings[19])
+        self.assertEqual([5, 15], result.crossings[20])
+        self.assertEqual([5], result.crossings[21])
+        self.assertEqual([32, 38], result.crossings[22])
+        self.assertEqual([15], result.crossings[23])
+        self.assertEqual([5, 15], result.crossings[24])
+        self.assertEqual([5], result.crossings[25])
+        self.assertEqual([28, 31], result.crossings[26])
+        self.assertEqual([15], result.crossings[27])
+        self.assertEqual([5, 15], result.crossings[28])
+        self.assertEqual([5], result.crossings[29])
+        self.assertEqual([27, 28], result.crossings[30])
+        self.assertEqual([15], result.crossings[31])
+        self.assertEqual([5, 23], result.crossings[32])
+        self.assertEqual([5], result.crossings[33])
+        self.assertEqual([5, 24], result.crossings[34])
+        self.assertEqual([5], result.crossings[35])
+        self.assertEqual([5, 15], result.crossings[36])
+
