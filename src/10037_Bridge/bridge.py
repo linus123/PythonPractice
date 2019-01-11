@@ -1,10 +1,11 @@
+import sys
 from bisect import bisect_left, bisect_right
 from enum import Enum
 
 
-class FlashLightSide(Enum):
-    LEFT_SIDE = 1,
-    RIGHT_SIDE = 2,
+class MoveTypes(Enum):
+    FASTER = 1,
+    SLOWER = 2,
 
 
 class SortedCollection(object):
@@ -224,13 +225,13 @@ def get_min_time_to_cross(people: list) -> CrossResult:
 
     crossed_people = SortedCollection()
 
-    cross_type = FlashLightSide.LEFT_SIDE
+    cross_type = MoveTypes.FASTER
 
     cr = CrossResult()
 
     while len(crossed_people) < len(people):
 
-        if cross_type == FlashLightSide.LEFT_SIDE:
+        if cross_type == MoveTypes.FASTER:
 
             fastest_person = people_to_cross[0]
             next_fastest_person = people_to_cross[1]
@@ -243,7 +244,7 @@ def get_min_time_to_cross(people: list) -> CrossResult:
             crossed_people.insert(fastest_person)
             crossed_people.insert(next_fastest_person)
 
-            cross_type = FlashLightSide.RIGHT_SIDE
+            cross_type = MoveTypes.SLOWER
 
             if len(people_to_cross) == 0:
                 break
@@ -255,7 +256,7 @@ def get_min_time_to_cross(people: list) -> CrossResult:
             crossed_people.remove(fastest_person)
             people_to_cross.insert(fastest_person)
 
-        elif cross_type == FlashLightSide.RIGHT_SIDE:
+        elif cross_type == MoveTypes.SLOWER:
 
             slowest_person = people_to_cross[-1]
             next_slowest_person = people_to_cross[-2]
@@ -268,7 +269,7 @@ def get_min_time_to_cross(people: list) -> CrossResult:
             crossed_people.insert(slowest_person)
             crossed_people.insert(next_slowest_person)
 
-            cross_type = FlashLightSide.LEFT_SIDE
+            cross_type = MoveTypes.FASTER
 
             if len(people_to_cross) == 0:
                 break
@@ -281,3 +282,41 @@ def get_min_time_to_cross(people: list) -> CrossResult:
             people_to_cross.insert(fastest_person)
 
     return cr
+
+
+def run_from_standard_in():
+
+    first_line = sys.stdin.readline()
+    number_of_test_cases = int(first_line.strip())
+
+    blank_line = sys.stdin.readline()
+
+    for test_case_counter in range(number_of_test_cases):
+
+        current_line = sys.stdin.readline().strip()
+        people_count = int(current_line)
+
+        people = []
+
+        for pc in range(people_count):
+            current_line = sys.stdin.readline().strip()
+            people.append(int(current_line))
+
+        result = get_min_time_to_cross(people)
+
+        print(result.total_number_of_seconds)
+
+        for cross in result.crossings:
+            print(" ".join(str(x) for x in cross))
+
+        if test_case_counter != number_of_test_cases:
+            print("")
+            blank_line = sys.stdin.readline()
+
+
+def main():
+    run_from_standard_in()
+
+
+if __name__ == '__main__':
+    main()
