@@ -26,6 +26,8 @@ Professor is: [Steven Skiena](https://www3.cs.stonybrook.edu/~skiena/)
 - Where's Waldorf : Completed
 - Crypt Kicker II : Completed
 - File Fragmentation : Completed
+- Doublets : Completed
 
-
-
+- Vito's Family : Completed
+- Bridge : Completed
+- Shoemaker's Problem : Completed

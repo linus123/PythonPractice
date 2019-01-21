@@ -18,6 +18,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/10041_VitosFamily" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/10037_Bridge" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/10026_ShoemakersProblem" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/10138_CDVII" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv35" />
     </content>
